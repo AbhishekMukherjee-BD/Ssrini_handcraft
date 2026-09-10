@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ssrini Handicrafts</title>
+    <link rel="stylesheet" href="css/style.css?v=20260904_amita">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="loading">
+
+    <!-- Fixed Scroll-driven Hero Video Canvas (Pure raw video, no filters) -->
+    <div class="hero-container" id="hero-container">
+        <canvas id="hero-canvas"></canvas>
+    </div>
+
+    <!-- Fixed Logo Container (Parallaxes smoothly from center to header and stays permanent) -->
+    <div class="logo-animation-container" id="logo-container">
+        <canvas id="logo-canvas" width="1080" height="1920"></canvas>
+    </div>
+
+    <!-- Cursive Handwriting Animation Overlay (Transparent, below logo) -->
+    <div class="cursive-container" id="cursive-container">
+        <svg id="cursive-svg" viewBox="0 0 4200 1100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="cursive-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
+                </filter>
+            </defs>
+            <text id="cursive-line1" class="cursive-stroke" filter="url(#cursive-shadow)"
+                x="2100" y="380"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                font-family="'Amita', cursive"
+                font-weight="700"
+                font-size="396">Where Every Piece</text>
+            <text id="cursive-line2" class="cursive-stroke" filter="url(#cursive-shadow)"
+                x="2100" y="840"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                font-family="'Amita', cursive"
+                font-weight="700"
+                font-size="396">Tells A Story.</text>
+        </svg>
+    </div>
+
+    <!-- Smart Idle Scroll Indicator (Hidden by default; appears only after 15s inactivity) -->
+    <div class="idle-scroll-indicator" id="idle-scroll-indicator">
+        <div class="mouse-icon">
+            <span class="wheel-dot"></span>
+        </div>
+        <span class="indicator-text">SCROLL TO DISCOVER</span>
+    </div>
+
+    <!-- Preloader Overlay -->
+    <div class="preloader" id="preloader">
+        
+        <!-- Stack of images: 1 at the bottom, 7 on top -->
+        <div class="image-stack" id="image-stack">
+            <!-- Image 1: Video Frame 1 (Base that zooms to fullscreen with zero blur) -->
+            <div class="stack-img-container stack-card" id="img-1-container">
+                <img src="preloader_images/1.jpg" id="img-1" alt="Craftsmanship 1">
+            </div>
+            
+            <!-- Image 2: 4:3 Landscape -->
+            <div class="stack-img-container stack-card" id="img-2-container">
+                <img src="preloader_images/2.jpeg" id="img-2" alt="Craftsmanship 2">
+            </div>
+            
+            <!-- Image 3: 4:5 Portrait -->
+            <div class="stack-img-container stack-card" id="img-3-container">
+                <img src="preloader_images/3.jpeg" id="img-3" alt="Craftsmanship 3">
+            </div>
+            
+            <!-- Image 4: 2:1 Landscape -->
+            <div class="stack-img-container stack-card" id="img-4-container">
+                <img src="preloader_images/4.jpeg" id="img-4" alt="Craftsmanship 4">
+            </div>
+            
+            <!-- Image 5: 3:4 Portrait -->
+            <div class="stack-img-container stack-card" id="img-5-container">
+                <img src="preloader_images/5.jpeg" id="img-5" alt="Craftsmanship 5">
+            </div>
+            
+            <!-- Image 6: 1.85:1 Landscape -->
+            <div class="stack-img-container stack-card" id="img-6-container">
+                <img src="preloader_images/6.jpeg" id="img-6" alt="Craftsmanship 6">
+            </div>
+            
+            <!-- Image 7: 4:5 Top Portrait -->
+            <div class="stack-img-container stack-card" id="img-7-container">
+                <img src="preloader_images/7.jpeg" id="img-7" alt="Craftsmanship 7">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Track (Clean track for video scrubbing) -->
+    <div class="scroll-track" id="scroll-track"></div>
+
+    <!-- Scripts -->
+    <script src="js/gsap.min.js"></script>
+    <script src="js/ScrollTrigger.min.js"></script>
+    <script src="js/app.js?v=20260904_amita"></script>
+</body>
+</html>

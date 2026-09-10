@@ -1,0 +1,909 @@
+/* ==========================================================================
+   SSRINI HANDCRAFTS — LUXURY WHITE THEMED AUTH SECTION
+   Faithful recreation & luxury adaptation of SolaceUI Auth Section 2
+   ========================================================================== */
+
+:root {
+  /* White Luxury Palette */
+  --auth-bg: #FFFFFF;
+  --auth-surface: #FAF8F5;
+  --auth-surface-card: rgba(255, 255, 255, 0.88);
+  --auth-border: #E8E4DC;
+  --auth-border-subtle: #F0EDE6;
+  --auth-border-focus: #C5A059;
+  --auth-gold: #C5A059;
+  --auth-gold-light: #DFCA9B;
+  --auth-gold-glow: rgba(197, 160, 89, 0.18);
+  --auth-text-main: #141414;
+  --auth-text-muted: #6B7280;
+  --auth-text-light: #9CA3AF;
+  --auth-input-bg: #FBF9F6;
+  --auth-input-border: #E5E0D8;
+  --auth-btn-dark: #121212;
+  --auth-btn-dark-hover: #262626;
+  --auth-radius-sm: 8px;
+  --auth-radius-md: 12px;
+  --auth-radius-lg: 20px;
+  --auth-font-serif: 'Cinzel', serif;
+  --auth-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --auth-font-display: 'Syne', sans-serif;
+  --auth-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --auth-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --auth-shadow-lg: 0 20px 50px rgba(197, 160, 89, 0.12);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--auth-font-sans);
+  background-color: var(--auth-bg);
+  color: var(--auth-text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Outer Container - 50/50 Desktop Split */
+.auth-page-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background: var(--auth-bg);
+}
+
+/* Floating Return to Home Button */
+.back-home-pill {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--auth-border);
+  border-radius: 999px;
+  color: var(--auth-text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  box-shadow: var(--auth-shadow-sm);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.back-home-pill:hover {
+  background: #FFFFFF;
+  border-color: var(--auth-gold);
+  color: var(--auth-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--auth-shadow-md);
+}
+
+.back-home-pill svg {
+  transition: transform 0.25s ease;
+}
+
+.back-home-pill:hover svg {
+  transform: translateX(-3px);
+}
+
+/* ==========================================================================
+   LEFT PANEL: SSRINI SHOWCASE EXPERIENCE (White & Ivory Luxury Aesthetic)
+   ========================================================================== */
+.auth-showcase-panel {
+  position: relative;
+  background: linear-gradient(145deg, #F8F5EE 0%, #F5EFEB 50%, #FBF9F5 100%);
+  border-right: 1px solid var(--auth-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 44px;
+  min-height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Subtle Golden Ambient Gradients */
+.auth-showcase-panel::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  left: -120px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-showcase-panel::after {
+  content: "";
+  position: absolute;
+  bottom: -150px;
+  right: -100px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 160, 89, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Top Showcase Brand Bar */
+.showcase-brand-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.showcase-logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(197, 160, 89, 0.25));
+}
+
+.showcase-brand-text h2 {
+  font-family: var(--auth-font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--auth-text-main);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.showcase-brand-text span {
+  font-size: 10px;
+  font-family: var(--auth-font-display);
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: var(--auth-gold);
+  text-transform: uppercase;
+}
+
+/* Central Interactive Art Showcase Stage */
+.showcase-stage {
+  position: relative;
+  z-index: 2;
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Main Display Frame */
+.showcase-image-viewport {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 38vh, 380px);
+  border-radius: var(--auth-radius-lg);
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(220, 210, 190, 0.6);
+}
+
+.showcase-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.04);
+}
+
+.showcase-slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.showcase-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Subtle inner border for crisp edge definition */
+.showcase-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+/* Floating Prompt / Craft Details Card (Exact SolaceUI Style) */
+.showcase-prompt-card {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px dashed rgba(197, 160, 89, 0.55);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.showcase-prompt-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: var(--auth-gold);
+  box-shadow: 0 14px 38px rgba(197, 160, 89, 0.16);
+}
+
+.prompt-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.prompt-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--auth-gold);
+  letter-spacing: 0.5px;
+}
+
+.prompt-text {
+  font-size: 13px;
+  color: var(--auth-text-main);
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prompt-action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--auth-btn-dark);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.prompt-action-btn:hover {
+  background: var(--auth-gold);
+  transform: scale(1.08) rotate(45deg);
+}
+
+.prompt-action-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s ease;
+}
+
+/* Bottom Showcase Headline & Controls */
+.showcase-footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.showcase-headline {
+  font-family: var(--auth-font-serif);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--auth-text-main);
+  letter-spacing: 0.5px;
+}
+
+.showcase-headline span {
+  color: var(--auth-gold);
+  font-style: italic;
+}
+
+/* Capsule Pill Indicators (Exact SolaceUI Carousel Controls) */
+.showcase-indicators {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-dot {
+  height: 5px;
+  border-radius: 999px;
+  background: #D9D4CB;
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 14px;
+}
+
+.pill-dot.active {
+  width: 36px;
+  background: var(--auth-gold);
+  box-shadow: 0 2px 8px var(--auth-gold-glow);
+}
+
+/* ==========================================================================
+   RIGHT PANEL: AUTHENTICATION FORM (Crisp, High-Conversion White Form)
+   ========================================================================== */
+.auth-form-panel {
+  position: relative;
+  background: var(--auth-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 48px 24px 48px;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: auto 0;
+}
+
+/* Form Brand Emblem (Top of Form) */
+.form-brand-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-emblem-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.form-emblem-badge img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.form-emblem-badge span {
+  font-family: var(--auth-font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--auth-text-main);
+  text-transform: uppercase;
+}
+
+/* Mode Switcher Pill (Sign In <-> Sign Up Toggle) */
+.auth-mode-toggle {
+  display: inline-flex;
+  background: #F3EFEA;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--auth-border);
+}
+
+.mode-tab-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--auth-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.mode-tab-btn.active {
+  background: #FFFFFF;
+  color: var(--auth-text-main);
+  box-shadow: var(--auth-shadow-sm);
+}
+
+/* Header Text */
+.auth-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-header-text h1 {
+  font-family: var(--auth-font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--auth-text-main);
+  line-height: 1.2;
+}
+
+.auth-header-text p {
+  font-size: 14px;
+  color: var(--auth-text-muted);
+  line-height: 1.5;
+}
+
+/* Social Login Grid (Google & Apple) */
+.social-auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.social-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: #FFFFFF;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-radius-md);
+  color: var(--auth-text-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--auth-shadow-sm);
+}
+
+.social-auth-btn:hover {
+  background: #FBF9F6;
+  border-color: var(--auth-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.social-auth-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Hairline Divider with "or" */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--auth-text-light);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--auth-border);
+}
+
+/* Form Elements */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Dual Column Row for Names */
+.auth-name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Signature SolaceUI Input Field Container */
+.solace-input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-input-border);
+  border-radius: var(--auth-radius-md);
+  padding: 10px 14px;
+  transition: all 0.22s ease;
+}
+
+.solace-input-field:focus-within {
+  background: #FFFFFF;
+  border-color: var(--auth-gold);
+  box-shadow: 0 0 0 3px var(--auth-gold-glow);
+}
+
+.solace-input-field input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--auth-text-main);
+  padding-right: 10px;
+}
+
+.solace-input-field input::placeholder {
+  color: #B0A89C;
+  font-size: 13.5px;
+}
+
+/* Inline Right-Aligned Label */
+.inline-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--auth-text-light);
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Password Toggle Icon Button */
+.password-toggle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--auth-text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 2px;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--auth-gold);
+}
+
+/* Extra Options: Remember Me & Forgot Password */
+.auth-extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.auth-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--auth-text-muted);
+  user-select: none;
+}
+
+.auth-checkbox-label input[type="checkbox"] {
+  accent-color: var(--auth-gold);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.auth-forgot-link {
+  color: var(--auth-gold);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.auth-forgot-link:hover {
+  color: #A37F38;
+  text-decoration: underline;
+}
+
+/* Terms & Marketing Checkboxes (Sign Up Mode) */
+.auth-consent-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--auth-text-muted);
+}
+
+.auth-consent-stack a {
+  color: var(--auth-text-main);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Mandatory Terms & Privacy Consent Row */
+.auth-terms-consent {
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--auth-text-muted);
+  padding: 4px 0;
+  transition: all 0.25s ease;
+}
+
+.auth-terms-consent a {
+  color: var(--auth-text-main);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.auth-terms-consent a:hover {
+  color: var(--auth-gold);
+}
+
+@keyframes shakeConsent {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.auth-terms-consent.highlight-error {
+  animation: shakeConsent 0.4s ease;
+  background: rgba(225, 29, 72, 0.05);
+  padding: 6px 10px;
+  border-radius: var(--auth-radius-sm);
+  border: 1px solid rgba(225, 29, 72, 0.3);
+}
+
+/* Primary Action CTA Button */
+.auth-primary-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--auth-btn-dark);
+  color: #FFFFFF;
+  border: 1px solid transparent;
+  border-radius: var(--auth-radius-md);
+  font-family: var(--auth-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  margin-top: 6px;
+}
+
+.auth-primary-btn:hover {
+  background: #242424;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.auth-primary-btn:active {
+  transform: translateY(0);
+}
+
+/* Locked / Disabled Button State when Terms Unchecked */
+.auth-primary-btn.disabled,
+.auth-primary-btn:disabled {
+  background: #E4E4E7 !important;
+  color: #9CA3AF !important;
+  border: 1px solid #D4D4D8 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+  opacity: 0.75;
+}
+
+.auth-primary-btn.loading {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Footer Helper Text */
+.auth-form-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--auth-text-muted);
+}
+
+.auth-form-footer a {
+  color: var(--auth-gold);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.auth-form-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Legal Links Footer (Terms & Privacy) */
+.auth-legal-footer {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--auth-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+
+.auth-legal-footer a,
+.auth-legal-link {
+  color: var(--auth-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.auth-legal-footer a:hover,
+.auth-legal-link:hover {
+  color: var(--auth-text-main);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.auth-legal-footer span {
+  opacity: 0.4;
+  font-size: 10px;
+}
+
+/* Form Feedback Toast */
+.auth-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #18181B;
+  color: #FFFFFF;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 999;
+}
+
+.auth-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.auth-toast.success {
+  background: #14532D;
+  border: 1px solid #166534;
+}
+
+.auth-toast.error {
+  background: #7F1D1D;
+  border: 1px solid #991B1B;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MOBILE ADAPTATION)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .auth-page-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-showcase-panel {
+    min-height: auto;
+    padding: 60px 32px 40px;
+  }
+
+  .showcase-image-viewport {
+    height: 340px;
+  }
+
+  .auth-form-panel {
+    min-height: auto;
+    padding: 50px 24px 70px;
+  }
+
+  .back-home-pill {
+    top: 16px;
+    left: 18px;
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .social-auth-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-name-row {
+    grid-template-columns: 1fr;
+  }
+
+  .showcase-image-viewport {
+    height: 280px;
+  }
+
+  .showcase-prompt-card {
+    padding: 12px 14px;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .prompt-text {
+    font-size: 12px;
+  }
+
+  .auth-header-text h1 {
+    font-size: 25px;
+  }
+}
+
+/* ====== COMPREHENSIVE MOBILE OPTIMIZATION OVERRIDES ====== */
+@media screen and (max-width: 768px) {
+  .auth-layout-container {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  .auth-showcase-section {
+    display: none !important; /* Hide image panel on small screens */
+  }
+  
+  .auth-form-section {
+    padding: 30px 20px !important;
+    justify-content: flex-start !important;
+  }
+}

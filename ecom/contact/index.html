@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | SSRINI Handcrafts</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../store/css/store.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <style>
+    /* Minimal White Auth Button (Synced with Site Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      line-height: 1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+    .nav-auth-btn:hover {
+      background: #FFFFFF !important;
+      border-color: #C5A059 !important;
+      color: #C5A059 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.16) !important;
+    }
+    .nav-auth-btn .nav-auth-icon {
+      width: 13px !important;
+      height: 13px !important;
+      stroke: currentColor !important;
+      transition: stroke 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
+
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- ==================== FIXED BACKGROUND CANVAS ==================== -->
+  <div class="contact-canvas-wrapper">
+    <canvas id="contact-canvas"></canvas>
+    <div class="canvas-overlay-dim"></div>
+  </div>
+
+  <!-- ==================== WATERMARK COVER & RADIAL LINK MENU ==================== -->
+  <div class="watermark-cover-container" id="watermark-cover-container">
+    
+    <!-- Expandable 5 Social Icons Radial Arc Menu (Top-Left Radiating) -->
+    <div class="watermark-arc-menu" id="watermark-arc-menu">
+      
+      <!-- 1. Instagram Icon -->
+      <a href="https://www.instagram.com/ssrini.handicrafts?igsh=MWNlbXY3eW11MDE4dw%3D%3D" target="_blank" rel="noopener" class="arc-icon-item arc-menu-pos-1" aria-label="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-instagram">
+          <path class="ig-body" d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z" style="transform-origin: 50% 50%;" />
+          <path class="ig-lens" d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" style="transform-origin: 50% 50%;" />
+          <path class="ig-dot" d="M16.5 7.5v.01" />
+        </svg>
+        <span class="arc-icon-tooltip">Instagram</span>
+      </a>
+
+      <!-- 2. WhatsApp Icon -->
+      <a href="https://wa.me/919836081994" target="_blank" rel="noopener" class="arc-icon-item arc-menu-pos-2" aria-label="WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-whatsapp">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+          <path class="phone-icon" style="transform-origin: 50% 50%;" d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+        </svg>
+        <span class="arc-icon-tooltip">WhatsApp</span>
+      </a>
+
+      <!-- 3. Map Pin Icon -->
+      <a href="https://maps.app.goo.gl/7TGUX2sGjCYobvfLA" target="_blank" rel="noopener" class="arc-icon-item arc-menu-pos-3" aria-label="Open Location">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-mappin" style="overflow: visible;">
+          <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+          <circle class="pin-dot" cx="12" cy="10" r="3" />
+        </svg>
+        <span class="arc-icon-tooltip">Location</span>
+      </a>
+
+      <!-- 4. Facebook Icon -->
+      <a href="https://www.facebook.com/ssrini.handicrafts/?ref=PROFILE_EDIT_xav_ig_profile_page_web" target="_blank" rel="noopener" class="arc-icon-item arc-menu-pos-4" aria-label="Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-facebook" style="overflow: visible;">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path class="fb-path" style="transform-origin: center;" d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+          <text class="fb-like" x="12" y="2" text-anchor="middle" font-size="10" fill="currentColor" opacity="0">👍</text>
+        </svg>
+        <span class="arc-icon-tooltip">Facebook</span>
+      </a>
+
+      <!-- 5. Threads Icon -->
+      <a href="https://www.threads.com/@ssrini.handicrafts?xmt=AQG0_1v9Optee5O_YfDcS9xNiripRUgb7PZv6uB9HqpAURc" target="_blank" rel="noopener" class="arc-icon-item arc-menu-pos-5" aria-label="Threads">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-threads">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path class="animated-path" d="M19 7.5c-1.333 -3 -3.667 -4.5 -7 -4.5c-5 0 -8 2.5 -8 9s3.5 9 8 9s7 -3 7 -5s-1 -5 -7 -5c-2.5 0 -3 1.25 -3 2.5c0 1.5 1 2.5 2.5 2.5c2.5 0 3.5 -1.5 3.5 -5s-2 -4 -3 -4s-1.833 .333 -2.5 1" />
+        </svg>
+        <span class="arc-icon-tooltip">Threads</span>
+      </a>
+
+    </div>
+
+    <!-- Main Watermark Cover Trigger Button with EXACT Link Icon from link-icon.json -->
+    <button class="watermark-link-trigger" id="watermark-link-trigger" aria-label="Toggle Social Links Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-link">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M9 15l6 -6" class="link-middle" style="transform-origin: 50% 50%;"/>
+        <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" class="link-top" style="transform-origin: 50% 50%;"/>
+        <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" class="link-bottom" style="transform-origin: 50% 50%;"/>
+      </svg>
+      <span class="watermark-badge-label">CONNECT</span>
+      <span class="watermark-badge-tooltip">Connect & Socials</span>
+    </button>
+
+  </div>
+
+  <!-- ==================== NAVBAR ==================== -->
+      <nav class="navbar" role="banner">
+    <a href="../index.html" class="brand">
+      <img src="../store/assets/images/logo.png" alt="SSRINI Handcrafts" class="brand-logo-img">
+    </a>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../index.html">Home</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../collection/index.html">Collections</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../store/index.html">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../about/index.html">About</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="index.html">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Minimal White Auth Button -->
+      <a href="../auth/index.html" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+        <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Sign In</span>
+      </a>
+
+      <!-- Animated Cart Icon with Tooltip -->
+      <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+        <a href="../store/index.html" class="cart-indicator" id="cart-indicator-link">
+          <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"
+            fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+            <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999" />
+            <circle class="cart-wheel-left" cx="11" cy="41" r="4" />
+            <circle class="cart-wheel-right" cx="37" cy="41" r="4" />
+            <path class="cart-upper"
+              d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3" />
+            <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19" />
+            <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19" />
+            <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19" />
+          </svg>
+          <span class="cart-count">0</span>
+        </a>
+        <div class="cart-tooltip">Shopping Bag</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN SCROLL CONTENT ==================== -->
+  <div class="contact-scroll-container">
+    
+    <!-- Hero Section: Centered Cluster (Title Vertically Above Enlarged Logo) -->
+    <section class="contact-hero-section">
+      <div class="contact-center-cluster" id="contact-center-cluster">
+        
+        <!-- Minimal Classy Title Vertically Above Logo -->
+        <h1 class="contact-minimal-title">CONTACT US</h1>
+
+        <!-- Central Enlarged Brand Logo -->
+        <a href="../index.html" class="arc-center-logo-box" aria-label="SSRINI Home">
+          <img src="../store/assets/images/logo.png" alt="SSRINI Handcrafts" class="arc-center-logo-img">
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Footer Section with Interactive Google Map -->
+    <footer class="contact-footer-section">
+      
+      <!-- Interactive Embedded Google Map Container -->
+      <div class="map-container-wrapper">
+        <div class="map-header-bar">
+          <span class="map-address-title">📍 Ssrini. 67/1 S.N Roy Road. Behala Kolkata - 700038</span>
+          <a href="https://maps.app.goo.gl/7TGUX2sGjCYobvfLA" target="_blank" rel="noopener" class="map-open-link">
+            Open in Maps ↗
+          </a>
+        </div>
+        <iframe 
+          class="map-iframe-viewport"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3685.5126868846387!2d88.3184323!3d22.5036737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a027a76046e7f2d%3A0x6b194d3a042cf761!2s67%2F1%2C%20SN%20Roy%20Rd%2C%20Sahapur%2C%20Taratala%2C%20Kolkata%2C%20West%20Bengal%20700038!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      
+
+    </footer>
+
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Scripts -->
+  <script src="../js/cursor.js"></script>
+  <script src="../store/js/cart-drawer.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>

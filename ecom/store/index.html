@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | SSRINI — A Creative World</title>
+  <meta name="description" content="Explore the full catalog of handcrafted luxury jewelry, terracotta masterpieces, pure silks, and filigree art from SSRINI.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/store.css">
+  <link rel="stylesheet" href="css/cart-drawer.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <style>
+    /* Minimal White Auth Button (Synced with Site Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      line-height: 1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+    .nav-auth-btn:hover {
+      background: #FFFFFF !important;
+      border-color: #C5A059 !important;
+      color: #C5A059 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.16) !important;
+    }
+    .nav-auth-btn .nav-auth-icon {
+      width: 13px !important;
+      height: 13px !important;
+      stroke: currentColor !important;
+      transition: stroke 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
+  
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" role="banner">
+    <a href="../index.html" class="brand">
+      <img src="assets/svgs/logo.svg" alt="SSRINI Handcrafts" class="brand-logo-img">
+    </a>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../index.html">Home</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../collection/index.html">Collections</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="index.html">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../about/index.html">About</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../contact/index.html">Contacts</a>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Minimal White Auth Button -->
+        <a href="../auth/index.html" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+          <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Sign In</span>
+        </a>
+
+        <!-- Animated Cart Icon with Tooltip -->
+        <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+          <a href="#" onclick="if(window.openCart) { window.openCart(); return false; }" class="cart-indicator" id="cart-indicator-link">
+            <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+              <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999"/>
+              <circle class="cart-wheel-left" cx="11" cy="41" r="4"/>
+              <circle class="cart-wheel-right" cx="37" cy="41" r="4"/>
+              <path class="cart-upper" d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3"/>
+              <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19"/>
+              <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19"/>
+              <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19"/>
+            </svg>
+            <span class="cart-count">0</span>
+          </a>
+          <!-- Hover Tooltip Popup -->
+          <div class="cart-tooltip">Shopping Bag</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== STORE CONTAINER ==================== -->
+  <main class="store-container font-shop">
+
+    <!-- Collection Label (replaces old breadcrumbs + title block) -->
+    <p class="selected-collection-label">All collections</p>
+
+    <!-- Controls Bar: Filter | Sort | Grid Layout -->
+    <div class="top-filters">
+      <!-- Filter Button -->
+      <button id="toggle-filter-drawer" class="filter-text-btn">
+        <span>Filter</span>
+        <span id="filter-badge-count" class="filter-badge" style="display: none;">0</span>
+      </button>
+
+      <!-- Active Filter Pills -->
+      <div id="active-filter-pills" class="active-filter-pills"></div>
+
+      <!-- Sort Buttons -->
+      <div class="sort-controls">
+        <span class="sort-label">Sort:</span>
+        <button class="sort-button" data-sort="name-asc">Name <span class="sort-dir">(A-Z)</span></button>
+        <button class="sort-button" data-sort="price-asc">Price <span class="sort-dir">(ASC)</span></button>
+      </div>
+
+      <!-- Grid Layout Switcher (matching Juri) -->
+      <div class="filters-layout">
+        <div id="three-cols" class="cols-selector cols-active" data-cols="3" title="3 Columns">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="4.5" height="12" rx="1" fill="currentColor"/>
+            <rect x="6.75" width="4.5" height="12" rx="1" fill="currentColor"/>
+            <rect x="13.5" width="4.5" height="12" rx="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <div id="four-cols" class="cols-selector" data-cols="4" title="4 Columns">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="5" width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="10" width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="14.8" width="3.2" height="12" rx="1" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <section id="product-grid" class="product-grid cols-3"></section>
+
+  </main>
+
+  <!-- ==================== FILTER DRAWER ==================== -->
+  <div id="filter-drawer-overlay" class="filter-drawer-overlay">
+    <aside class="filter-drawer" role="dialog" aria-label="Filters">
+      <div class="filter-drawer-header">
+        <h2 class="filter-drawer-title">Filter Catalog</h2>
+        <button id="close-filter-drawer" class="filter-close-btn">✕</button>
+      </div>
+
+      <div class="filter-drawer-body">
+        
+        <!-- Collection Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Collections</h3>
+          <div class="filter-options-list">
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Rivulet Heritage">
+              <span>Rivulet Heritage</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Terracotta Art">
+              <span>Terracotta Art</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Silk & Weave">
+              <span>Silk & Weave</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Brass Filigree">
+              <span>Brass Filigree</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Ceramic Glyphs">
+              <span>Ceramic Glyphs</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Wooden Sculptures">
+              <span>Wooden Sculptures</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-collection" value="Royal Atelier">
+              <span>Royal Atelier</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Category Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Product Type</h3>
+          <div class="filter-options-list">
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Rings">
+              <span>Rings</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Earrings">
+              <span>Earrings</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Necklaces">
+              <span>Necklaces</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Sculptures">
+              <span>Sculptures & Statues</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Textiles">
+              <span>Textiles & Silks</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-category" value="Decor">
+              <span>Ceramic & Decor</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Material Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Medium & Material</h3>
+          <div class="filter-options-list">
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-material" value="Clay">
+              <span>Terracotta & Clay</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-material" value="Brass">
+              <span>Brass & Bronze</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-material" value="Silk">
+              <span>Pure Mulberry Silk</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-material" value="Teak">
+              <span>Reclaimed Teak Wood</span>
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" name="filter-material" value="Gold">
+              <span>Gold Gilt & Plated</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="filter-drawer-footer">
+        <button id="reset-filters" class="btn-reset-filters">Reset All</button>
+        <button id="apply-filters" class="btn-apply-filters">Apply Filters</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==================== QUICK VIEW MODAL ==================== -->
+  <div id="quickview-modal-overlay" class="quickview-modal-overlay">
+    <div id="quickview-modal-content" class="quickview-modal-card"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Scripts -->
+  <script src="../js/cursor.js"></script>
+  <script src="js/cart-drawer.js"></script>
+  <script src="js/store.js"></script>
+</body>
+</html>

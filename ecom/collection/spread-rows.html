@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Ssrini Handcraft · Haute Joaillerie | Spread Rows Motion</title>
+  <meta name="description" content="Pure code recreation of animos.app Spread Rows motion design showcasing handcrafted luxury jewelry collections with lightweight 60fps momentum physics.">
+
+  <!-- Typography: Cinzel (Luxury Serif), Inter Tight (Modern Sans), Syne (Display) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Spread Rows Pure Code Stylesheet -->
+  <link rel="stylesheet" href="css/spread-rows.css">
+</head>
+<body>
+
+  <!-- Minimal Luxury Header -->
+  <header class="spread-header">
+    <div class="brand-badge-group">
+      <a href="../collection/index.html" class="brand-logo-text">SSRINI</a>
+      <span class="badge-tag">Spread Rows Motion</span>
+    </div>
+    <div class="header-action-group">
+      <a href="../collection/index.html" class="hud-btn" style="text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Collection Archive
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Motion Stage -->
+  <main class="spread-showcase-stage" id="spreadStage">
+    <!-- Subtle Film Grain & Radial Gold Ambience -->
+    <div class="stage-grain-overlay"></div>
+    <div class="stage-ambient-glow"></div>
+
+    <!-- Motion Viewport -->
+    <div class="spread-viewport" id="spreadViewport">
+
+      <!-- 1. Hero 1:1 Centerpiece Container (The Origin Necklace) -->
+      <div class="hero-origin-container" id="heroOriginCard" title="Click to trigger emergence">
+        <div class="hero-card-inner">
+          <img 
+            src="assets/images/craftsmanship/necklace-hero.webp" 
+            alt="Haute Joaillerie Royal Necklace Centerpiece" 
+            class="hero-card-img"
+            id="heroNecklaceImg"
+          >
+          <div class="spread-card-glint"></div>
+          <div class="hero-card-badge">Haute Joaillerie · Click to Spread</div>
+        </div>
+      </div>
+
+      <!-- 2. Breakout Layer (Flying Cards during emergence transition) -->
+      <div class="spread-breakout-layer" id="breakoutLayer"></div>
+
+      <!-- 3. The 3-Row Momentum Container -->
+      <div class="spread-rows-container" id="spreadRowsContainer">
+        <!-- Row 1: Top Ribbon (Drifts Left) -->
+        <div class="spread-row-track" id="trackRow1">
+          <div class="spread-row-ribbon" id="ribbonRow1"></div>
+        </div>
+
+        <!-- Row 2: Center Ribbon (Drifts Right, houses the original necklace and complementary sets) -->
+        <div class="spread-row-track" id="trackRow2">
+          <div class="spread-row-ribbon" id="ribbonRow2"></div>
+        </div>
+
+        <!-- Row 3: Bottom Ribbon (Drifts Left) -->
+        <div class="spread-row-track" id="trackRow3">
+          <div class="spread-row-ribbon" id="ribbonRow3"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Interactive Luxury HUD Controls -->
+    <nav class="spread-hud-controls" aria-label="Spread Rows Controls">
+      <button class="hud-btn" id="btnPlayPause" title="Toggle Momentum Drift">
+        <svg id="iconPause" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16"/>
+          <rect x="14" y="4" width="4" height="16"/>
+        </svg>
+        <svg id="iconPlay" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span id="labelPlayPause">Drift Active</span>
+      </button>
+
+      <div class="hud-divider"></div>
+
+      <button class="hud-btn" id="btnReplay" title="Replay Emergence from 1:1 Center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        Replay Breakout
+      </button>
+
+      <div class="hud-divider"></div>
+
+      <button class="hud-btn" id="btnSpeed" title="Cycle Drift Velocity">
+        <span>Speed: <strong id="labelSpeed">1.0x</strong></span>
+      </button>
+
+      <div class="hud-divider"></div>
+
+      <button class="hud-btn" id="btnResetCenter" title="Return to Single 1:1 Origin">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        </svg>
+        1:1 Center
+      </button>
+    </nav>
+  </main>
+
+  <!-- Luxury Modal Lightbox (Crystal Inspection) -->
+  <div class="spread-modal-overlay" id="spreadModal" role="dialog" aria-modal="true">
+    <div class="spread-modal-card">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      <div class="modal-img-wrap">
+        <img id="modalImg" src="" alt="Handcraft Masterpiece">
+        <div class="spread-card-glint"></div>
+      </div>
+      <div class="modal-content-panel">
+        <span class="modal-tag" id="modalTag">Haute Joaillerie Handcraft</span>
+        <h2 class="modal-title" id="modalTitle">Handcrafted Masterpiece</h2>
+        <p class="modal-desc" id="modalDesc">
+          Exquisite handcrafted creation forged by master artisans using time-honored Indian goldsmith techniques, certified gemstones, and fine polki settings.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pure JavaScript Motion Engine -->
+  <script src="js/spread-rows.js"></script>
+</body>
+</html>

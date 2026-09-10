@@ -1,0 +1,620 @@
+@import url('https://fonts.googleapis.com/css2?family=Amita:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    background-color: #000000;
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+}
+
+/* Lock scrolling while preloader runs */
+html.loading, body.loading {
+    overflow: hidden !important;
+    overflow-y: hidden !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    position: fixed !important;
+    width: 100vw !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* -------------------------------------------------------------
+   HERO SCROLL CANVAS (Pure, raw video playback without filters)
+-------------------------------------------------------------- */
+.hero-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    background-color: #ddcfbe;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#hero-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* -------------------------------------------------------------
+   FIXED LOGO CONTAINER (Parallaxes to top header and stays permanent)
+-------------------------------------------------------------- */
+.logo-animation-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 150;
+    width: clamp(240px, 28vw, 380px);
+    pointer-events: none;
+    transform-origin: center center;
+    will-change: top, left, width, transform;
+}
+
+#logo-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1080 / 1920;
+    display: block;
+}
+
+/* -------------------------------------------------------------
+   SMART IDLE SCROLL INDICATOR (Appears after 15s inactivity)
+-------------------------------------------------------------- */
+.idle-scroll-indicator {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.idle-scroll-indicator.visible {
+    opacity: 0.85;
+    transform: translateX(-50%) translateY(0);
+}
+
+.idle-scroll-indicator.disabled {
+    display: none !important;
+}
+
+.mouse-icon {
+    width: 22px;
+    height: 34px;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.wheel-dot {
+    width: 3px;
+    height: 6px;
+    background-color: var(--gold);
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: mouseWheel 1.6s infinite ease-in-out;
+}
+
+@keyframes mouseWheel {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    80% { transform: translate(-50%, 12px); opacity: 0; }
+    100% { transform: translate(-50%, 0); opacity: 0; }
+}
+
+.indicator-text {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* -------------------------------------------------------------
+   PRELOADER ANIMATION
+-------------------------------------------------------------- */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 50;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.image-stack {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Individual Card Sizing (Matching Juri proportions) */
+.stack-img-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    transform-origin: center center;
+    opacity: 0;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16), 0 3px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    will-change: transform, opacity;
+}
+
+.stack-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 1. Base Video Frame (16:9) */
+#img-1-container {
+    width: clamp(280px, 32vw, 440px);
+    height: calc(clamp(280px, 32vw, 440px) * 9 / 16);
+    z-index: 10;
+    will-change: width, height, top, left, transform;
+}
+
+/* 2. 4:3 Landscape */
+#img-2-container {
+    width: clamp(260px, 28vw, 380px);
+    height: calc(clamp(260px, 28vw, 380px) * 3 / 4);
+    z-index: 20;
+}
+
+/* 3. 4:5 Portrait */
+#img-3-container {
+    width: clamp(200px, 21vw, 290px);
+    height: calc(clamp(200px, 21vw, 290px) * 5 / 4);
+    z-index: 30;
+}
+
+/* 4. 2:1 Wide Landscape */
+#img-4-container {
+    width: clamp(280px, 29vw, 410px);
+    height: calc(clamp(280px, 29vw, 410px) * 1 / 2);
+    z-index: 40;
+}
+
+/* 5. 3:4 Portrait */
+#img-5-container {
+    width: clamp(210px, 23vw, 310px);
+    height: calc(clamp(210px, 23vw, 310px) * 4 / 3);
+    z-index: 50;
+}
+
+/* 6. 1.85:1 Landscape */
+#img-6-container {
+    width: clamp(270px, 28vw, 390px);
+    height: calc(clamp(270px, 28vw, 390px) * 20 / 37);
+    z-index: 60;
+}
+
+/* 7. 4:5 Top Portrait */
+#img-7-container {
+    width: clamp(180px, 19vw, 260px);
+    height: calc(clamp(180px, 19vw, 260px) * 5 / 4);
+    z-index: 70;
+}
+
+/* -------------------------------------------------------------
+   SCROLL TRACK (Extended to 800vh for slower, luxurious scrub)
+-------------------------------------------------------------- */
+.scroll-track {
+    position: relative;
+    width: 100%;
+    min-height: 800vh;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* -------------------------------------------------------------
+   CURSIVE / AMITA TEXT ANIMATION OVERLAY
+   Where Every Piece Tells A Story.
+   Transparent background — only the ink strokes are visible.
+-------------------------------------------------------------- */
+.cursive-container {
+    position: fixed;
+    top: clamp(280px, 37vh, 390px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    width: clamp(750px, 90vw, 1550px);
+    pointer-events: none;
+    opacity: 0;
+    background: transparent;
+    will-change: opacity;
+}
+
+#cursive-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    will-change: transform, opacity;
+}
+
+/* SVG text: stroke-only initially, fill reveals after writing */
+.cursive-stroke {
+    font-family: 'Amita', cursive;
+    font-weight: 700;
+    fill: transparent;
+    stroke: #ffffff;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    paint-order: stroke fill;
+    transition: fill 0.35s ease, stroke-width 0.35s ease;
+}
+
+.cursive-stroke.filled {
+    fill: #ffffff;
+    stroke: #ffffff;
+    stroke-width: 4.5;
+}
+
+/* ── Responsive adjustments ──────────────────────────── */
+@media (max-width: 768px) {
+    .cursive-container {
+        top: clamp(230px, 33vh, 320px);
+        width: clamp(540px, 94vw, 920px);
+    }
+    .cursive-stroke {
+        stroke-width: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .cursive-container {
+        top: clamp(190px, 28vh, 260px);
+        width: clamp(340px, 96vw, 520px);
+    }
+    .cursive-stroke {
+        stroke-width: 1.2;
+    }
+}
+
+
+/* Redesigned Sleek Footer Styles */
+.footer-bottom.redesigned-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 1rem 4%; /* Thin padding */
+    width: 100%;
+    background-color: #050505;
+    border-top: 1px solid rgba(212, 175, 55, 0.2); /* Subtle gold border */
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+.footer-legal-links {
+    display: flex;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.footer-legal-text {
+    color: #888;
+}
+
+.footer-link {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-link:hover {
+    color: #d4af37;
+}
+
+.footer-center-logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-connect-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.footer-icon-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; /* Smaller icons */
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.footer-icon-item:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+    transform: translateY(-2px);
+}
+
+.footer-icon-item svg {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 992px) {
+    .footer-bottom.redesigned-footer {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem 4%;
+    }
+    .footer-legal-links, .footer-center-logo, .footer-connect-buttons {
+        justify-content: center;
+        flex: none;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: rgba(243, 247, 250, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-logo-img {
+  height: 56px;
+  max-height: 64px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.05));
+}
+
+.brand:hover .brand-logo-img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-menu-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.nav-link-wrapper {
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--light);
+}
+
+.nav-link-wrapper.active,
+.nav-link-wrapper:hover {
+  color: var(--dark);
+}
+
+.nav-link-wrapper .selector {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 1.5px;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav-link-wrapper.active .selector,
+.nav-link-wrapper:hover .selector {
+  width: 100%;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cart-indicator {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  color: var(--dark);
+  transition: transform 0.3s ease;
+}
+
+.cart-indicator:hover {
+  transform: scale(1.08);
+}
+
+.cart-svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cart-icon-wrapper:hover .cart-svg {
+  animation: cartBounce 0.6s ease-in-out;
+}
+
+@keyframes cartBounce {
+  0% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(-8deg); }
+  60% { transform: translateY(2px) rotate(4deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Shopping Cart Tooltip Popup */
+.cart-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 50%;
+  transform: translateX(50%) translateY(6px);
+  background-color: var(--dark);
+  color: var(--white);
+  font-family: var(--sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 120;
+}
+
+.cart-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 4px 4px 4px;
+  border-style: solid;
+  border-color: transparent transparent var(--dark) transparent;
+}
+
+.cart-icon-wrapper:hover .cart-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(50%) translateY(0);
+}
+
+.cart-count {
+  background-color: var(--dark);
+  color: var(--white);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 12px;
+  font-family: var(--inter);
+}
+
+/* ==========================================================================
+   MINIMAL WHITE NAVBAR AUTH BUTTON (Synced with Site Aesthetics)
+   ========================================================================== */
+.nav-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #FFFFFF;
+  border: 1px solid rgba(42, 42, 42, 0.14);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: var(--dark, #2a2a2a);
+  text-decoration: none;
+  font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-auth-btn:hover {
+  background: #FFFFFF;
+  border-color: #C5A059;
+  color: #C5A059;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.14);
+}
+
+.nav-auth-btn .nav-auth-icon {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  transition: stroke 0.25s ease;
+  flex-shrink: 0;
+}
+

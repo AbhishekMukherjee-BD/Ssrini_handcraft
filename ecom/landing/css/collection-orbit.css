@@ -1,0 +1,494 @@
+/* ==========================================================================
+   SSRINI LUXURY HANDCRAFTS - COLLECTION ORBIT SHOWCASE
+   Figma Mathematical Layout Recreation (Radial 25-Card Orbit with Logo Clearance)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&family=Syne:wght@400;500;700&display=swap');
+
+:root {
+  --bg-primary: #070707;
+  --bg-secondary: #0e0e0e;
+  --gold-primary: #d4af37;
+  --gold-light: #f3e5ab;
+  --gold-muted: #8a7332;
+  --gold-glow: rgba(212, 175, 55, 0.15);
+  --text-white: #f8f8f8;
+  --text-muted: #8e8e93;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(212, 175, 55, 0.25);
+  --glass-bg: rgba(18, 18, 20, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Syne', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-white);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   BACKGROUND & LUXURY AMBIENCE
+   ========================================================================== */
+.collection-scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, #141416 0%, #080808 60%, #030303 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Faint background craft grain texture */
+.scene-overlay-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  background-size: 24px 24px;
+  z-index: 1;
+}
+
+/* Ambient golden glow radiating from center */
+.center-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(800px, 90vw);
+  height: min(800px, 90vw);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   MINIMALIST TOP NAVIGATION BAR
+   ========================================================================== */
+.collection-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(7, 7, 7, 0.85) 0%, rgba(7, 7, 7, 0) 100%);
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  color: var(--text-white);
+  text-transform: uppercase;
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-primary);
+  border: 1px solid var(--border-gold);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.collection-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.collection-title-badge {
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--gold-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--gold-primary);
+}
+
+.collection-stats {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: var(--text-white);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--glass-bg);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.15);
+}
+
+.close-icon {
+  font-size: 0.85rem;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.close-btn:hover .close-icon {
+  transform: rotate(90deg);
+}
+
+/* ==========================================================================
+   ORBIT STAGE & VIEWPORT
+   ========================================================================== */
+.orbit-stage-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Coordinate reference system centered in viewport */
+.orbit-coordinate-system {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(0, 0);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   CENTER LOGO & CLEARANCE ZONE
+   ========================================================================== */
+.center-logo-anchor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  pointer-events: auto;
+}
+
+/* Elegant geometric circular clearance buffer boundary */
+.center-clearance-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  pointer-events: none;
+  transition: width 0.3s ease, height 0.3s ease;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.04);
+}
+
+.center-inner-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+/* Center Emblem Frame */
+.logo-emblem-wrapper {
+  position: relative;
+  width: clamp(180px, 18vw, 240px);
+  aspect-ratio: 855 / 735;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.85));
+}
+
+.logo-emblem-wrapper:hover {
+  transform: scale(1.04);
+}
+
+.logo-emblem-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Emblem Subtitle / Legend */
+.emblem-caption {
+  margin-top: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.85;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   DYNAMIC ORBIT CARDS CONTAINER
+   ========================================================================== */
+.cards-orbit-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* Individual Card (matches Figma card structure) */
+.orbit-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: center center;
+  will-change: transform;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.orbit-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #121214;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.orbit-card:hover .orbit-card-inner {
+  border-color: var(--gold-primary);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 18px rgba(212, 175, 55, 0.3);
+}
+
+.orbit-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.5s ease;
+}
+
+.orbit-card:hover .orbit-card-img {
+  transform: scale(1.08);
+}
+
+/* Subtle Card Index Chip */
+.card-index-tag {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--gold-light);
+  font-family: var(--font-sans);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Card shimmer overlay */
+.card-glass-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   MINIMALIST HUD / LIVE CONTROLS DRAWER
+   (Allows instant tweaking & verification of Radius, Gap, Spacing, Scale)
+   ========================================================================== */
+.collection-hud {
+  position: absolute;
+  bottom: 1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(14, 14, 16, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 16px rgba(212, 175, 55, 0.08);
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hud-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.hud-value {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  min-width: 2.8rem;
+}
+
+.hud-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 90px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hud-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.hud-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+.hud-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hud-action-btn {
+  background: none;
+  border: none;
+  color: var(--gold-primary);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.hud-action-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--gold-light);
+}
+
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+@media (max-width: 900px) {
+  .collection-header {
+    padding: 0 1.25rem;
+  }
+  .collection-meta {
+    display: none;
+  }
+  .collection-hud {
+    padding: 0.5rem 1rem;
+    gap: 0.8rem;
+  }
+  .hud-slider {
+    width: 60px;
+  }
+}

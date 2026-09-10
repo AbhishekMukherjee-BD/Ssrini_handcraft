@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSRINI | Haute Joaillerie Collection</title>
+
+  <!-- SEO & Brand Meta -->
+  <meta name="description"
+    content="SSRINI Luxury Handcrafts — Radial collection constellation showcasing 25 imperial handcrafted artifacts surrounding the master atelier emblem, transitioning smoothly into Spread Rows motion.">
+
+  <!-- Google Fonts: Cinzel, Syne, Inter Tight (Main Website Typography) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/collection.css?v=20260909_auth_v2">
+  <link rel="stylesheet" href="css/spread-rows.css?v=20260905_v11_smooth_fluid">
+  <link rel="stylesheet" href="../store/css/cart-drawer.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+
+  <style>
+    /* Minimal White Auth Button (Synced with Preexisting Website Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      line-height: 1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+    .nav-auth-btn:hover {
+      background: #FFFFFF !important;
+      border-color: #C5A059 !important;
+      color: #C5A059 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.16) !important;
+    }
+    .nav-auth-btn .nav-auth-icon {
+      width: 13px !important;
+      height: 13px !important;
+      stroke: currentColor !important;
+      transition: stroke 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
+</head>
+
+<body class="collection-body">
+
+  <!-- ========================================================================
+       LUXURY FLOATING HEADER & NAVIGATION (STANDARD)
+       ======================================================================== -->
+  <!-- ==================== SLEEK NAVBAR (EXACT SHOP STYLE, EXCLUDING LOGO) ==================== -->
+  <nav class="navbar" role="banner">
+    <div class="nav-spacer"></div>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../index.html">Home</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="index.html">Collections</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../store/index.html">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../about/index.html">About</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../contact/index.html">Contacts</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Minimal White Auth Button -->
+      <a href="../auth/index.html" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+        <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Sign In</span>
+      </a>
+
+      <!-- Animated Cart Icon with Tooltip -->
+      <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+        <a href="../store/index.html" onclick="if(window.openCart) { window.openCart(); return false; }"
+          class="cart-indicator" id="cart-indicator-link">
+          <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"
+            fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+            <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999" />
+            <circle class="cart-wheel-left" cx="11" cy="41" r="4" />
+            <circle class="cart-wheel-right" cx="37" cy="41" r="4" />
+            <path class="cart-upper"
+              d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3" />
+            <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19" />
+            <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19" />
+            <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19" />
+          </svg>
+          <span class="cart-count">0</span>
+        </a>
+        <!-- Hover Tooltip Popup -->
+        <div class="cart-tooltip">Shopping Bag</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       1. ORBIT SHOWCASE SECTION (Section 1: 100vh)
+       ======================================================================== -->
+  <section class="collection-orbit-section" id="collection-orbit-section">
+
+    <!-- Ambient Stage Backdrop -->
+    <div class="stage-grain-overlay"></div>
+    <div class="center-stage-halo"></div>
+
+    <!-- Orbit Stage Viewport -->
+    <div class="orbit-stage-viewport" id="orbit-stage">
+
+      <!-- Center Anchor: Standalone 2x Logo -->
+      <div class="center-logo-anchor" id="center-logo-anchor">
+        <img src="assets/images/logo-emblem-frame143.png" alt="SSRINI Imperial Atelier Emblem"
+          class="center-standalone-logo" id="center-standalone-logo"
+          onerror="this.onerror=null; this.src='../landing/assets/images/logo-emblem-frame143.png';">
+      </div>
+
+      <!-- Dynamic Cards Orbit Layer (25 spots, spot 6 is dead center bottom apex) -->
+      <div class="cards-orbit-container" id="cards-orbit-container">
+        <!-- Injected via js/collection-orbit.js -->
+      </div>
+
+    </div>
+
+    <!-- Subtle Scroll Hint -->
+    <div class="orbit-scroll-hint" id="orbitScrollHint">
+      <span class="orbit-scroll-hint-text">SCROLL TO DISCOVER SPREAD</span>
+      <svg class="orbit-scroll-hint-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================
+       2. FLOATING PARALLAX TRANSITION PROXY (Pure vertical descent on center axis)
+       ======================================================================== -->
+  <div class="parallax-glide-proxy" id="parallaxGlideProxy" style="display: none;">
+    <div class="orbit-card-inner">
+      <img src="assets/images/craftsmanship/necklace-hero.webp" alt="Royal Polki & Pearl Heritage Collar"
+        class="orbit-card-img">
+      <div class="card-glass-shine"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       3. SPREAD ROWS MOTION SECTION (Section 2: 100vh, placed directly below)
+       ======================================================================== -->
+  <section class="collection-spread-section" id="collectionSpreadSection">
+    <div class="spread-showcase-stage" id="spreadStage">
+      <!-- Subtle Film Grain & Radial Gold Ambience -->
+      <div class="stage-grain-overlay"></div>
+      <div class="stage-ambient-glow"></div>
+
+      <!-- Motion Viewport -->
+      <div class="spread-viewport" id="spreadViewport">
+
+        <!-- 1. Hero 1:1 Centerpiece Container (The Origin Necklace) -->
+        <div class="hero-origin-container" id="heroOriginCard" title="Masterpiece Necklace">
+          <div class="hero-card-inner">
+            <img src="assets/images/craftsmanship/necklace-hero.webp" alt="Haute Joaillerie Royal Necklace Centerpiece"
+              class="hero-card-img" id="heroNecklaceImg">
+            <div class="spread-card-glint"></div>
+          </div>
+        </div>
+
+        <!-- 2. Breakout Layer (Flying Cards during emergence transition) -->
+        <div class="spread-breakout-layer" id="breakoutLayer"></div>
+
+        <!-- 3. The 3-Row Momentum Container -->
+        <div class="spread-rows-container" id="spreadRowsContainer">
+          <!-- Row 1: Top Ribbon (Drifts Left) -->
+          <div class="spread-row-track" id="trackRow1">
+            <div class="spread-row-ribbon" id="ribbonRow1"></div>
+          </div>
+
+          <!-- Row 2: Center Ribbon (Drifts Right, houses the original necklace) -->
+          <div class="spread-row-track" id="trackRow2">
+            <div class="spread-row-ribbon" id="ribbonRow2"></div>
+          </div>
+
+          <!-- Row 3: Bottom Ribbon (Drifts Left) -->
+          <div class="spread-row-track" id="trackRow3">
+            <div class="spread-row-ribbon" id="ribbonRow3"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean Modular Extensibility Section -->
+  <section class="collection-modular-extensions" id="collection-modular-extensions">
+    <!-- Future sections will be added here -->
+  </section>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Execution Pipeline: Orbit Engine -> Scroll Orchestrator -> Spread Rows Engine -->
+  <script src="js/collection-orbit.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="js/collection-spread-scroll.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="js/spread-rows.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="../store/js/cart-drawer.js"></script>
+  <script src="../js/cursor.js"></script>
+</body>
+
+</html>

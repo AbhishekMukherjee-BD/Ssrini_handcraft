@@ -1,0 +1,486 @@
+/* ==========================================================================
+   21st.dev @uilayout.contact / About Section — 1:1 Exact Replica Styles
+   Exact Animation Timing, Framer Motion Blur/Translate Emulation, and Spring Reveal
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: #f9f9f9;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base Container */
+.about-section-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding: 48px 16px 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.about-inner-wrapper {
+  width: 100%;
+  max-width: 1152px; /* max-w-6xl */
+  margin: 0 auto;
+}
+
+/* Replay Badge Controller */
+.replay-ctrl-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  background: #111827;
+  color: #ffffff;
+  border: 1px solid #374151;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+
+.replay-ctrl-floating:hover {
+  background: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+.replay-ctrl-floating svg {
+  transition: transform 0.4s ease;
+}
+
+.replay-ctrl-floating:hover svg {
+  transform: rotate(180deg);
+}
+
+/* ==================== TIMELINE MOTION SYSTEM (GPU ACCELERATED) ==================== */
+.timeline-item, .timeline-figure, .vertical-cut-word-inner {
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+.timeline-item {
+  opacity: 0;
+  transform: translateY(-22px) translateZ(0);
+  filter: blur(12px);
+}
+
+.timeline-figure {
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(0.985) translateZ(0);
+}
+
+/* ==================== HERO FIGURE & TOP BAR ==================== */
+.hero-relative-box {
+  position: relative;
+  width: 100%;
+}
+
+/* Top bar: WHO I AM + Socials */
+.top-bar-shelf {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 85%;
+  position: absolute;
+  top: 16px; /* lg:top-4 */
+  left: 0;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.who-i-am-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+}
+
+/* Exact Tailwind animate-spin */
+.spin-asterisk {
+  color: #ef4444; /* text-red-500 */
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 700;
+  transform-origin: center center;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.who-i-am-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563; /* text-gray-600 */
+  letter-spacing: 0.5px;
+}
+
+/* Social Icon Pills */
+.social-icons-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.social-pill-link {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  background-color: #f3f4f6; /* bg-gray-100 */
+  border-radius: 8px; /* rounded-lg */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.social-pill-link:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.social-pill-link img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+}
+
+/* SVG Geometric Mask Container */
+.hero-svg-mask-figure {
+  position: relative;
+  width: 100%;
+  display: block;
+  line-height: 0;
+}
+
+.hero-mask-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==================== STATS ROW ==================== */
+.stats-sub-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 14px;
+  position: relative;
+}
+
+.stats-left-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.stat-num-red {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.stat-label-gray {
+  color: #4b5563;
+}
+
+.stat-divider {
+  color: #d1d5db;
+  margin-left: 8px;
+}
+
+/* Right-side Notch Stats Box (100+ BRANDS / 30% higher engagement) */
+.stats-notch-card {
+  position: absolute;
+  right: 0;
+  bottom: 64px; /* bottom-16 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 5;
+}
+
+.stat-brands-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 36px; /* lg:text-4xl */
+  margin-bottom: 8px;
+}
+
+.stat-brands-num {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.stat-brands-text {
+  color: #4b5563;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.stat-engagement-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.stat-engagement-num {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.stat-engagement-text {
+  color: #4b5563;
+}
+
+/* ==================== LOWER EDITORIAL 3-COL GRID ==================== */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* md:grid-cols-3 */
+  gap: 32px;
+  margin-top: 36px;
+}
+
+/* Left 2 Cols: Main Heading & Paragraphs */
+.editorial-left-col {
+  grid-column: 1;
+}
+
+.editorial-headline {
+  font-size: clamp(28px, 4.2vw, 48px); /* sm:text-4xl md:text-5xl */
+  line-height: 1.1;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 0.35em;
+}
+
+/* VerticalCutReveal (Spring Motion from y: -100% to 0) */
+.vertical-cut-word-mask {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.vertical-cut-word-inner {
+  display: inline-block;
+  transform: translateY(-102%) translateZ(0);
+  will-change: transform;
+}
+
+.editorial-body-paragraphs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  color: #4b5563;
+}
+
+.editorial-p {
+  font-size: 16px;
+  line-height: 1.625;
+  text-align: justify;
+}
+
+/* Right Col: Author Lockup & Button */
+.editorial-right-col {
+  grid-column: 2;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.author-title-red {
+  color: #ef4444;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.author-role-sub {
+  color: #4b5563;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.author-cta-prompt {
+  color: #111827;
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 24px;
+  max-width: 280px;
+}
+
+/* Black Collaborate Button */
+.btn-collaborate {
+  background-color: #171717; /* bg-neutral-900 */
+  color: #ffffff;
+  border: 1px solid #404040; /* border-neutral-700 */
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px -5px rgba(23, 23, 23, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-collaborate:hover {
+  background-color: #0a0a0a;
+  gap: 16px; /* hover:gap-4 */
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -5px rgba(23, 23, 23, 0.5);
+}
+
+.btn-collaborate svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-collaborate:hover svg {
+  transform: translateX(3px);
+}
+
+/* ==================== RESPONSIVENESS ==================== */
+@media (max-width: 1024px) {
+  .top-bar-shelf {
+    top: 0px;
+    width: 88%;
+  }
+  .stats-notch-card {
+    position: static;
+    margin-top: 16px;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 16px;
+  }
+  .stat-brands-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-bar-shelf {
+    top: -8px;
+    width: 90%;
+  }
+  .editorial-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .editorial-left-col {
+    grid-column: 1;
+  }
+  .editorial-right-col {
+    grid-column: 1;
+    text-align: left;
+    align-items: flex-start;
+  }
+  .author-cta-prompt {
+    max-width: 100%;
+  }
+  .btn-collaborate {
+    margin-left: 0;
+  }
+  .editorial-body-paragraphs {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .stat-item {
+    font-size: 12px;
+  }
+  .stat-brands-title {
+    font-size: 22px;
+  }
+  .stat-engagement-row {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar-shelf {
+    top: -12px;
+    width: 95%;
+  }
+  .social-icons-group {
+    gap: 8px;
+  }
+  .social-pill-link {
+    width: 24px;
+    height: 24px;
+  }
+  .who-i-am-badge {
+    font-size: 14px;
+  }
+  .who-i-am-text {
+    font-size: 12px;
+  }
+}
+
+/* ====== COMPREHENSIVE MOBILE OPTIMIZATION OVERRIDES ====== */
+@media screen and (max-width: 768px) {
+  .about-hero-grid, .timeline-grid {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .about-hero-col-img {
+    order: -1 !important; /* Move image to top on mobile */
+  }
+}

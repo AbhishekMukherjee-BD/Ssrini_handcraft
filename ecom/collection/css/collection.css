@@ -1,0 +1,591 @@
+/* ==========================================================================
+   SSRINI LUXURY HANDCRAFTS — RAW CLEAN WHITE THEME RADIAL ORBIT
+   Pure canvas: Standalone 2x logo, ultra-thin image separation, no clutter
+   ========================================================================== */
+
+:root {
+  --dark: #2a2a2a;
+  --light: #939393;
+  --background: #f3f7fa;
+  --white: #ffffff;
+  --accent: #e082a8;
+  --accent-gold: #c8a261;
+  --inter: 'Inter Tight', sans-serif;
+  --border-light: rgba(42, 42, 42, 0.06);
+  --border-hairline: rgba(0, 0, 0, 0.08);
+  --shadow-subtle: 0 4px 14px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 14px 32px rgba(0, 0, 0, 0.09);
+  --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--background);
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body:not(.loading) {
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   1. RAW ORBIT SHOWCASE SECTION (Section 1: 100vh)
+   ========================================================================== */
+.collection-orbit-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f5f8fa 55%, #ebf1f5 100%);
+}
+
+.stage-grain-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
+  background-image: radial-gradient(#2a2a2a 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.center-stage-halo {
+  position: absolute;
+  width: min(650px, 80vw);
+  height: min(650px, 80vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 162, 97, 0.06) 0%, rgba(243, 247, 250, 0) 70%);
+  pointer-events: none;
+}
+
+.orbit-stage-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   2. CENTER STANDALONE 2X LOGO (Fluidly proportional across all devices)
+   ========================================================================== */
+.center-logo-anchor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.center-standalone-logo {
+  width: clamp(130px, 30vmin, 380px);
+  height: auto;
+  max-height: clamp(115px, 28vmin, 340px);
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.08));
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.center-standalone-logo:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.12));
+}
+
+/* ==========================================================================
+   3. DYNAMIC ORBIT CARDS (Ultra-crisp photography, Rivulet edge glow, 1s hold)
+   ========================================================================== */
+.cards-orbit-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.orbit-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease;
+}
+
+.orbit-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f0f3f6;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+/* TIER 1: RIVULET HOVER STATE */
+.orbit-card:hover {
+  z-index: 90;
+}
+
+.orbit-card:hover .orbit-card-inner,
+.orbit-card.is-hovered .orbit-card-inner {
+  border-color: #c8a261;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1), 0 0 18px rgba(200, 162, 97, 0.45);
+}
+
+.orbit-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.5s ease;
+}
+
+.orbit-card:hover .orbit-card-img,
+.orbit-card.is-hovered .orbit-card-img {
+  transform: scale(1.08);
+}
+
+/* Subtle crystal edge glint */
+.card-glass-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+/* TIER 2: MASTER ZOOM STATE (Held >= 1 Second) */
+.orbit-card.is-held-active {
+  z-index: 200 !important;
+  transform: translate3d(var(--card-x), var(--card-y), 0) scale(var(--hover-scale, 2.4)) rotate(0deg) !important;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.orbit-card.is-held-active .orbit-card-inner {
+  border-color: #c8a261;
+  transform: translateY(-6px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.18), 0 0 30px rgba(200, 162, 97, 0.6);
+}
+
+/* ==========================================================================
+   4. SPREAD ROWS MOTION SECTION (Section 2: 100vh, placed directly below)
+   ========================================================================== */
+.collection-spread-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f5f8fa 55%, #ebf1f5 100%);
+}
+
+/* Floating Parallax Proxy Card (Pure vertical glide along center axis) */
+.parallax-glide-proxy {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: 999;
+  pointer-events: none;
+  border-radius: 8px;
+  will-change: transform, width, height;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), 0 0 24px rgba(200, 162, 97, 0.45);
+}
+
+.parallax-glide-proxy .orbit-card-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f3f6;
+  border: 1px solid rgba(200, 162, 97, 0.9);
+}
+
+/* ==========================================================================
+   5. MODULAR EXTENSIBILITY SECTION
+   ========================================================================== */
+.collection-modular-extensions {
+  width: 100%;
+  position: relative;
+  background: var(--background);
+}
+
+/* ==========================================================================
+   6. LUXURY FLOATING NAVBAR (EXACT SHOP STYLE, NO LOGO)
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: rgba(243, 247, 250, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light, rgba(42, 42, 42, 0.06));
+  padding: 18px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-menu-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.nav-link-wrapper {
+  position: relative;
+  font-family: var(--inter, 'Inter Tight', sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--light, #939393);
+}
+
+.nav-link-wrapper a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.nav-link-wrapper.active,
+.nav-link-wrapper:hover {
+  color: var(--dark, #2a2a2a);
+}
+
+.nav-link-wrapper .selector {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 1.5px;
+  background-color: var(--accent, #e082a8);
+  transition: width 0.3s ease;
+}
+
+.nav-link-wrapper.active .selector,
+.nav-link-wrapper:hover .selector {
+  width: 100%;
+}
+
+.nav-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+  .nav-menu-links {
+    gap: 18px;
+  }
+  .nav-link-wrapper {
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+  .nav-menu-links {
+    gap: 10px;
+  }
+  .nav-link-wrapper {
+    font-size: 10px;
+    letter-spacing: 0.8px;
+  }
+  .nav-spacer {
+    display: none;
+  }
+}
+
+/* Animated Cart Icon from Shop */
+.cart-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cart-indicator {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  color: var(--dark);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.cart-indicator:hover {
+  transform: scale(1.08);
+}
+
+.cart-svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cart-icon-wrapper:hover .cart-svg {
+  animation: cartBounce 0.6s ease-in-out;
+}
+
+@keyframes cartBounce {
+  0% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(-8deg); }
+  60% { transform: translateY(2px) rotate(4deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.cart-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 50%;
+  transform: translateX(50%) translateY(6px);
+  background-color: var(--dark);
+  color: #ffffff;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 120;
+}
+
+.cart-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 4px 4px 4px;
+  border-style: solid;
+  border-color: transparent transparent var(--dark) transparent;
+}
+
+.cart-icon-wrapper:hover .cart-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(50%) translateY(0);
+}
+
+.cart-count {
+  background-color: var(--dark);
+  color: #ffffff;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 12px;
+  font-family: 'Inter Tight', sans-serif;
+}
+
+.collection-close-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(42, 42, 42, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+  transition: all 0.25s ease;
+}
+
+.collection-close-btn:hover {
+  background: #ffffff;
+  border-color: var(--dark);
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.collection-close-cross {
+  font-size: 10px;
+  opacity: 0.65;
+}
+
+/* Minimal White Auth Button (Synced with Preexisting Website Aesthetics) */
+.nav-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #FFFFFF;
+  border: 1px solid rgba(42, 42, 42, 0.15);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: var(--dark, #2a2a2a);
+  text-decoration: none;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-auth-btn:hover {
+  background: #FFFFFF;
+  border-color: #C5A059;
+  color: #C5A059;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.14);
+}
+
+.nav-auth-btn .nav-auth-icon {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  transition: stroke 0.25s ease;
+  flex-shrink: 0;
+}
+
+/* Scroll hint indicator */
+.orbit-scroll-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.75;
+  transition: opacity 0.4s ease;
+}
+
+.orbit-scroll-hint-text {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(42, 42, 42, 0.6);
+  font-weight: 600;
+}
+
+.orbit-scroll-hint-arrow {
+  width: 14px;
+  height: 14px;
+  stroke: rgba(42, 42, 42, 0.5);
+  animation: bounceHint 2s infinite;
+}
+
+@keyframes bounceHint {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(5px); }
+  60% { transform: translateY(3px); }
+}
+
+/* ==========================================================================
+   7. RESPONSIVE QUERIES
+   ========================================================================== */
+@media (max-width: 768px) {
+  .center-standalone-logo {
+    width: clamp(160px, 32vw, 200px);
+  }
+  .collection-nav-center {
+    display: none;
+  }
+  .collection-badge-wrapper {
+    display: none;
+  }
+}
+
+/* ====== COMPREHENSIVE MOBILE OPTIMIZATION OVERRIDES ====== */
+@media screen and (max-width: 768px) {
+  .hero-card, .orbit-card, .editorial-layout {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .editorial-layout {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}

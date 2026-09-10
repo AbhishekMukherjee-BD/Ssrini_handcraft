@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In & Register | SSRINI Handcrafts</title>
+  <meta name="description" content="Access your private vault, bespoke royal commissions, and order history at SSRINI Handcrafts.">
+
+  <!-- Google Fonts: Cinzel (Imperial Serif), Inter (Clean UI), Syne (Modern Display) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Syne:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="icon" type="image/png" href="../collection/assets/images/logo-emblem-frame143.png">
+</head>
+<body>
+
+  <!-- Floating Return to Store Navigation -->
+  <a href="../collection/index.html" class="back-home-pill" id="backHomeBtn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Return to Atelier</span>
+  </a>
+
+  <!-- Split-Screen Grid Layout -->
+  <div class="auth-page-wrapper">
+
+    <!-- ==========================================
+         LEFT PANEL: INTERACTIVE SHOWCASE (WHITE THEME)
+         ========================================== -->
+    <aside class="auth-showcase-panel" aria-label="SSRINI Atelier Showcase">
+      
+      <!-- Top Brand Mark -->
+      <div class="showcase-brand-header">
+        <img src="../collection/assets/images/logo-emblem-frame143.png" alt="SSRINI Emblem" class="showcase-logo-img">
+        <div class="showcase-brand-text">
+          <h2>Ssrini Handcrafts</h2>
+          <span>Atelier & Co. • Heritage Edition</span>
+        </div>
+      </div>
+
+      <!-- Main Showcase Carousel Stage -->
+      <div class="showcase-stage">
+        <div class="showcase-image-viewport" id="showcaseViewport">
+          <!-- Slide 0 -->
+          <div class="showcase-slide active" data-index="0" data-tag="✦ /heritage_masterpiece" data-prompt="Imperial Kundan Necklace in 22k Gold Filigree with Natural Zambian Emeralds" data-headline="Every jewel is born from a legacy of <span>patience & royal devotion</span>">
+            <img src="../collection/assets/images/craftsmanship/necklace-hero.webp" alt="Imperial Kundan Necklace" loading="eager">
+          </div>
+          <!-- Slide 1 -->
+          <div class="showcase-slide" data-index="1" data-tag="✦ /artisan_chronicles" data-prompt="Master Goldsmith Hand-setting Cabochon Gemstones in Chased Antique Brass" data-headline="Preserving 500-year-old <span>craft traditions</span> for modern collectors">
+            <img src="../collection/assets/images/craftsmanship/1.webp" alt="Master Goldsmith Handcrafting" loading="lazy">
+          </div>
+          <!-- Slide 2 -->
+          <div class="showcase-slide" data-index="2" data-tag="✦ /bespoke_creations" data-prompt="Royal Heritage Choker with Meenakari Enameling & Polki Uncut Diamonds" data-headline="Crafted by human hands, sculpted for <span>generations of grace</span>">
+            <img src="../collection/assets/images/craftsmanship/5.webp" alt="Royal Heritage Choker" loading="lazy">
+          </div>
+          <!-- Slide 3 -->
+          <div class="showcase-slide" data-index="3" data-tag="✦ /temple_goldsmith" data-prompt="Intricate Filigree Bangles Cast in Sacred Temple Geometry" data-headline="Timeless allure designed to become your family's <span>heirloom treasure</span>">
+            <img src="../collection/assets/images/craftsmanship/6.webp" alt="Intricate Filigree Bangles" loading="lazy">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Showcase Headline & Carousel Indicators -->
+      <div class="showcase-footer">
+        <h3 class="showcase-headline" id="showcaseHeadline">
+          Every jewel is born from a legacy of <span>patience & royal devotion</span>
+        </h3>
+        
+        <!-- SolaceUI Pill Indicators -->
+        <div class="showcase-indicators" id="carouselIndicators" role="tablist" aria-label="Showcase Slides">
+          <button class="pill-dot active" data-target="0" role="tab" aria-selected="true" aria-label="Slide 1"></button>
+          <button class="pill-dot" data-target="1" role="tab" aria-selected="false" aria-label="Slide 2"></button>
+          <button class="pill-dot" data-target="2" role="tab" aria-selected="false" aria-label="Slide 3"></button>
+          <button class="pill-dot" data-target="3" role="tab" aria-selected="false" aria-label="Slide 4"></button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ==========================================
+         RIGHT PANEL: CLEAN LUXURY WHITE FORM
+         ========================================== -->
+    <main class="auth-form-panel">
+      <div class="auth-form-container">
+        
+        <!-- Form Header Bar with Mode Toggle -->
+        <div class="form-brand-top">
+          <a href="../collection/index.html" class="form-emblem-badge">
+            <img src="../collection/assets/images/logo-emblem-frame143.png" alt="SSRINI">
+            <span>Ssrini</span>
+          </a>
+
+          <!-- Interactive Mode Switcher Pill -->
+          <div class="auth-mode-toggle" role="radiogroup" aria-label="Authentication Mode">
+            <button type="button" class="mode-tab-btn active" id="tabSignIn" data-mode="signin" role="radio" aria-checked="true">Sign In</button>
+            <button type="button" class="mode-tab-btn" id="tabSignUp" data-mode="signup" role="radio" aria-checked="false">Sign Up</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Header Text -->
+        <div class="auth-header-text">
+          <h1 id="authTitle">Welcome Back</h1>
+          <p id="authSubtitle">Enter your credentials to access your private vault and bespoke orders.</p>
+        </div>
+
+        <!-- Social OAuth Login Buttons -->
+        <div class="social-auth-grid">
+          <button type="button" class="social-auth-btn" id="btnGoogleAuth" aria-label="Continue with Google">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Google</span>
+          </button>
+
+          <button type="button" class="social-auth-btn" id="btnAppleAuth" aria-label="Continue with Apple">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.65-.82 1.09-1.96.97-3.1-.96.04-2.13.65-2.8 1.45-.58.68-1.1 1.83-.96 2.94 1.07.08 2.15-.55 2.79-1.29z"/>
+            </svg>
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="auth-divider">
+          <span>or continue with email</span>
+        </div>
+
+        <!-- Form Element -->
+        <form class="auth-form" id="authForm" novalidate>
+
+          <!-- First & Last Name Dual Input (Sign Up Only) -->
+          <div class="auth-name-row" id="nameRow" style="display: none;">
+            <div class="solace-input-field">
+              <input type="text" id="firstNameInput" placeholder="First Name" autocomplete="given-name">
+              <span class="inline-field-label">First Name</span>
+            </div>
+            <div class="solace-input-field">
+              <input type="text" id="lastNameInput" placeholder="Last Name" autocomplete="family-name">
+              <span class="inline-field-label">Last Name</span>
+            </div>
+          </div>
+
+          <!-- Email Input Field -->
+          <div class="solace-input-field">
+            <input type="email" id="emailInput" placeholder="name@domain.com" required autocomplete="email">
+            <span class="inline-field-label">Email</span>
+          </div>
+
+          <!-- Password Input Field -->
+          <div class="solace-input-field">
+            <input type="password" id="passwordInput" placeholder="••••••••••••" required autocomplete="current-password">
+            <span class="inline-field-label">Password</span>
+            <button type="button" class="password-toggle-btn" id="passwordToggleBtn" aria-label="Toggle password visibility">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="eyeIcon">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Extra Options for Sign In (Remember & Forgot) -->
+          <div class="auth-extra-row" id="signInExtras">
+            <label class="auth-checkbox-label">
+              <input type="checkbox" id="rememberMeCheckbox" checked>
+              <span>Remember me</span>
+            </label>
+            <a href="javascript:void(0)" class="auth-forgot-link" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+
+          <!-- Extra Consents for Sign Up (VIP updates) -->
+          <div class="auth-consent-stack" id="signUpConsents" style="display: none;">
+            <label class="auth-checkbox-label">
+              <input type="checkbox" id="newsletterCheckbox" checked>
+              <span>Receive private invitations to seasonal salon previews</span>
+            </label>
+          </div>
+
+          <!-- Mandatory Legal Consent (Terms & Privacy) for Both Sign In & Sign Up -->
+          <div class="auth-terms-consent" id="termsConsentRow">
+            <label class="auth-checkbox-label" for="termsCheckbox">
+              <input type="checkbox" id="termsCheckbox">
+              <span>I agree to the <a href="../terms.html" target="_blank" rel="noopener noreferrer" class="auth-legal-link">Terms of Service</a> &amp; <a href="../privacy.html" target="_blank" rel="noopener noreferrer" class="auth-legal-link">Privacy Policy</a></span>
+            </label>
+          </div>
+
+          <!-- Submit CTA Button -->
+          <button type="submit" class="auth-primary-btn" id="submitBtn">
+            <span id="submitBtnText">Sign In to Account</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Dynamic Footer Switch Helper -->
+        <div class="auth-form-footer">
+          <span id="footerPromptText">Don't have an account?</span>
+          <a href="javascript:void(0)" id="switchModeLink">Create one now</a>
+        </div>
+
+        <!-- Terms of Service & Privacy Policy Footer -->
+        <div class="auth-legal-footer">
+          <a href="../terms.html" target="_blank" rel="noopener noreferrer" class="auth-legal-link">Terms of Service</a>
+          <span>•</span>
+          <a href="../privacy.html" target="_blank" rel="noopener noreferrer" class="auth-legal-link">Privacy Policy</a>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast Notification Feedback -->
+  <div class="auth-toast" id="authToast" role="alert" aria-live="polite">
+    <span id="toastMessage">Logged in successfully</span>
+  </div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script src="js/auth.js"></script>
+</body>
+</html>

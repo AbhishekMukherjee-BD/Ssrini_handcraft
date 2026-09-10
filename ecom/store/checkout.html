@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | SSRINI — A Creative World</title>
+
+  <!-- Google Fonts (Exact typography matching OG site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- GSAP Suite for Smooth Lerp Cursor & Interactions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/store.css">
+  <link rel="stylesheet" href="css/cart-drawer.css">
+  <link rel="stylesheet" href="css/checkout.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+</head>
+<body class="checkout-body">
+
+  <!-- ==================== TOP CHECKOUT HEADER ==================== -->
+  <header class="checkout-header">
+    <div class="checkout-header-inner">
+      
+      <!-- Big & Prominent Logo -->
+      <a href="../index.html" class="checkout-brand-link" aria-label="SSRINI Handcrafts">
+        <img src="assets/images/logo.png" alt="SSRINI Handcrafts" class="checkout-brand-logo">
+      </a>
+
+      <!-- Combined Two Animated Icons (ArrowBigLeftDash + ShoppingCart) with Micro-Tooltip Popover -->
+      <div class="checkout-return-wrapper">
+        <a href="index.html" class="checkout-return-btn" aria-label="Return to Store">
+          <div class="combined-icons-box">
+            <!-- 1st: Arrow Big Left Dash Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-arrow-dash">
+              <path class="arrow" d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z" style="transform-origin: center;" />
+              <path class="dash" d="M20 9v6" />
+            </svg>
+            <!-- 2nd: Shopping Cart Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shadcn-hover-icon icon-shopping-cart">
+              <circle cx="8" cy="21" r="1" class="cart-wheel" style="transform-origin: 8px 21px;"/>
+              <circle cx="19" cy="21" r="1" class="cart-wheel" style="transform-origin: 19px 21px;"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" class="cart-body" style="transform-origin: center;"/>
+            </svg>
+          </div>
+          <!-- Small Hover Tooltip Pop -->
+          <span class="return-tooltip-pop">Return to Store</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CHECKOUT CONTAINER ==================== -->
+  <main class="checkout-main-container" id="checkout-main-container">
+    
+    <!-- Empty Cart Notice (if user enters checkout with 0 items) -->
+    <div id="checkout-empty-state" class="checkout-empty-state" style="display: none;">
+      <div class="empty-state-card">
+        <div class="empty-state-icon">🛍️</div>
+        <h2 class="empty-state-title">Your Shopping Bag is Empty</h2>
+        <p class="empty-state-text">Explore our collection of handcrafted silver, filigree, brass, and terracotta artifacts to add items to your cart.</p>
+        <a href="index.html" class="checkout-btn-primary return-btn">Browse Collection</a>
+      </div>
+    </div>
+
+    <!-- Active Checkout Grid (Two Columns) -->
+    <div id="checkout-active-grid" class="checkout-grid">
+      
+      <!-- LEFT COLUMN: Customer, Shipping & Payment Information -->
+      <section class="checkout-form-column">
+        <form id="checkout-form" class="checkout-form" novalidate>
+          
+          <!-- Step 1: Contact Information -->
+          <div class="checkout-section-block">
+            <div class="section-header-row">
+              <span class="step-badge">1</span>
+              <h2 class="section-title">Customer Contact</h2>
+            </div>
+            <p class="section-subtitle">We will send your order confirmation and dispatch updates here.</p>
+            
+            <div class="form-grid">
+              <div class="form-field-group full-width">
+                <label for="customer-phone" class="form-label">Phone Number <span class="required">*</span></label>
+                <div class="phone-input-wrapper">
+                  <span class="phone-prefix">+91</span>
+                  <input type="tel" id="customer-phone" name="phone" class="form-input phone-input" placeholder="98360 81994" required pattern="[0-9]{10}">
+                </div>
+                <span class="field-hint">Required for delivery agent coordination and WhatsApp status updates.</span>
+                <span class="field-error" id="error-customer-phone">Please enter a valid 10-digit mobile number.</span>
+              </div>
+
+              <div class="form-field-group full-width">
+                <label for="customer-email" class="form-label">Email Address <span class="optional">(Optional)</span></label>
+                <input type="email" id="customer-email" name="email" class="form-input" placeholder="e.g. yourname@domain.com">
+                <span class="field-hint">For digital PDF invoice and shipping tracking links.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Shipping Address (Maps to customers and orders tables) -->
+          <div class="checkout-section-block">
+            <div class="section-header-row">
+              <span class="step-badge">2</span>
+              <h2 class="section-title">Shipping Address</h2>
+            </div>
+            <p class="section-subtitle">Please provide the complete street address for secure courier delivery.</p>
+
+            <div class="form-grid">
+              <div class="form-field-group full-width">
+                <label for="customer-name" class="form-label">Full Name <span class="required">*</span></label>
+                <input type="text" id="customer-name" name="name" class="form-input" placeholder="First and Last Name" required>
+                <span class="field-error" id="error-customer-name">Please enter the recipient's full name.</span>
+              </div>
+
+              <div class="form-field-group full-width">
+                <label for="customer-address" class="form-label">Street Address & House / Flat No. <span class="required">*</span></label>
+                <textarea id="customer-address" name="address" class="form-input form-textarea" rows="2" placeholder="e.g. 67/1 S.N Roy Road, Behala, 2nd Floor" required></textarea>
+                <span class="field-error" id="error-customer-address">Please provide your delivery address.</span>
+              </div>
+
+              <div class="form-field-group half-width">
+                <label for="customer-city" class="form-label">City <span class="required">*</span></label>
+                <input type="text" id="customer-city" name="city" class="form-input" placeholder="e.g. Kolkata" required>
+                <span class="field-error" id="error-customer-city">Please enter your city.</span>
+              </div>
+
+              <div class="form-field-group half-width">
+                <label for="customer-state" class="form-label">State <span class="required">*</span></label>
+                <select id="customer-state" name="state" class="form-input form-select" required>
+                  <option value="">Select State</option>
+                  <option value="West Bengal" selected>West Bengal</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Other">Other States & UT</option>
+                </select>
+                <span class="field-error" id="error-customer-state">Please select your state.</span>
+              </div>
+
+              <div class="form-field-group half-width">
+                <label for="customer-pincode" class="form-label">PIN Code <span class="required">*</span></label>
+                <input type="text" id="customer-pincode" name="pincode" class="form-input" placeholder="700038" required pattern="[0-9]{6}">
+                <span class="field-error" id="error-customer-pincode">Please enter a valid 6-digit PIN code.</span>
+              </div>
+
+              <div class="form-field-group half-width">
+                <label for="customer-country" class="form-label">Country</label>
+                <input type="text" id="customer-country" name="country" class="form-input" value="India" readonly>
+              </div>
+
+              <!-- Special Atelier Notes -->
+              <div class="form-field-group full-width">
+                <label for="order-notes" class="form-label">Atelier Notes & Gift Instructions <span class="optional">(Optional)</span></label>
+                <input type="text" id="order-notes" name="notes" class="form-input" placeholder="e.g. Please include bespoke gift packaging / handle with care.">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Shipping Method Selection -->
+          <div class="checkout-section-block">
+            <div class="section-header-row">
+              <span class="step-badge">3</span>
+              <h2 class="section-title">Delivery Method</h2>
+            </div>
+            
+            <div class="shipping-option-card active">
+              <div class="shipping-radio-circle"></div>
+              <div class="shipping-info">
+                <div class="shipping-title-row">
+                  <span class="shipping-name">Complimentary Artisanal Insured Transit</span>
+                  <span class="shipping-cost">FREE</span>
+                </div>
+                <p class="shipping-desc">Insured express delivery from Bengal Guild Atelier. Dispatched within 3–5 business days.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Payment Method Selection (Maps to orders.payment_method) -->
+          <div class="checkout-section-block">
+            <div class="section-header-row">
+              <span class="step-badge">4</span>
+              <h2 class="section-title">Payment Method</h2>
+            </div>
+            <p class="section-subtitle">Select how you would like to complete your transaction.</p>
+
+            <div class="payment-methods-grid">
+              
+              <!-- COD Option -->
+              <label class="payment-method-card active" for="payment-cod">
+                <input type="radio" name="payment_method" id="payment-cod" value="cod" checked>
+                <div class="payment-card-content">
+                  <div class="payment-card-header">
+                    <div class="payment-title-group">
+                      <span class="payment-name">Cash on Delivery (COD)</span>
+                      <span class="payment-badge">Standard</span>
+                    </div>
+                    <div class="payment-icon">💵</div>
+                  </div>
+                  <p class="payment-desc">Pay cash or UPI upon receiving the handcrafted parcel at your doorstep.</p>
+                </div>
+              </label>
+
+              <!-- Online Payment Option -->
+              <label class="payment-method-card" for="payment-online">
+                <input type="radio" name="payment_method" id="payment-online" value="online">
+                <div class="payment-card-content">
+                  <div class="payment-card-header">
+                    <div class="payment-title-group">
+                      <span class="payment-name">Online Payment</span>
+                      <span class="payment-badge">Instant</span>
+                    </div>
+                    <div class="payment-icon">💳</div>
+                  </div>
+                  <p class="payment-desc">Pay via UPI (GPay / PhonePe / Paytm), Credit / Debit Card, or NetBanking.</p>
+                  <div class="payment-gateways-icons">
+                    <span class="gw-tag">UPI</span>
+                    <span class="gw-tag">GPay</span>
+                    <span class="gw-tag">Visa</span>
+                    <span class="gw-tag">Mastercard</span>
+                    <span class="gw-tag">NetBanking</span>
+                  </div>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Action Submit Button -->
+          <div class="checkout-action-row">
+            <div class="checkout-terms-consent" style="margin-bottom: 20px;">
+              <label class="auth-checkbox-label" for="checkoutTermsCheckbox" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-family: 'Inter Tight', sans-serif; font-size: 0.9rem; color: #555;">
+                <input type="checkbox" id="checkoutTermsCheckbox" name="terms_agreed" style="margin-top: 3px; accent-color: #222;">
+                <span>I agree to SSRINI's <a href="../terms.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Terms of Service</a> and <a href="../privacy.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Privacy Policy</a>.</span>
+              </label>
+              <span class="field-error" id="error-checkout-terms" style="display:none; color: #e53935; font-size: 0.85rem; margin-top: 5px;">Please agree to the Terms of Service to complete your purchase.</span>
+            </div>
+            
+            <button type="submit" id="btn-place-order" class="checkout-btn-primary submit-btn">
+              <span class="btn-text">COMPLETE PURCHASE</span>
+              <span class="btn-spinner" style="display: none;"></span>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- RIGHT COLUMN: Sticky Order Summary -->
+      <aside class="checkout-summary-column">
+        <div class="order-summary-sticky-card">
+          
+          <div class="summary-card-header">
+            <h3 class="summary-card-title">Order Summary</h3>
+            <span id="summary-items-count" class="summary-items-count">0 Items</span>
+          </div>
+
+          <!-- Live Cart Items List -->
+          <div id="summary-items-list" class="summary-items-list">
+            <!-- Dynamic Items -->
+          </div>
+
+          <!-- Calculations Breakdown -->
+          <div class="summary-calculations">
+            <div class="summary-row">
+              <span class="calc-label">Subtotal</span>
+              <span id="summary-subtotal" class="calc-val">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="calc-label">Insured Shipping</span>
+              <span class="calc-val free-val">Free</span>
+            </div>
+            <div class="summary-row">
+              <span class="calc-label">Estimated Taxes</span>
+              <span class="calc-val">Included</span>
+            </div>
+
+            <div class="summary-row total-row">
+              <div class="total-label-group">
+                <span class="total-title">Total Due</span>
+                <span class="total-subtext">USD / INR Equivalent</span>
+              </div>
+              <div class="total-amount-group">
+                <span id="summary-total-usd" class="total-usd">$0.00</span>
+                <span id="summary-total-inr" class="total-inr">₹0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust & Authenticity Guarantee -->
+          <div class="summary-trust-box">
+            <div class="trust-item">
+              <span class="trust-icon">✨</span>
+              <div class="trust-text">
+                <strong>Certified Bengal Guild Craft</strong>
+                <p>Each piece is individually handcrafted and hallmarked for authenticity.</p>
+              </div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🛡️</span>
+              <div class="trust-text">
+                <strong>Transit Insurance Guarantee</strong>
+                <p>Complimentary 100% loss/damage insurance coverage during transit.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- ==================== ORDER CONFIRMATION VIEW (SUCCESS STATE) ==================== -->
+    <div id="checkout-success-view" class="checkout-success-view" style="display: none;">
+      <div class="success-card">
+        <div class="success-icon-badge">✓</div>
+        <span class="success-kicker">Order Confirmed</span>
+        <h1 class="success-title">Thank You For Your Order</h1>
+        <p class="success-subtitle">Your bespoke order has been registered in our Master Guild Atelier system.</p>
+
+        <div class="success-order-number-banner">
+          <span class="order-num-label">Order Reference:</span>
+          <span id="confirmed-order-number" class="order-num-val">SSR-2026-00001</span>
+        </div>
+
+        <div class="success-details-grid">
+          <div class="detail-box">
+            <h4 class="detail-box-title">Shipping To</h4>
+            <p id="confirmed-customer-name" class="detail-line bold">Recipient Name</p>
+            <p id="confirmed-customer-phone" class="detail-line">+91 0000000000</p>
+            <p id="confirmed-customer-address" class="detail-line">Address Line</p>
+            <p id="confirmed-customer-citystate" class="detail-line">City, State - PIN</p>
+          </div>
+
+          <div class="detail-box">
+            <h4 class="detail-box-title">Payment & Status</h4>
+            <p class="detail-line"><strong>Method:</strong> <span id="confirmed-payment-method">Cash on Delivery</span></p>
+            <p class="detail-line"><strong>Payment Status:</strong> <span id="confirmed-payment-status" class="status-pill pending">Pending</span></p>
+            <p class="detail-line"><strong>Order Total:</strong> <span id="confirmed-total-amount" class="bold">$0.00</span></p>
+          </div>
+        </div>
+
+        <!-- Ordered Items Summary Table -->
+        <div class="success-items-summary">
+          <h4 class="detail-box-title">Purchased Pieces</h4>
+          <div id="confirmed-items-list" class="confirmed-items-list"></div>
+        </div>
+
+        <!-- WhatsApp Concierge & Return CTAs -->
+        <div class="success-actions-row">
+          <a id="btn-whatsapp-concierge" href="#" target="_blank" rel="noopener" class="whatsapp-concierge-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"/>
+              <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"/>
+            </svg>
+            <span>Connect on WhatsApp for Live Updates</span>
+          </a>
+          <a href="index.html" class="checkout-btn-primary return-store-btn">Return to Storefront</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 1:1 Juri Exact Smooth Custom Cursor Element -->
+  <div class="cursor"></div>
+
+  <!-- Scripts -->
+  <script src="../js/cursor.js"></script>
+  <script src="js/cart-drawer.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
