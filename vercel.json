@@ -1,5 +1,4 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/ecom/index.html" },
     { "source": "/(.*)", "destination": "/ecom/$1" }
