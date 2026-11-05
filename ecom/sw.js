@@ -7,7 +7,7 @@
  *  - Strict Network-Only / Bypass for dynamic APIs, checkout, payments, and admin
  */
 
-const CACHE_VERSION = 'ssrini-v1';
+const CACHE_VERSION = 'ssrini-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const MEDIA_CACHE = `${CACHE_VERSION}-media`;
 

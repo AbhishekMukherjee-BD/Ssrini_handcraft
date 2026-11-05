@@ -3,10 +3,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base href="/ecom/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SSRINI | Luxury Handcrafted Creations & Fine Art</title>
     <meta name="description" content="SSRINI Handcrafts - Discover bespoke handmade jewelry, luxury artisanal artifacts, terracotta, pure silks, and filigree art crafted by master artisans.">
     <link rel="canonical" href="https://yourdomain.com/ecom/">
+    
+    <!-- Emergency Loading Failsafe -->
+    <script>
+      (function() {
+        function releasePreloader() {
+          try {
+            document.documentElement.classList.remove('loading');
+            document.body.classList.remove('loading');
+            var p = document.getElementById('preloader');
+            if (p && p.style.display !== 'none') p.style.display = 'none';
+            var n = document.getElementById('main-navbar');
+            if (n) { n.classList.add('visible'); n.style.opacity = '1'; n.style.visibility = 'visible'; }
+          } catch(e) {}
+        }
+        setTimeout(releasePreloader, 3500);
+        window.addEventListener('load', function() {
+          setTimeout(releasePreloader, 2200);
+        });
+      })();
+    </script>
     
     <!-- LCP Preload -->
     <link rel="preload" as="image" href="/ecom/collection/assets/images/craftsmanship/necklace-hero.webp" fetchpriority="high">
