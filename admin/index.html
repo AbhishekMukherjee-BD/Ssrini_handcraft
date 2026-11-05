@@ -1,14 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/admin/ssrini-handicrafts-admin/admin/index.html">
-  <title>Admin Gateway | SSRINI Handcrafts</title>
-  <script>
-    window.location.replace('/admin/ssrini-handicrafts-admin/admin/index.html');
-  </script>
+    <base href="/admin/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Dashboard | SSRINI Handcrafts</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="assets/js/admin-data.js"></script>
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light, #e8eaf2);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .stat-icon { font-size: 28px; margin-bottom: 12px; }
+        .stat-label { font-size: 13px; color: var(--text-secondary, #6c7293); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--text-primary, #15182b); margin: 6px 0; }
+        .stat-subtext { font-size: 12px; color: #45b98b; font-weight: 600; }
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #e8eaf2;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+            margin-bottom: 30px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .table-title { font-size: 18px; font-weight: 700; color: #15182b; }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .admin-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c7293;
+            border-bottom: 1px solid #e8eaf2;
+            background: #fafbfe;
+        }
+        .admin-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f2f8;
+            font-size: 14px;
+            color: #15182b;
+        }
+        .badge-paid {
+            background: #e6f9f0;
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .badge-pending {
+            background: #fff8e6;
+            color: #f59e0b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-<body style="background:#f7f8fc; font-family:sans-serif; text-align:center; padding:100px;">
-  <p>Redirecting to SSRINI Admin Dashboard...</p>
+<body>
+<div class="admin-wrapper">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="adminSidebar" aria-label="Admin Navigation">
+        <div class="sidebar-brand">
+            <a href="/admin/" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
+                <img src="assets/images/logo.jpg" alt="SSRINI Handcrafts" style="width:38px; height:38px; border-radius:10px; object-fit:cover;" onerror="this.src='../../ecom/store/assets/images/logo.png'">
+                <div>
+                    <h2 style="font-size:16px; font-weight:700; color:var(--text-primary); margin:0; line-height:1.2;">SSRINI</h2>
+                    <span style="font-size:11px; color:var(--primary); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Master Atelier</span>
+                </div>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Navigation</div>
+                
+        <a href="/admin/" class="nav-item active">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+        
+        <a href="/admin/orders/" class="nav-item ">
+            <span class="nav-icon">📦</span>
+            <span>Orders</span>
+        </a>
+        
+        <a href="/admin/products/" class="nav-item ">
+            <span class="nav-icon">🛍️</span>
+            <span>Products</span>
+        </a>
+        
+        <a href="/admin/customers/" class="nav-item ">
+            <span class="nav-icon">👥</span>
+            <span>Customers</span>
+        </a>
+        
+        <a href="/admin/invoices/" class="nav-item ">
+            <span class="nav-icon">📄</span>
+            <span>Invoices</span>
+        </a>
+        
+        <a href="/admin/analytics/" class="nav-item ">
+            <span class="nav-icon">📈</span>
+            <span>Analytics</span>
+        </a>
+        
+        <a href="/admin/reviews/" class="nav-item ">
+            <span class="nav-icon">⭐</span>
+            <span>Reviews</span>
+        </a>
+        
+        <a href="/admin/settings/" class="nav-item ">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+        
+            </div>
+            <div class="nav-section" style="margin-top:auto; padding-top:20px; border-top:1px solid var(--border-light);">
+                <a href="/ecom/index.html" class="nav-item" target="_blank" style="color:var(--text-secondary);">
+                    <span class="nav-icon">↗</span>
+                    <span>View Storefront</span>
+                </a>
+                <a href="/admin/logout/" class="nav-item" style="color:#e53e3e;">
+                    <span class="nav-icon">🚪</span>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+        <div class="header-left">
+            <h1 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;">Master Dashboard</h1>
+        </div>
+        <div class="header-right">
+            <button type="button" class="header-button" onclick="window.location.reload();" title="Refresh data">
+                🔄 <span>Sync Data</span>
+            </button>
+            <div class="profile" title="Signed in as Super Administrator">
+                <div class="profile-avatar">
+                    <img src="assets/images/logo.jpg" alt="SSRINI" style="border-radius:30%; width:100%; height:100%; object-fit:cover;" onerror="this.src='../../ecom/store/assets/images/logo.png'">
+                </div>
+                <div class="profile-info">
+                    <span class="profile-name" id="adminUserDisplay">Abhishek M.</span>
+                    <span class="profile-role">Super Admin</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+
+    <main class="main-area">
+        <div class="page-content" style="padding: 28px 32px;">
+            
+            <!-- STATS CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Total Store Revenue</div>
+                    <div class="stat-value" id="dashRevenue">₹14,80,000</div>
+                    <div class="stat-subtext">↑ 18.4% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" id="dashOrders">49</div>
+                    <div class="stat-subtext">Active store orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-label">Catalog Products</div>
+                    <div class="stat-value" id="dashProducts">9</div>
+                    <div class="stat-subtext">All active & published</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Patron Collectors</div>
+                    <div class="stat-value" id="dashCustomers">11</div>
+                    <div class="stat-subtext">Registered collectors</div>
+                </div>
+            </div>
+
+            <!-- RECENT ORDERS TABLE -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h2 class="table-title">Recent Haute Joaillerie Orders</h2>
+                        <p style="font-size: 13px; color: #6c7293; margin: 4px 0 0 0;">Latest customer transactions from Bengal master atelier</p>
+                    </div>
+                    <a href="/admin/orders/" style="font-size: 13px; color: var(--primary); font-weight: 700; text-decoration: none;">View All Orders →</a>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order Ref</th>
+                                <th>Collector</th>
+                                <th>Destination</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <!-- Injected dynamically from admin-data.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.ADMIN_MOCK_DATA) {
+            const m = window.ADMIN_MOCK_DATA.metrics;
+            document.getElementById('dashRevenue').textContent = '₹' + m.totalRevenue.toLocaleString('en-IN');
+            document.getElementById('dashOrders').textContent = m.totalOrders;
+            document.getElementById('dashProducts').textContent = m.totalProducts;
+            document.getElementById('dashCustomers').textContent = m.totalCustomers;
+
+            const orders = window.ADMIN_MOCK_DATA.orders.slice(0, 8);
+            const tbody = document.getElementById('recentOrdersBody');
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td><strong>${o.order_number}</strong></td>
+                    <td>${o.customer_name || 'Valued Collector'}</td>
+                    <td>${o.shipping_city || 'Kolkata'}, ${o.shipping_state || 'WB'}</td>
+                    <td><strong>₹${Number(o.total_amount).toLocaleString('en-IN')}</strong></td>
+                    <td>
+                        <span class="${o.payment_status === 'paid' ? 'badge-paid' : 'badge-pending'}">
+                            ${o.payment_status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="color:#6c7293; font-size:13px;">${o.created_at ? o.created_at.split(' ')[0] : '2026-09-14'}</td>
+                </tr>
+            `).join('');
+        }
+    });
+</script>
 </body>
 </html>
