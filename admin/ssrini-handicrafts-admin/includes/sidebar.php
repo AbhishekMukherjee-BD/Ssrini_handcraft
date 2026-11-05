@@ -96,7 +96,22 @@ $isOrdersPage = isActivePage(['orders.php', 'order-view.php', 'order-details.php
 
             <a href="about-details.php" class="nav-item <?= isActivePage(['about-details.php'], $currentPage) ? 'active' : '' ?>"> 
                 <span class="nav-icon">ℹ️</span> 
-                <span>About Details</span> 
+                <span>About & Honors</span> 
+            </a> 
+
+            <a href="collection-gallery.php" class="nav-item <?= isActivePage(['collection-gallery.php'], $currentPage) ? 'active' : '' ?>"> 
+                <span class="nav-icon">🔮</span> 
+                <span>Collection Gallery</span> 
+            </a> 
+
+            <a href="social-links.php" class="nav-item <?= isActivePage(['social-links.php'], $currentPage) ? 'active' : '' ?>"> 
+                <span class="nav-icon">🌐</span> 
+                <span>Social Links</span> 
+            </a> 
+
+            <a href="login-settings.php" class="nav-item <?= isActivePage(['login-settings.php'], $currentPage) ? 'active' : '' ?>"> 
+                <span class="nav-icon">🔐</span> 
+                <span>Login Customization</span> 
             </a> 
         </div> 
 
@@ -109,9 +124,14 @@ $isOrdersPage = isActivePage(['orders.php', 'order-view.php', 'order-details.php
                 <span>Customers</span> 
             </a> 
 
+            <a href="admins.php" class="nav-item <?= isActivePage(['admins.php'], $currentPage) ? 'active' : '' ?>"> 
+                <span class="nav-icon">🛡️</span> 
+                <span>Administrators</span> 
+            </a> 
+
             <a href="reviews.php" class="nav-item <?= isActivePage(['reviews.php'], $currentPage) ? 'active' : '' ?>"> 
                 <span class="nav-icon">⭐</span> 
-                <span>Reviews</span> 
+                <span>Testimonials & Reviews</span> 
             </a> 
 
             <a href="notifications.php" class="nav-item <?= isActivePage(['notifications.php'], $currentPage) ? 'active' : '' ?>"> 

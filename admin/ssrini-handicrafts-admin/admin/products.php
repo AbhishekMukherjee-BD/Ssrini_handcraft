@@ -1012,6 +1012,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                 </div>
 
                 <form id="addProductForm" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
                     <div class="modal-body">
 
                         <!-- PRODUCT IMAGE -->
@@ -1028,7 +1029,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                                     <p class="upload-description">JPG, PNG or WEBP</p>
 
                                     <label for="productImage" class="upload-btn">Choose Image</label>
-                                    <input type="file" id="productImage" name="image" accept="image/jpeg,image/png,image/webp" hidden>
+                                    <input type="file" id="productImage" name="image" accept="image/jpeg,image/png,image/webp">
                                 </div>
                             </div>
                         </div>
@@ -1061,10 +1062,70 @@ require_once __DIR__ . '/../includes/sidebar.php';
                             </div>
                         </div>
 
+                        <!-- METADATA -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="productCollection" class="form-label">Collection Name</label>
+                                <input type="text" id="productCollection" name="collection_name" class="form-input" placeholder="e.g. Rivulet Heritage" maxlength="150">
+                            </div>
+                            <div class="form-group">
+                                <label for="productMaterial" class="form-label">Material</label>
+                                <input type="text" id="productMaterial" name="material" class="form-input" placeholder="e.g. Gold Plated Brass & Peridot" maxlength="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="productBadge" class="form-label">Badge</label>
+                                <input type="text" id="productBadge" name="badge" class="form-input" placeholder="e.g. Signature Edition" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="productCraftHours" class="form-label">Artisan Time</label>
+                                <input type="text" id="productCraftHours" name="craft_hours" class="form-input" placeholder="e.g. 36 Handcrafted Hours" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="productOrigin" class="form-label">Guild Provenance</label>
+                                <input type="text" id="productOrigin" name="origin" class="form-input" placeholder="e.g. Bengal Atelier" maxlength="150">
+                            </div>
+                            <div class="form-grid three-columns">
+                                <div class="form-group">
+                                    <label for="productLength" class="form-label">Length (cm)</label>
+                                    <input type="number" step="0.01" id="productLength" name="length" class="form-input" placeholder="e.g. 28">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productWidth" class="form-label">Width (cm)</label>
+                                    <input type="number" step="0.01" id="productWidth" name="width" class="form-input" placeholder="e.g. 18">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productHeight" class="form-label">Height (cm)</label>
+                                    <input type="number" step="0.01" id="productHeight" name="height" class="form-input" placeholder="e.g. 14">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="productWeight" class="form-label">Item Weight (kg)</label>
+                                <input type="number" step="0.01" id="productWeight" name="weight" class="form-input" placeholder="e.g. 14.2">
+                            </div>
+                            <div class="form-group">
+                                <label for="productGallery" class="form-label">Gallery Images (Multiple)</label>
+                                <input type="file" id="productGallery" name="gallery_images[]" class="form-input" accept="image/jpeg,image/png,image/webp" multiple style="padding:10px;">
+                            </div>
+                        </div>
+
                         <!-- DESCRIPTION -->
                         <div class="form-group">
-                            <label for="productDescription" class="form-label">Description</label>
+                            <label for="productDescription" class="form-label">Description / Artisan Callout</label>
                             <textarea id="productDescription" name="description" class="form-input form-textarea" placeholder="Describe your product..." rows="4"></textarea>
+                        </div>
+
+                        <!-- ACCORDIONS -->
+                        <div class="form-group mt-4" style="margin-top: 1.5rem;">
+                            <label for="productAccCraft" class="form-label">Artisanal Craftsmanship Details (Accordion 1)</label>
+                            <textarea id="productAccCraft" name="accordion_craftsmanship" class="form-input form-textarea" placeholder="Details about craftsmanship..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productAccCare" class="form-label">Care & Preservation Guidelines (Accordion 2)</label>
+                            <textarea id="productAccCare" name="accordion_care" class="form-input form-textarea" placeholder="Details about care..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productAccDelivery" class="form-label">Insured Delivery & Authenticity (Accordion 3)</label>
+                            <textarea id="productAccDelivery" name="accordion_delivery" class="form-input form-textarea" placeholder="Details about delivery..." rows="3"></textarea>
                         </div>
 
                         <!-- PRICE / STOCK -->
@@ -1120,6 +1181,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                 </div>
 
                 <form id="editProductForm" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" id="editProductId" name="id">
 
                     <div class="modal-body">
@@ -1138,7 +1200,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                                     <p class="upload-description">JPG, PNG or WEBP</p>
 
                                     <label for="editProductImage" class="upload-btn">Choose Image</label>
-                                    <input type="file" id="editProductImage" name="image" accept="image/jpeg,image/png,image/webp" hidden>
+                                    <input type="file" id="editProductImage" name="image" accept="image/jpeg,image/png,image/webp">
                                 </div>
                             </div>
                         </div>
@@ -1171,10 +1233,77 @@ require_once __DIR__ . '/../includes/sidebar.php';
                             </div>
                         </div>
 
+                        <!-- METADATA -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="editProductCollection" class="form-label">Collection Name</label>
+                                <input type="text" id="editProductCollection" name="collection_name" class="form-input" maxlength="150">
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductMaterial" class="form-label">Material</label>
+                                <input type="text" id="editProductMaterial" name="material" class="form-input" maxlength="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductBadge" class="form-label">Badge</label>
+                                <input type="text" id="editProductBadge" name="badge" class="form-input" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductCraftHours" class="form-label">Artisan Time</label>
+                                <input type="text" id="editProductCraftHours" name="craft_hours" class="form-input" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductOrigin" class="form-label">Guild Provenance</label>
+                                <input type="text" id="editProductOrigin" name="origin" class="form-input" maxlength="150">
+                            </div>
+                            <div class="form-grid three-columns">
+                                <div class="form-group">
+                                    <label for="editProductLength" class="form-label">Length (cm)</label>
+                                    <input type="number" step="0.01" id="editProductLength" name="length" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductWidth" class="form-label">Width (cm)</label>
+                                    <input type="number" step="0.01" id="editProductWidth" name="width" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductHeight" class="form-label">Height (cm)</label>
+                                    <input type="number" step="0.01" id="editProductHeight" name="height" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductWeight" class="form-label">Item Weight (kg)</label>
+                                <input type="number" step="0.01" id="editProductWeight" name="weight" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Existing Gallery Images</label>
+                                <div id="editGalleryPreviewContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                                    <!-- Gallery thumbnails will be injected here -->
+                                </div>
+                                <div id="editGalleryRemoveInputs"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductGallery" class="form-label">Add More Gallery Images (Multiple)</label>
+                                <input type="file" id="editProductGallery" name="gallery_images[]" class="form-input" accept="image/jpeg,image/png,image/webp" multiple style="padding:10px;">
+                            </div>
+                        </div>
+
                         <!-- DESCRIPTION -->
                         <div class="form-group">
-                            <label for="editProductDescription" class="form-label">Description</label>
+                            <label for="editProductDescription" class="form-label">Description / Artisan Callout</label>
                             <textarea id="editProductDescription" name="description" class="form-input form-textarea" rows="4"></textarea>
+                        </div>
+
+                        <!-- ACCORDIONS -->
+                        <div class="form-group mt-4" style="margin-top: 1.5rem;">
+                            <label for="editProductAccCraft" class="form-label">Artisanal Craftsmanship Details (Accordion 1)</label>
+                            <textarea id="editProductAccCraft" name="accordion_craftsmanship" class="form-input form-textarea" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductAccCare" class="form-label">Care & Preservation Guidelines (Accordion 2)</label>
+                            <textarea id="editProductAccCare" name="accordion_care" class="form-input form-textarea" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductAccDelivery" class="form-label">Insured Delivery & Authenticity (Accordion 3)</label>
+                            <textarea id="editProductAccDelivery" name="accordion_delivery" class="form-input form-textarea" rows="3"></textarea>
                         </div>
 
                         <!-- PRICE / STOCK -->
@@ -1217,6 +1346,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
 </main>
 
 <script>
+const ADMIN_CSRF_TOKEN = <?= json_encode(generateCsrfToken()) ?>;
 /*
 |--------------------------------------------------------------------------
 | MOBILE SIDEBAR
@@ -1298,6 +1428,20 @@ const editProductDescription = document.getElementById('editProductDescription')
 const editProductPrice = document.getElementById('editProductPrice');
 const editDiscountPrice = document.getElementById('editDiscountPrice');
 const editStockQuantity = document.getElementById('editStockQuantity');
+
+// New Metadata & Accordion Elements
+const editProductCollection = document.getElementById('editProductCollection');
+const editProductMaterial = document.getElementById('editProductMaterial');
+const editProductBadge = document.getElementById('editProductBadge');
+const editProductCraftHours = document.getElementById('editProductCraftHours');
+const editProductOrigin = document.getElementById('editProductOrigin');
+const editProductLength = document.getElementById('editProductLength');
+const editProductWidth = document.getElementById('editProductWidth');
+const editProductHeight = document.getElementById('editProductHeight');
+const editProductWeight = document.getElementById('editProductWeight');
+const editProductAccCraft = document.getElementById('editProductAccCraft');
+const editProductAccCare = document.getElementById('editProductAccCare');
+const editProductAccDelivery = document.getElementById('editProductAccDelivery');
 
 /*
 |--------------------------------------------------------------------------
@@ -1718,6 +1862,20 @@ async function openEditProductModal(productId) {
         editProductPrice.value = product.price ?? '';
         editDiscountPrice.value = product.discount_price ?? '';
         editStockQuantity.value = product.stock_quantity ?? '';
+        
+        editProductCollection.value = product.collection_name || '';
+        editProductMaterial.value = product.material || '';
+        editProductBadge.value = product.badge || '';
+        editProductCraftHours.value = product.craft_hours || '';
+        editProductOrigin.value = product.origin || '';
+        editProductLength.value = product.length || '';
+        editProductWidth.value = product.width || '';
+        editProductHeight.value = product.height || '';
+        editProductWeight.value = product.weight || '';
+        editProductAccCraft.value = product.accordion_craftsmanship || '';
+        editProductAccCare.value = product.accordion_care || '';
+        editProductAccDelivery.value = product.accordion_delivery || '';
+
 
         if (product.image) {
             editImagePreview.innerHTML = `
@@ -1728,6 +1886,70 @@ async function openEditProductModal(productId) {
                 <span>📷</span>
                 <p>No image</p>
             `;
+        }
+
+        const galleryPreviewContainer = document.getElementById('editGalleryPreviewContainer');
+        const galleryRemoveInputs = document.getElementById('editGalleryRemoveInputs');
+        galleryPreviewContainer.innerHTML = '';
+        galleryRemoveInputs.innerHTML = '';
+
+        if (product.gallery_images) {
+            let galleryImages = [];
+            try {
+                galleryImages = JSON.parse(product.gallery_images);
+            } catch (e) {
+                console.error("Failed to parse gallery images", e);
+            }
+
+            if (Array.isArray(galleryImages)) {
+                galleryImages.forEach(imgName => {
+                    const thumbDiv = document.createElement('div');
+                    thumbDiv.style.position = 'relative';
+                    thumbDiv.style.width = '80px';
+                    thumbDiv.style.height = '80px';
+                    thumbDiv.style.borderRadius = '4px';
+                    thumbDiv.style.overflow = 'hidden';
+                    thumbDiv.style.border = '1px solid var(--border)';
+
+                    const imgEl = document.createElement('img');
+                    imgEl.src = `../assets/uploads/${escapeHTML(imgName)}`;
+                    imgEl.style.width = '100%';
+                    imgEl.style.height = '100%';
+                    imgEl.style.objectFit = 'cover';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '✕';
+                    removeBtn.style.position = 'absolute';
+                    removeBtn.style.top = '2px';
+                    removeBtn.style.right = '2px';
+                    removeBtn.style.background = 'rgba(220, 38, 38, 0.9)';
+                    removeBtn.style.color = 'white';
+                    removeBtn.style.border = 'none';
+                    removeBtn.style.borderRadius = '50%';
+                    removeBtn.style.width = '20px';
+                    removeBtn.style.height = '20px';
+                    removeBtn.style.fontSize = '12px';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.display = 'flex';
+                    removeBtn.style.alignItems = 'center';
+                    removeBtn.style.justifyContent = 'center';
+                    removeBtn.title = "Remove image";
+
+                    removeBtn.addEventListener('click', () => {
+                        thumbDiv.remove();
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'remove_gallery[]';
+                        hiddenInput.value = imgName;
+                        galleryRemoveInputs.appendChild(hiddenInput);
+                    });
+
+                    thumbDiv.appendChild(imgEl);
+                    thumbDiv.appendChild(removeBtn);
+                    galleryPreviewContainer.appendChild(thumbDiv);
+                });
+            }
         }
 
         editProductModal.classList.add('active');
@@ -1781,6 +2003,7 @@ productsGrid.addEventListener('click', async function (event) {
     try {
         const formData = new FormData();
         formData.append('id', productId);
+        formData.append('csrf_token', ADMIN_CSRF_TOKEN);
 
         // FIX 3: Updated URL to products-delete.php for consistent naming
         const response = await fetch('../api/products-delete.php', {

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   closeBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = '../index.html?skip-preloader=true';
+      window.location.href = '/ecom/index.php?skip-preloader=true';
     });
   });
 

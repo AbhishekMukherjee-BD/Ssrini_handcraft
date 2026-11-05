@@ -3,7 +3,7 @@
  */
 
 // Master Products Dataset
-let PRODUCTS_DATA = [];
+const PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
 
 // State
 let activeFilters = {
@@ -12,93 +12,46 @@ let activeFilters = {
   materials: [],
   search: ''
 };
-let currentSort = 'newest'; // Changed default to match API
+let currentSort = 'featured';
 let currentCols = 4;
 
 document.addEventListener('DOMContentLoaded', () => {
   initCart();
   initControls();
+  generateFilters();
+  renderProducts();
   initFilterDrawer();
-  fetchProducts(); // Fetch from API on load
+  initQuickViewModal();
 });
 
-function fetchProducts() {
-  const grid = document.querySelector('#product-grid');
-  if (grid) {
-    grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Loading masterworks...</p></div>';
-  }
+function generateFilters() {
+  const collections = new Set();
+  const categories = new Set();
+  const materials = new Set();
 
-  fetch('http://localhost:8080/api/store-products.php')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        // Map backend product structure to frontend structure
-        PRODUCTS_DATA = data.data.map(p => ({
-          id: p.id,
-          title: p.name,
-          collection: p.collection_name || 'Heritage Collection',
-          category: p.category_name || 'Uncategorized',
-          material: p.material || 'Premium Materials',
-          priceUSD: p.price_usd || Math.round(p.price / 80),
-          priceINR: p.price,
-          badge: p.badge || '',
-          images: (p.gallery_images && p.gallery_images.length > 0) ? 
-                    p.gallery_images.map(img => `http://localhost:8080/uploads/products/${img}`) : 
-                    [ p.image ? `http://localhost:8080/uploads/products/${p.image}` : '../collection/assets/images/placeholder.jpg' ],
-          description: p.description || '',
-          specs: {
-            craftHours: p.craft_hours ? `${p.craft_hours} Hours` : 'N/A',
-            origin: p.origin || 'Studio SSRINI',
-            dimensions: p.dimensions || 'Standard',
-            weight: p.weight ? `${p.weight} kg` : 'N/A'
-          }
-        }));
-        
-        // Populate filter options dynamically based on available data
-        populateFilterOptions();
-        renderProducts();
-      } else {
-        if (grid) grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: red;"><p>Failed to load products.</p></div>';
-      }
-    })
-    .catch(err => {
-      console.error('Error fetching products:', err);
-      if (grid) grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: red;"><p>Network error loading products.</p></div>';
-    });
-}
-
-function populateFilterOptions() {
-  const collectionList = document.querySelector('.filter-group:nth-child(1) .filter-options-list');
-  const categoryList = document.querySelector('.filter-group:nth-child(2) .filter-options-list');
-  const materialList = document.querySelector('.filter-group:nth-child(3) .filter-options-list');
-
-  if (!collectionList || !categoryList || !materialList) return;
-
-  const collections = [...new Set(PRODUCTS_DATA.map(p => p.collection).filter(Boolean))].sort();
-  const categories = [...new Set(PRODUCTS_DATA.map(p => p.category).filter(Boolean))].sort();
-  
-  // Materials might be comma-separated or complex strings, let's just get unique strings for now
-  // or we can split them if they contain '&' or ',' but for simplicity, exact match
-  const materials = [...new Set(PRODUCTS_DATA.map(p => p.material).filter(Boolean))].sort();
-
-  const createCheckbox = (name, value) => `
-    <label class="filter-checkbox-label">
-      <input type="checkbox" name="filter-${name}" value="${value}">
-      <span>${value}</span>
-    </label>
-  `;
-
-  collectionList.innerHTML = collections.map(c => createCheckbox('collection', c)).join('');
-  categoryList.innerHTML = categories.map(c => createCheckbox('category', c)).join('');
-  materialList.innerHTML = materials.map(m => createCheckbox('material', m)).join('');
-
-  // Re-attach event listeners to new checkboxes
-  const checkboxes = document.querySelectorAll('.filter-checkbox-label input');
-  checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      updateFilterState();
-    });
+  PRODUCTS_DATA.forEach(p => {
+    if (p.collection && p.collection !== 'All') collections.add(p.collection);
+    if (p.category && p.category !== 'All') categories.add(p.category);
+    if (p.material) materials.add(p.material);
   });
+
+  const buildCheckboxHTML = (name, set) => {
+    return Array.from(set).sort().map(val => `
+      <label class="filter-checkbox-label">
+        <input type="checkbox" name="${name}" value="${val}">
+        <span>${val}</span>
+      </label>
+    `).join('');
+  };
+
+  const colContainer = document.querySelector('#filter-list-collections');
+  if (colContainer) colContainer.innerHTML = buildCheckboxHTML('filter-collection', collections);
+
+  const catContainer = document.querySelector('#filter-list-categories');
+  if (catContainer) catContainer.innerHTML = buildCheckboxHTML('filter-category', categories);
+
+  const matContainer = document.querySelector('#filter-list-materials');
+  if (matContainer) matContainer.innerHTML = buildCheckboxHTML('filter-material', materials);
 }
 
 // Initialize Cart Count from LocalStorage
@@ -112,39 +65,110 @@ function initCart() {
 
 // Controls & Event Listeners
 function initControls() {
-  // Sort Buttons (Name / Price)
-  const sortBtns = document.querySelectorAll('.sort-button');
-  sortBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const type = btn.dataset.sort;
-      if (currentSort === type) {
-        // Toggle direction
-        if (type.startsWith('name')) {
-          currentSort = currentSort === 'name-asc' ? 'name-desc' : 'name-asc';
-          btn.querySelector('.sort-dir').textContent = currentSort === 'name-asc' ? '(A-Z)' : '(Z-A)';
-        } else if (type.startsWith('price')) {
-          currentSort = currentSort === 'price-asc' ? 'price-desc' : 'price-asc';
-          btn.querySelector('.sort-dir').textContent = currentSort === 'price-asc' ? '(ASC)' : '(DESC)';
+  const searchInput = document.querySelector('#store-search-input');
+  const suggestionsBox = document.querySelector('#search-suggestions');
+  
+  if (searchInput && suggestionsBox) {
+    // Populate suggestions dynamically from unique categories
+    const categories = window.PHP_PRODUCTS_DATA 
+      ? [...new Set(window.PHP_PRODUCTS_DATA.map(p => p.categoryName || p.category_id || p.category))]
+      : [];
+      
+    // Create a mapping or extract names
+    let availableCategories = categories.filter(c => c && typeof c === 'string');
+    
+    // Fallback static if needed, but this uses dynamic
+    if (availableCategories.length === 0 && window.PHP_CATEGORIES_DATA) {
+      availableCategories = window.PHP_CATEGORIES_DATA.map(c => c.name);
+    }
+    
+    // Default list if nothing could be found (to ensure suggestion feature works)
+    if (availableCategories.length === 0) {
+       availableCategories = ["Sculptures", "Paintings", "Metal Craft", "Wood Craft", "Home Decor"];
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      const val = e.target.value.toLowerCase().trim();
+      activeFilters.search = val;
+      renderProducts();
+      
+      // Update suggestions
+      if (val.length > 0) {
+        const matches = availableCategories.filter(c => c.toLowerCase().includes(val));
+        if (matches.length > 0) {
+          suggestionsBox.innerHTML = matches.map(c => `<li>${c}</li>`).join('');
+          suggestionsBox.classList.add('active');
+        } else {
+          suggestionsBox.classList.remove('active');
         }
       } else {
-        currentSort = type;
+        suggestionsBox.classList.remove('active');
       }
+    });
 
+    // Also show all suggestions on focus if empty
+    searchInput.addEventListener('focus', (e) => {
+      const val = e.target.value.toLowerCase().trim();
+      if (val.length === 0 && availableCategories.length > 0) {
+        suggestionsBox.innerHTML = availableCategories.map(c => `<li>${c}</li>`).join('');
+        suggestionsBox.classList.add('active');
+      }
+    });
+
+    // Handle clicking a suggestion
+    suggestionsBox.addEventListener('click', (e) => {
+      if (e.target.tagName === 'LI') {
+        const selected = e.target.textContent;
+        searchInput.value = selected;
+        activeFilters.search = selected.toLowerCase();
+        suggestionsBox.classList.remove('active');
+        renderProducts();
+      }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.classList.remove('active');
+      }
+    });
+  }
+
+  const sortBtns = document.querySelectorAll('.sort-button');
+  sortBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
       sortBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      currentSort = btn.dataset.sort;
       renderProducts();
     });
   });
 
-  // Grid Layout Switchers matching Juri (#three-cols, #four-cols)
-  const colsSelectors = document.querySelectorAll('.cols-selector');
-  const grid = document.querySelector('#product-grid');
+  const priceMin = document.querySelector('#price-min');
+  const priceMax = document.querySelector('#price-max');
+  const priceGoBtn = document.querySelector('#price-go-btn');
+  if (priceMin && priceMax && priceGoBtn) {
+    const applyPriceRange = () => {
+      activeFilters.minPrice = priceMin.value ? parseFloat(priceMin.value) : null;
+      activeFilters.maxPrice = priceMax.value ? parseFloat(priceMax.value) : null;
+      renderProducts();
+    };
+    priceGoBtn.addEventListener('click', applyPriceRange);
+    priceMin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') applyPriceRange();
+    });
+    priceMax.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') applyPriceRange();
+    });
+  }
 
-  colsSelectors.forEach(selector => {
-    selector.addEventListener('click', () => {
-      colsSelectors.forEach(s => s.classList.remove('cols-active'));
-      selector.classList.add('cols-active');
-      const cols = parseInt(selector.dataset.cols, 10);
+  const layoutBtns = document.querySelectorAll('.cols-selector');
+  const grid = document.querySelector('#product-grid');
+  layoutBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      layoutBtns.forEach(b => b.classList.remove('cols-active'));
+      btn.classList.add('cols-active');
+      const cols = parseInt(btn.dataset.cols, 10);
       currentCols = cols;
       if (grid) {
         grid.className = `product-grid cols-${cols}`;
@@ -175,13 +199,14 @@ function initFilterDrawer() {
     });
   }
 
-  // Checkbox inputs
-  const checkboxes = document.querySelectorAll('.filter-checkbox-label input');
-  checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      updateFilterState();
+  // Checkbox inputs (using event delegation since they are dynamic now)
+  if (overlay) {
+    overlay.addEventListener('change', (e) => {
+      if (e.target.matches('.filter-checkbox-label input')) {
+        updateFilterState();
+      }
     });
-  });
+  }
 
   if (applyBtn && overlay) {
     applyBtn.addEventListener('click', () => {
@@ -192,10 +217,24 @@ function initFilterDrawer() {
 
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.filter-checkbox-label input');
       checkboxes.forEach(cb => cb.checked = false);
+      
+      const priceMin = document.querySelector('#price-min');
+      const priceMax = document.querySelector('#price-max');
+      if (priceMin) priceMin.value = '';
+      if (priceMax) priceMax.value = '';
+
+      const searchInput = document.querySelector('#store-search-input');
+      if (searchInput) searchInput.value = '';
+
       activeFilters.collections = [];
       activeFilters.categories = [];
       activeFilters.materials = [];
+      activeFilters.minPrice = null;
+      activeFilters.maxPrice = null;
+      activeFilters.search = '';
+      
       renderFilterPills();
       renderProducts();
     });
@@ -268,17 +307,33 @@ function renderProducts() {
     if (activeFilters.materials.length > 0 && !activeFilters.materials.some(m => item.material.includes(m))) {
       return false;
     }
-    if (activeFilters.search && !item.title.toLowerCase().includes(activeFilters.search) && !item.collection.toLowerCase().includes(activeFilters.search)) {
+    
+    // Price range filters
+    const price = parseFloat(item.priceINR);
+    if (activeFilters.minPrice !== undefined && activeFilters.minPrice !== null && price < activeFilters.minPrice) {
       return false;
+    }
+    if (activeFilters.maxPrice !== undefined && activeFilters.maxPrice !== null && price > activeFilters.maxPrice) {
+      return false;
+    }
+
+    if (activeFilters.search) {
+      const searchStr = activeFilters.search;
+      const titleMatch = item.title && item.title.toLowerCase().includes(searchStr);
+      const collectionMatch = item.collection && item.collection.toLowerCase().includes(searchStr);
+      const categoryMatch = item.category && item.category.toLowerCase().includes(searchStr);
+      if (!titleMatch && !collectionMatch && !categoryMatch) {
+        return false;
+      }
     }
     return true;
   });
 
   // Sort
   if (currentSort === 'price-asc') {
-    list.sort((a, b) => a.priceUSD - b.priceUSD);
+    list.sort((a, b) => a.priceINR - b.priceINR);
   } else if (currentSort === 'price-desc') {
-    list.sort((a, b) => b.priceUSD - a.priceUSD);
+    list.sort((a, b) => b.priceINR - a.priceINR);
   } else if (currentSort === 'name-asc') {
     list.sort((a, b) => a.title.localeCompare(b.title));
   }
@@ -289,35 +344,47 @@ function renderProducts() {
 
   if (list.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px;">
-        <p style="font-family: var(--sans-serif); font-size: 20px; color: var(--dark); margin-bottom: 12px;">No matching artifacts found</p>
-        <p style="color: var(--light); font-size: 13px;">Try clearing filters or searching for different materials.</p>
+      <div class="empty-state-container">
+        <svg class="empty-state-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <h3 class="empty-state-title">No Masterpieces Found</h3>
+        <p class="empty-state-desc">We couldn't find any creations matching your search criteria. Please try adjusting your filters.</p>
+        <button class="empty-state-btn" onclick="document.querySelector('#reset-filters').click();">Clear All Filters</button>
       </div>
     `;
     return;
   }
 
-  grid.innerHTML = list.map(item => `
+  grid.innerHTML = list.map(item => {
+    const isWishlisted = window.PHP_WISHLIST_DATA && window.PHP_WISHLIST_DATA.includes(item.id);
+    return `
     <article class="product-card">
       <div class="product-image-box">
         <span class="product-badge">${item.badge}</span>
-        <a href="product.html?id=${item.id}">
-          <img src="${item.images[0]}" alt="${item.title}" class="img-primary" loading="lazy">
-          <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary" loading="lazy">
+        <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist('${item.id}', this)" aria-label="Toggle Wishlist">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${isWishlisted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+        <a href="product.php?id=${item.id}">
+          <img src="${item.images[0]}" alt="${item.title}" class="img-primary skeleton-shimmer" loading="lazy" onload="this.classList.remove('skeleton-shimmer')">
+          <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary skeleton-shimmer" loading="lazy" onload="this.classList.remove('skeleton-shimmer')">
         </a>
         <button class="quickview-btn" onclick="openQuickView('${item.id}')">Quick View</button>
       </div>
       <div class="product-info">
         <span class="product-collection-tag">${item.collection}</span>
-        <a href="product.html?id=${item.id}" class="product-title">${item.title}</a>
+        <a href="product.php?id=${item.id}" class="product-title">${item.title}</a>
         <p class="product-material-desc">${item.material}</p>
         <div class="product-price-row">
-          <span class="product-price">$${item.priceUSD}</span>
           <span class="product-currency-inr">₹${item.priceINR.toLocaleString()}</span>
         </div>
       </div>
     </article>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // QuickView Modal Trigger
@@ -341,8 +408,7 @@ window.openQuickView = function(id) {
         <h2 style="font-family: var(--sans-serif); font-size: 26px; font-weight: 700; margin-top: 6px; color: var(--dark);">${item.title}</h2>
       </div>
       <div style="display: flex; align-items: baseline; gap: 12px;">
-        <span style="font-family: var(--sans-serif); font-size: 24px; font-weight: 700; color: var(--dark);">$${item.priceUSD}</span>
-        <span style="color: var(--light); font-size: 13px;">₹${item.priceINR.toLocaleString()}</span>
+        <span style="font-family: var(--sans-serif); font-size: 24px; font-weight: 700; color: var(--dark);">₹${item.priceINR.toLocaleString()}</span>
       </div>
       <p style="font-size: 13px; line-height: 1.6; color: #555;">${item.description}</p>
       <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--dark); background: var(--card-bg); padding: 14px; border-radius: 4px;">
@@ -352,7 +418,7 @@ window.openQuickView = function(id) {
       </div>
       <div style="display: flex; gap: 12px; margin-top: 8px;">
         <button class="btn-add-to-bag" onclick="addToCartQuick('${item.id}')">Add To Bag</button>
-        <a href="product.html?id=${item.id}" class="filter-btn-toggle" style="padding: 14px 20px;">Full Details →</a>
+        <a href="product.php?id=${item.id}" class="filter-btn-toggle" style="padding: 14px 20px;">Full Details →</a>
       </div>
     </div>
   `;
@@ -365,6 +431,18 @@ window.closeQuickView = function() {
   if (modalOverlay) modalOverlay.classList.remove('active');
 };
 
+function initQuickViewModal() {
+  const modalOverlay = document.querySelector('#quickview-modal-overlay');
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) window.closeQuickView();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.closeQuickView();
+  });
+}
+
 window.addToCartQuick = function(id) {
   const item = PRODUCTS_DATA.find(p => p.id === id);
   if (!item) return;
@@ -374,7 +452,7 @@ window.addToCartQuick = function(id) {
   if (existing) {
     existing.qty = (existing.qty || 1) + 1;
   } else {
-    cart.push({ id: item.id, title: item.title, priceUSD: item.priceUSD, qty: 1, image: item.images[0] });
+    cart.push({ id: item.id, title: item.title, price: item.priceINR, priceINR: item.priceINR, qty: 1, image: item.images[0] });
   }
 
   localStorage.setItem('ssrini_cart', JSON.stringify(cart));
@@ -386,6 +464,40 @@ window.addToCartQuick = function(id) {
     btn.classList.add('added');
     setTimeout(() => {
       closeQuickView();
-    }, 800);
+    }, 1000);
+  }
+};
+
+window.toggleWishlist = async function(productId, btn) {
+  try {
+    const res = await fetch('../api/toggle_wishlist.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ product_id: productId })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (data.status === 'added') {
+        btn.classList.add('active');
+        btn.querySelector('svg').setAttribute('fill', 'currentColor');
+        if (!window.PHP_WISHLIST_DATA.includes(productId)) {
+          window.PHP_WISHLIST_DATA.push(productId);
+        }
+      } else {
+        btn.classList.remove('active');
+        btn.querySelector('svg').setAttribute('fill', 'none');
+        window.PHP_WISHLIST_DATA = window.PHP_WISHLIST_DATA.filter(id => id !== productId);
+      }
+    } else {
+      if (data.error === 'not_logged_in') {
+        window.location.href = '../auth/login.php';
+      } else {
+        console.error('Wishlist error:', data.error);
+      }
+    }
+  } catch (err) {
+    console.error('Error toggling wishlist:', err);
   }
 };

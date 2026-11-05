@@ -31,6 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$csrfToken = $_POST['csrf_token'] ?? '';
+if (!verifyCsrfToken($csrfToken)) {
+    http_response_code(403);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Security token invalid or missing. Please refresh and try again.'
+    ]);
+    exit;
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +73,21 @@ $discountPrice = $_POST['discount_price'] ?? '';
 $stockQuantity = $_POST['stock_quantity'] ?? '';
 
 $status = $_POST['status'] ?? 'active';
+
+/* NEW METADATA FIELDS */
+$collectionName = trim($_POST['collection_name'] ?? '');
+$material = trim($_POST['material'] ?? '');
+$badge = trim($_POST['badge'] ?? '');
+$craftHours = trim($_POST['craft_hours'] ?? '');
+$origin = trim($_POST['origin'] ?? '');
+$length = trim($_POST['length'] ?? '');
+$width = trim($_POST['width'] ?? '');
+$height = trim($_POST['height'] ?? '');
+$weight = trim($_POST['weight'] ?? '');
+
+$accCraft = trim($_POST['accordion_craftsmanship'] ?? '');
+$accCare = trim($_POST['accordion_care'] ?? '');
+$accDelivery = trim($_POST['accordion_delivery'] ?? '');
 
 
 /*
@@ -194,7 +219,8 @@ $productCheck = $pdo->prepare(
     "
     SELECT
         id,
-        image
+        image,
+        gallery_images
     FROM products
     WHERE id = :id
     LIMIT 1
@@ -577,6 +603,73 @@ if (
 
 /*
 |--------------------------------------------------------------------------
+| GALLERY IMAGES UPLOAD (NEW)
+|--------------------------------------------------------------------------
+*/
+$galleryImageNames = [];
+if (!empty($existingProduct['gallery_images'])) {
+    $existingGallery = json_decode($existingProduct['gallery_images'], true);
+    if (is_array($existingGallery)) {
+        $galleryImageNames = $existingGallery;
+    }
+}
+
+// Handle removal of specific gallery images
+if (isset($_POST['remove_gallery']) && is_array($_POST['remove_gallery'])) {
+    $removeList = $_POST['remove_gallery'];
+    $galleryImageNames = array_filter($galleryImageNames, function($img) use ($removeList) {
+        if (in_array($img, $removeList)) {
+            // Delete the file from server
+            $filePath = __DIR__ . '/../assets/uploads/' . basename($img);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            return false; // Remove from array
+        }
+        return true; // Keep in array
+    });
+    // Re-index the array after filtering
+    $galleryImageNames = array_values($galleryImageNames);
+}
+
+if (isset($_FILES['gallery_images']) && !empty($_FILES['gallery_images']['name'][0])) {
+    $galleryFiles = $_FILES['gallery_images'];
+    $fileCount = count($galleryFiles['name']);
+    $uploadDirectoryG = __DIR__ . '/../assets/uploads/';
+
+    for ($i = 0; $i < $fileCount; $i++) {
+        if ($galleryFiles['error'][$i] === UPLOAD_ERR_OK) {
+            
+            // Check size (5MB)
+            if ($galleryFiles['size'][$i] > 5 * 1024 * 1024) continue;
+
+            // Check MIME
+            $finfoGallery = new finfo(FILEINFO_MIME_TYPE);
+            $mimeTypeG = $finfoGallery->file($galleryFiles['tmp_name'][$i]);
+            
+            $allowedTypesG = [
+                'image/jpeg' => 'jpg',
+                'image/png'  => 'png',
+                'image/webp' => 'webp'
+            ];
+            
+            if (!isset($allowedTypesG[$mimeTypeG])) continue;
+
+            $extG = $allowedTypesG[$mimeTypeG];
+            $gName = 'gallery_' . uniqid('', true) . '.' . $extG;
+            $gPath = $uploadDirectoryG . $gName;
+
+            if (move_uploaded_file($galleryFiles['tmp_name'][$i], $gPath)) {
+                $galleryImageNames[] = $gName; // Append to existing
+            }
+        }
+    }
+}
+$galleryJson = json_encode($galleryImageNames);
+
+
+/*
+|--------------------------------------------------------------------------
 | Update Product
 |--------------------------------------------------------------------------
 */
@@ -597,6 +690,19 @@ try {
             discount_price = :discount_price,
             stock_quantity = :stock_quantity,
             image = :image,
+            gallery_images = :gallery_images,
+            collection_name = :collection_name,
+            material = :material,
+            badge = :badge,
+            craft_hours = :craft_hours,
+            origin = :origin,
+            length = :length,
+            width = :width,
+            height = :height,
+            weight = :weight,
+            accordion_craftsmanship = :accordion_craftsmanship,
+            accordion_care = :accordion_care,
+            accordion_delivery = :accordion_delivery,
             status = :status
 
         WHERE id = :id
@@ -634,6 +740,20 @@ try {
 
         ':image' =>
             $imageName,
+            
+        ':gallery_images' => $galleryJson,
+        ':collection_name' => $collectionName ?: null,
+        ':material' => $material ?: null,
+        ':badge' => $badge ?: null,
+        ':craft_hours' => $craftHours ?: null,
+        ':origin' => $origin ?: null,
+        ':length' => $length !== '' ? $length : null,
+        ':width' => $width !== '' ? $width : null,
+        ':height' => $height !== '' ? $height : null,
+        ':weight' => $weight !== '' ? $weight : null,
+        ':accordion_craftsmanship' => $accCraft ?: null,
+        ':accordion_care' => $accCare ?: null,
+        ':accordion_delivery' => $accDelivery ?: null,
 
         ':status' =>
             $status,

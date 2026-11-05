@@ -293,6 +293,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($stmt->rowCount() > 0) {
                         $successMessage = 'Order status updated successfully.';
+
+                        // Send Email Notification
+                        if (in_array($newStatus, ['shipped', 'delivered', 'cancelled'], true)) {
+                            // Include mailer from ecom
+                            require_once __DIR__ . '/../../../ecom/includes/mailer.php';
+
+                            // Fetch order details
+                            $stmtDetails = $pdo->prepare("SELECT order_number, customer_email, customer_name FROM orders WHERE id = :order_id LIMIT 1");
+                            $stmtDetails->execute([':order_id' => $orderId]);
+                            $orderDetails = $stmtDetails->fetch(PDO::FETCH_ASSOC);
+
+                            if ($orderDetails && !empty($orderDetails['customer_email'])) {
+                                $statusDisplay = ucfirst($newStatus);
+                                $subject = "Order Status Update - {$statusDisplay}";
+                                $body = "
+                                    <h2>Hello {$orderDetails['customer_name']},</h2>
+                                    <p>The status of your order (<strong>{$orderDetails['order_number']}</strong>) has been updated to <strong>{$statusDisplay}</strong>.</p>
+                                    <p>Thank you for shopping with us!</p>
+                                ";
+                                sendEmailNotification($orderDetails['customer_email'], $subject, $body);
+                            }
+                        }
                     } else {
                         $successMessage = 'Order status is already up to date.';
                     }
@@ -1594,7 +1616,7 @@ $queryString = http_build_query($currentQuery);
                                     <tr>
                                         <!-- ORDER -->
                                         <td>
-                                            <a href="javascript:void(0)" class="order-number" onclick="openOrderModal(<?= e(htmlspecialchars(json_encode($modalOrder, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8')) ?>)">
+                                            <a href="javascript:void(0)" class="order-number" onclick="openOrderModal(<?= htmlspecialchars(json_encode($modalOrder, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8') ?>)">
                                                 #<?= e($orderNumber) ?>
                                             </a>
                                             <span class="order-id-small">ID: <?= e($orderId) ?></span>
@@ -1651,7 +1673,7 @@ $queryString = http_build_query($currentQuery);
                                         <td>
                                             <div class="order-actions">
                                                 <!-- VIEW -->
-                                                <button type="button" class="order-action-btn" title="View Order" onclick="openOrderModal(<?= e(htmlspecialchars(json_encode($modalOrder, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8')) ?>)">
+                                                <button type="button" class="order-action-btn" title="View Order" onclick="openOrderModal(<?= htmlspecialchars(json_encode($modalOrder, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8') ?>)">
                                                     👁
                                                 </button>
 

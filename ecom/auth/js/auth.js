@@ -14,7 +14,11 @@
   // DOM Elements - Carousel
   const slides = document.querySelectorAll('.showcase-slide');
   const pills = document.querySelectorAll('.pill-dot');
+  const promptTag = document.getElementById('promptTag');
+  const promptText = document.getElementById('promptText');
+  const promptCycleBtn = document.getElementById('promptCycleBtn');
   const showcaseHeadline = document.getElementById('showcaseHeadline');
+  const promptCard = document.getElementById('showcasePromptCard');
 
   // DOM Elements - Auth Mode Switching
   const tabSignIn = document.getElementById('tabSignIn');
@@ -38,7 +42,6 @@
   const passwordToggleBtn = document.getElementById('passwordToggleBtn');
   const eyeIcon = document.getElementById('eyeIcon');
   const termsCheckbox = document.getElementById('termsCheckbox');
-  const termsConsentRow = document.getElementById('termsConsentRow');
   const authToast = document.getElementById('authToast');
   const toastMessage = document.getElementById('toastMessage');
   const btnGoogleAuth = document.getElementById('btnGoogleAuth');
@@ -98,6 +101,18 @@
       }
     });
 
+    // Update prompt card with micro-fade
+    if (promptCard) {
+      promptCard.style.opacity = '0.6';
+      promptCard.style.transform = 'translateY(4px)';
+      setTimeout(() => {
+        const data = slideData[currentSlide];
+        if (promptTag) promptTag.textContent = data.tag;
+        if (promptText) promptText.textContent = data.prompt;
+        promptCard.style.opacity = '1';
+        promptCard.style.transform = 'translateY(0)';
+      }, 160);
+    }
 
     // Update headline with subtle fade
     if (showcaseHeadline) {
@@ -126,6 +141,18 @@
     }
   }
 
+  // Next slide action button on prompt card
+  if (promptCycleBtn) {
+    promptCycleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      promptCycleBtn.style.transform = 'scale(0.92) rotate(180deg)';
+      setTimeout(() => {
+        promptCycleBtn.style.transform = '';
+      }, 350);
+      goToSlide(currentSlide + 1);
+      startCarouselTimer();
+    });
+  }
 
   // Pill dot controls
   pills.forEach((pill) => {
@@ -179,7 +206,6 @@
 
       passwordInput.setAttribute('autocomplete', 'new-password');
     }
-    updateSubmitButtonState();
   }
 
   if (tabSignIn) {
@@ -247,20 +273,7 @@
     authForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // 1. Mandatory Terms & Privacy agreement validation for BOTH Sign In & Sign Up
-      if (!termsCheckbox || !termsCheckbox.checked) {
-        showToast('Please agree to the Terms of Service & Privacy Policy to proceed.', 'error');
-        if (termsConsentRow) {
-          termsConsentRow.classList.remove('highlight-error');
-          void termsConsentRow.offsetWidth;
-          termsConsentRow.classList.add('highlight-error');
-          setTimeout(() => termsConsentRow.classList.remove('highlight-error'), 1800);
-        }
-        if (termsCheckbox) termsCheckbox.focus();
-        return;
-      }
-
-      const email = emailInput ? emailInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
       const password = passwordInput ? passwordInput.value.trim() : '';
 
       // Email validation
@@ -286,6 +299,12 @@
           if (firstNameInput) firstNameInput.focus();
           return;
         }
+
+        if (termsCheckbox && !termsCheckbox.checked) {
+          showToast('Please accept the Terms of Service to proceed.', 'error');
+          termsCheckbox.focus();
+          return;
+        }
       }
 
       // Loading state
@@ -293,65 +312,73 @@
       const originalText = submitBtnText.textContent;
       submitBtnText.textContent = currentMode === 'signin' ? 'Authenticating...' : 'Creating Account...';
 
-      const payload = {
-        action: currentMode === 'signin' ? 'login' : 'register',
-        email: email,
-        password: password
-      };
+      // Build request payload for the real backend API
+      const lastName = lastNameInput ? lastNameInput.value.trim() : '';
+      const fullName = currentMode === 'signup'
+        ? (firstNameInput ? firstNameInput.value.trim() : '') + (lastName ? ' ' + lastName : '')
+        : '';
 
-      if (currentMode === 'signup') {
-        const firstName = firstNameInput ? firstNameInput.value.trim() : '';
-        const lastName = lastNameInput ? lastNameInput.value.trim() : '';
-        payload.name = `${firstName} ${lastName}`.trim();
-      }
+      const payload = currentMode === 'signup'
+        ? { action: 'register', name: fullName, email: email, password: password }
+        : { action: 'login', email: email, password: password };
 
-      fetch('http://localhost:8080/api/customer-auth.php', {
+      fetch('/ecom/api/auth.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         submitBtn.classList.remove('loading');
         submitBtnText.textContent = originalText;
 
-        if (data.success) {
-          const displayName = data.customer.name || email.split('@')[0];
-
-          // Store session for client continuity
-          const sessionData = {
-            id: data.customer.id,
-            email: data.customer.email,
-            name: displayName,
-            loggedInAt: new Date().toISOString(),
-            vipTier: 'Heritage Circle'
-          };
-          try {
-            localStorage.setItem('ssrini_auth_user', JSON.stringify(sessionData));
-          } catch (err) {
-            console.warn('LocalStorage error:', err);
-          }
-
-          if (currentMode === 'signin') {
-            showToast(`Welcome back, ${displayName}! Redirecting to Atelier...`, 'success');
-          } else {
-            showToast(`Welcome to the SSRINI Circle, ${displayName}! Redirecting...`, 'success');
-          }
-
-          setTimeout(() => {
-            window.location.href = '../collection/index.html';
-          }, 1400);
-        } else {
-          showToast(data.message || 'Authentication failed.', 'error');
+        if (!data.success) {
+          showToast(data.error || data.message || 'Authentication failed.', 'error');
+          return;
         }
+
+        // We no longer strictly need localStorage because PHP handles the secure session!
+        // But we can keep a tiny footprint if needed.
+        try {
+          localStorage.setItem('ssrini_auth_user', JSON.stringify({ name: data.customer_name }));
+          
+          // Sync local cart to database
+          const localCartStr = localStorage.getItem('ssrini_cart');
+          if (localCartStr) {
+            const localCart = JSON.parse(localCartStr);
+            if (localCart.length > 0) {
+              fetch('/ecom/api/cart-sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'push', cart: localCart })
+              }).catch(e => console.warn('Cart sync failed:', e));
+            }
+          }
+        } catch (err) {
+          console.warn('LocalStorage/Sync error:', err);
+        }
+
+        if (currentMode === 'signin') {
+          showToast(`Welcome back, ${data.customer_name}! Redirecting...`, 'success');
+        } else {
+          showToast(`Welcome to the SSRINI Circle, ${data.customer_name}! Redirecting...`, 'success');
+        }
+
+        setTimeout(() => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirect = urlParams.get('redirect');
+          if (redirect) {
+            window.location.href = redirect;
+          } else {
+            window.location.href = '/ecom/index.php';
+          }
+        }, 1400);
       })
       .catch(err => {
-        console.error('Auth error:', err);
         submitBtn.classList.remove('loading');
         submitBtnText.textContent = originalText;
-        showToast('Connection error. Please try again.', 'error');
+        console.error('Auth API error:', err);
+        showToast('Network error. Please try again.', 'error');
       });
     });
   }
@@ -383,50 +410,28 @@
     });
   }
 
-  // Prevent clicking legal links inside labels from unintentionally toggling the checkbox
-  document.querySelectorAll('.auth-legal-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-  });
-
-  // Dynamic Submit Button State based on Terms Acceptance
-  function updateSubmitButtonState() {
-    const isTermsAgreed = termsCheckbox && termsCheckbox.checked;
-    if (!isTermsAgreed) {
-      submitBtn.classList.add('disabled');
-      submitBtn.setAttribute('aria-disabled', 'true');
-    } else {
-      submitBtn.classList.remove('disabled');
-      submitBtn.removeAttribute('aria-disabled');
-    }
-  }
-
-  if (termsCheckbox) {
-    termsCheckbox.addEventListener('change', updateSubmitButtonState);
-  }
-
-  // Intercept clicks on submit button if terms are not accepted
-  if (submitBtn) {
-    submitBtn.addEventListener('click', (e) => {
-      if (termsCheckbox && !termsCheckbox.checked) {
-        e.preventDefault();
-        showToast('Please agree to the Terms of Service & Privacy Policy to proceed.', 'error');
-        if (termsConsentRow) {
-          termsConsentRow.classList.remove('highlight-error');
-          void termsConsentRow.offsetWidth;
-          termsConsentRow.classList.add('highlight-error');
-          setTimeout(() => termsConsentRow.classList.remove('highlight-error'), 1800);
+  // Dynamic Back Home button resolution based on redirect parameter
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    const backBtn = document.getElementById('backHomeBtn');
+    const backBtnText = document.getElementById('backHomeBtnText');
+    if (redirectParam && backBtn) {
+      backBtn.href = redirectParam;
+      if (backBtnText) {
+        if (redirectParam.includes('collection')) {
+          backBtnText.textContent = 'Return to Atelier';
+        } else {
+          backBtnText.textContent = 'Return to Store';
         }
-        termsCheckbox.focus();
       }
-    });
+    }
+  } catch (err) {
+    console.warn('Redirect resolve error:', err);
   }
 
   // Initialize
-  if (termsCheckbox) termsCheckbox.checked = false;
   setAuthMode('signin');
-  updateSubmitButtonState();
   goToSlide(0);
   startCarouselTimer();
 

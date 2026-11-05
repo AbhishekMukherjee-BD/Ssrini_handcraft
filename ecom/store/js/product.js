@@ -1,6 +1,9 @@
 /**
- * SSRINI Product Detail Page (PDP) Media Carousel, Zoom, Accordions & Cart Engine
+ * 1:1 Juri Product Detail Page (PDP) Engine
+ * Handles dynamic product rendering, vertical image scroll stack, sticky info panel, and accordions.
  */
+
+const PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
 
 document.addEventListener('DOMContentLoaded', () => {
   initCartCount();
@@ -18,54 +21,18 @@ function initCartCount() {
 
 function loadProductDetails() {
   const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get('id');
+  const urlId = urlParams.get('id');
+  const productId = urlId || (PRODUCTS_DATA.length > 0 ? PRODUCTS_DATA[0].id : null);
 
-  if (!productId) {
-    document.body.innerHTML = '<div style="text-align:center; padding:50px;">Product not found.</div>';
+  // Find product from PRODUCTS_DATA array (by slug, id, or db_id)
+  let product = PRODUCTS_DATA.find(p => p.id === productId || String(p.db_id) === String(productId) || p.slug === productId);
+  
+  // Redirect or handle empty product if not found
+  if (!product) {
+    document.body.innerHTML = '<h1 style="text-align:center; padding:100px;">Product not found in database.</h1>';
     return;
   }
 
-  fetch(`http://localhost:8080/api/store-products.php?id=${productId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.success && data.data.length > 0) {
-        const p = data.data[0];
-        const product = {
-          id: p.id,
-          title: p.name,
-          collection: p.collection_name || 'Heritage Collection',
-          category: p.category_name || 'Uncategorized',
-          material: p.material || 'Premium Materials',
-          priceUSD: p.price_usd || Math.round(p.price / 80),
-          priceINR: p.price,
-          badge: p.badge || '',
-          images: (p.gallery_images && p.gallery_images.length > 0) ? 
-                    p.gallery_images.map(img => `http://localhost:8080/uploads/products/${img}`) : 
-                    [ p.image ? `http://localhost:8080/uploads/products/${p.image}` : '../collection/assets/images/placeholder.jpg' ],
-          description: p.description || '',
-          specs: {
-            craftHours: p.craft_hours ? `${p.craft_hours} Hours` : 'N/A',
-            origin: p.origin || 'Studio SSRINI',
-            dimensions: p.dimensions || 'Standard',
-            weight: p.weight ? `${p.weight} kg` : 'N/A'
-          },
-          stock: p.stock_quantity !== undefined ? parseInt(p.stock_quantity) : 1
-        };
-
-        renderProductUI(product);
-        // We can't fetch related directly without another call, so we'll fetch all active products for related
-        fetchRelatedProducts(product.id);
-      } else {
-        document.body.innerHTML = '<div style="text-align:center; padding:50px;">Product not found.</div>';
-      }
-    })
-    .catch(err => {
-      console.error('Error fetching product:', err);
-      document.body.innerHTML = '<div style="text-align:center; padding:50px; color:red;">Network error loading product.</div>';
-    });
-}
-
-function renderProductUI(product) {
   // Update Page Meta & Breadcrumbs
   document.title = `${product.title} | SSRINI Handcrafts`;
   const crumbCollection = document.querySelector('#crumb-collection');
@@ -73,18 +40,16 @@ function renderProductUI(product) {
   if (crumbCollection) crumbCollection.textContent = product.collection;
   if (crumbTitle) crumbTitle.textContent = product.title;
 
-  // Update Content
-  const colTag = document.querySelector('#pdp-collection-tag');
-  const title = document.querySelector('#pdp-title');
-  const priceUSD = document.querySelector('#pdp-price-usd');
-  const priceINR = document.querySelector('#pdp-price-inr');
-  const desc = document.querySelector('#pdp-desc');
+  // Update Product Details
+  const titleEl = document.querySelector('#pdp-title');
+  const priceINREl = document.querySelector('#pdp-price-inr');
+  const collectionTagEl = document.querySelector('#pdp-collection-tag');
+  const descEl = document.querySelector('#pdp-desc');
 
-  if (colTag) colTag.textContent = product.collection;
-  if (title) title.textContent = product.title;
-  if (priceUSD) priceUSD.textContent = `$${product.priceUSD}`;
-  if (priceINR) priceINR.textContent = `₹${product.priceINR.toLocaleString()}`;
-  if (desc) desc.textContent = product.description;
+  if (titleEl) titleEl.textContent = product.title;
+  if (priceINREl) priceINREl.textContent = `₹${product.priceINR.toLocaleString()}`;
+  if (collectionTagEl) collectionTagEl.textContent = product.collection;
+  if (descEl) descEl.textContent = product.description;
 
   // Specs
   const specHours = document.querySelector('#spec-hours');
@@ -97,22 +62,89 @@ function renderProductUI(product) {
   if (specDim) specDim.textContent = product.specs.dimensions;
   if (specWeight) specWeight.textContent = product.specs.weight;
 
-  // Gallery Setup
-  setupGallery(product.images, product.title);
+  // Accordions
+  const accCraft = document.querySelector('#acc-craft');
+  const accCare = document.querySelector('#acc-care');
+  const accDelivery = document.querySelector('#acc-delivery');
+  
+  if (accCraft && product.accordions.craftsmanship) accCraft.textContent = product.accordions.craftsmanship;
+  if (accCare && product.accordions.care) accCare.textContent = product.accordions.care;
+  if (accDelivery && product.accordions.delivery) accDelivery.textContent = product.accordions.delivery;
 
-  // Setup Add to Cart
+  // Render Vertical Image Scroll Stack (NO zoom, NO carousel)
+  setupVerticalGallery(product.images, product.title);
+
+  // Add to Cart Logic
   setupAddToCart(product);
+
+  // Mobile Sticky Buy Bar
+  setupMobileStickyBar(product);
+
+  // Related Products Grid
+  setupRelated(product.id);
 }
 
-// Editorial Scroll Gallery Setup (Vertical Photo Stack)
-function setupGallery(images, title) {
-  const gallery = document.querySelector('#pdp-scroll-gallery');
-  if (!gallery) return;
+// Mobile Sticky Buy Bar Engine
+function setupMobileStickyBar(product) {
+  let stickyBar = document.getElementById('mobileStickyBuyBar');
+  if (!stickyBar) {
+    stickyBar = document.createElement('div');
+    stickyBar.id = 'mobileStickyBuyBar';
+    stickyBar.className = 'mobile-pdp-sticky-bar';
+    stickyBar.innerHTML = `
+      <div class="sticky-bar-info">
+        <span class="sticky-bar-title">${product.title}</span>
+        <span class="sticky-bar-price">₹${product.priceINR.toLocaleString()}</span>
+      </div>
+      <button type="button" class="sticky-bar-buy-btn" id="stickyBarBuyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span>Add to Bag</span>
+      </button>
+    `;
+    document.body.appendChild(stickyBar);
 
-  gallery.innerHTML = images.map((imgSrc, i) => `
-    <div class="pdp-gallery-card" data-index="${i}">
-      <img src="${imgSrc}" alt="${title} View ${i + 1}" loading="${i === 0 ? 'eager' : 'lazy'}">
-    </div>
+    const stickyBuyBtn = document.getElementById('stickyBarBuyBtn');
+    if (stickyBuyBtn) {
+      stickyBuyBtn.addEventListener('click', () => {
+        const addBtn = document.querySelector('#btn-add-to-bag');
+        if (addBtn) addBtn.click();
+        if (window.openCart) window.openCart();
+      });
+    }
+
+    const mainActionBtn = document.querySelector('#btn-add-to-bag');
+    if (mainActionBtn && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            stickyBar.classList.add('visible');
+          } else {
+            stickyBar.classList.remove('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      observer.observe(mainActionBtn);
+    }
+  }
+}
+
+
+// Render vertical high-res image scroll stack matching Juri PDP
+function setupVerticalGallery(images, title) {
+  const stackContainer = document.querySelector('#pdp-scroll-gallery');
+  if (!stackContainer) return;
+
+  if (!images || images.length === 0) {
+    stackContainer.innerHTML = `<img src="assets/images/IMG_0685.jpg" alt="${title}" class="pdp-vertical-image-item">`;
+    return;
+  }
+
+  stackContainer.innerHTML = images.map((imgSrc, idx) => `
+    <img src="${imgSrc}" alt="${title} View ${idx + 1}" class="pdp-vertical-image-item" loading="${idx === 0 ? 'eager' : 'lazy'}">
   `).join('');
 }
 
@@ -123,18 +155,6 @@ function setupAddToCart(product) {
   const decBtn = document.querySelector('#qty-dec');
   const incBtn = document.querySelector('#qty-inc');
   const addBtn = document.querySelector('#btn-add-to-bag');
-
-  if (addBtn) {
-    if (product.stock <= 0) {
-      addBtn.textContent = 'Out of Stock';
-      addBtn.disabled = true;
-      addBtn.style.opacity = '0.5';
-      addBtn.style.cursor = 'not-allowed';
-      if (incBtn) incBtn.disabled = true;
-      if (decBtn) decBtn.disabled = true;
-      return;
-    }
-  }
 
   if (decBtn && qtyVal) {
     decBtn.addEventListener('click', () => {
@@ -147,55 +167,50 @@ function setupAddToCart(product) {
 
   if (incBtn && qtyVal) {
     incBtn.addEventListener('click', () => {
-      if (qty < product.stock) {
-        qty++;
-        qtyVal.textContent = qty;
-      }
+      qty++;
+      qtyVal.textContent = qty;
     });
   }
 
   if (addBtn) {
     addBtn.addEventListener('click', () => {
-      if (window.addToCart) {
-        window.addToCart({
+      let cart = JSON.parse(localStorage.getItem('ssrini_cart') || '[]');
+      const existing = cart.find(c => c.id === product.id);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({
           id: product.id,
           title: product.title,
-          price: product.priceUSD,
-          image: product.images[0],
-          qty: qty
+          priceINR: product.priceINR,
+          qty: qty,
+          image: product.images[0]
         });
-      } else {
-        let cart = JSON.parse(localStorage.getItem('ssrini_cart') || '[]');
-        const existing = cart.find(c => c.id === product.id);
-        if (existing) {
-          existing.qty += qty;
-        } else {
-          cart.push({ id: product.id, title: product.title, price: product.priceUSD, qty: qty, image: product.images[0] });
-        }
-        localStorage.setItem('ssrini_cart', JSON.stringify(cart));
-        initCartCount();
       }
 
-      addBtn.innerHTML = '<span>✓ Added to Bag</span>';
+      localStorage.setItem('ssrini_cart', JSON.stringify(cart));
+      initCartCount();
+
+      addBtn.innerHTML = '<span>✓ ADDED TO CART</span>';
       addBtn.classList.add('added');
 
       setTimeout(() => {
-        addBtn.innerHTML = '<span>Add to Bag</span>';
+        addBtn.innerHTML = '<span>ADD TO CART</span>';
         addBtn.classList.remove('added');
-      }, 1500);
+      }, 2000);
     });
   }
 }
 
-// Accordion Toggles
+// Juri Accordion Expand / Collapse
 function initAccordions() {
-  const items = document.querySelectorAll('.accordion-item');
-  items.forEach(item => {
+  const accordionItems = document.querySelectorAll('.accordion-item');
+  accordionItems.forEach(item => {
     const header = item.querySelector('.accordion-header');
     if (header) {
       header.addEventListener('click', () => {
         const isActive = item.classList.contains('active');
-        items.forEach(i => i.classList.remove('active'));
+        accordionItems.forEach(i => i.classList.remove('active'));
         if (!isActive) {
           item.classList.add('active');
         }
@@ -204,7 +219,7 @@ function initAccordions() {
   });
 }
 
-// Related Products
+// Related Masterpieces Grid
 function setupRelated(currentId) {
   const relatedGrid = document.querySelector('#pdp-related-grid');
   if (!relatedGrid) return;
@@ -215,66 +230,22 @@ function setupRelated(currentId) {
     <article class="product-card">
       <div class="product-image-box">
         <span class="product-badge">${item.badge}</span>
-        <a href="product.html?id=${item.id}">
+        <a href="product.php?id=${item.id}">
           <img src="${item.images[0]}" alt="${item.title}" class="img-primary" loading="lazy">
           <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary" loading="lazy">
         </a>
+        <button class="quickview-btn" onclick="window.openQuickView('${item.id}')">Quick View</button>
       </div>
       <div class="product-info">
-        <span class="product-collection-tag">${item.collection}</span>
-        <a href="product.html?id=${item.id}" class="product-title">${item.title}</a>
-        <p class="product-material-desc">${item.material}</p>
+        <span class="product-category">${item.category}</span>
+        <h3 class="product-title">
+          <a href="product.php?id=${item.id}">${item.title}</a>
+        </h3>
+        <p class="product-collection">${item.collection}</p>
         <div class="product-price-row">
-          <span class="product-price">$${item.priceUSD}</span>
-          <span class="product-currency-inr">₹${item.priceINR.toLocaleString()}</span>
+          <span class="price-inr">₹${item.priceINR.toLocaleString()}</span>
         </div>
       </div>
     </article>
   `).join('');
-}
-
-function fetchRelatedProducts(currentId) {
-  fetch('http://localhost:8080/api/store-products.php')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        const others = data.data.filter(p => String(p.id) !== String(currentId)).slice(0, 4).map(p => ({
-          id: p.id,
-          title: p.name,
-          collection: p.collection_name || 'Heritage Collection',
-          material: p.material || 'Premium Materials',
-          priceUSD: p.price_usd || Math.round(p.price / 80),
-          priceINR: p.price,
-          badge: p.badge || '',
-          images: (p.gallery_images && p.gallery_images.length > 0) ? 
-                    p.gallery_images.map(img => `http://localhost:8080/uploads/products/${img}`) : 
-                    [ p.image ? `http://localhost:8080/uploads/products/${p.image}` : '../collection/assets/images/placeholder.jpg' ]
-        }));
-        
-        const relatedGrid = document.querySelector('#pdp-related-grid');
-        if (!relatedGrid) return;
-        
-        relatedGrid.innerHTML = others.map(item => `
-          <article class="product-card">
-            <div class="product-image-box">
-              <span class="product-badge">${item.badge}</span>
-              <a href="product.html?id=${item.id}">
-                <img src="${item.images[0]}" alt="${item.title}" class="img-primary" loading="lazy">
-                <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary" loading="lazy">
-              </a>
-            </div>
-            <div class="product-info">
-              <span class="product-collection-tag">${item.collection}</span>
-              <a href="product.html?id=${item.id}" class="product-title">${item.title}</a>
-              <p class="product-material-desc">${item.material}</p>
-              <div class="product-price-row">
-                <span class="product-price">$${item.priceUSD}</span>
-                <span class="product-currency-inr">₹${item.priceINR.toLocaleString()}</span>
-              </div>
-            </div>
-          </article>
-        `).join('');
-      }
-    })
-    .catch(err => console.error('Error fetching related products:', err));
 }

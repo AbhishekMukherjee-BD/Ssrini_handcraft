@@ -1,0 +1,322 @@
+<?php 
+require_once __DIR__ . "/../includes/products_data.php"; 
+
+$productId = $_GET['id'] ?? null;
+$product = null;
+
+if ($productId) {
+    foreach ($jsProducts as $p) {
+        if ($p['id'] === $productId) {
+            $product = $p;
+            break;
+        }
+    }
+}
+
+$pageTitle = $product ? htmlspecialchars($product['name']) . " | SSRINI" : "Product Details | SSRINI Luxury Handcrafts";
+$pageDesc = $product ? htmlspecialchars(substr($product['description'] ?? 'Exclusive handcrafted luxury from SSRINI.', 0, 155)) . '...' : "Explore the full catalog of handcrafted luxury jewelry, terracotta masterpieces, pure silks, and filigree art from SSRINI.";
+$pageUrl = "https://yourdomain.com/ecom/store/product.php?id=" . urlencode($productId);
+$ogImage = $product ? "https://yourdomain.com/ecom/" . htmlspecialchars($product['image_url'] ?? '') : "";
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= $pageTitle ?></title>
+  <meta name="description" content="<?= $pageDesc ?>">
+  
+  <link rel="canonical" href="<?= $pageUrl ?>">
+  
+  <!-- Open Graph & Social Sharing -->
+  <meta property="og:title" content="<?= $pageTitle ?>">
+  <meta property="og:description" content="<?= $pageDesc ?>">
+  <meta property="og:url" content="<?= $pageUrl ?>">
+  <meta property="og:type" content="product">
+  <?php if ($ogImage): ?>
+  <meta property="og:image" content="<?= $ogImage ?>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="<?= $ogImage ?>">
+  <?php endif; ?>
+
+  <!-- JSON-LD Product Schema -->
+  <?php if ($product): ?>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "<?= htmlspecialchars($product['name']) ?>",
+    "image": [
+      "<?= $ogImage ?>"
+    ],
+    "description": "<?= htmlspecialchars($product['description'] ?? '') ?>",
+    "sku": "<?= htmlspecialchars($product['id']) ?>",
+    "brand": {
+      "@type": "Brand",
+      "name": "SSRINI"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "<?= $pageUrl ?>",
+      "priceCurrency": "INR",
+      "price": "<?= htmlspecialchars(str_replace(',', '', $product['price'] ?? '0')) ?>",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+  <?php endif; ?>
+  
+  <!-- Global Store Data Payload -->
+  <script>
+    window.PHP_PRODUCTS_DATA = <?= json_encode($jsProducts, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    window.PHP_WISHLIST_DATA = <?= json_encode($userWishlist, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+  </script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/store.css">
+  <link rel="stylesheet" href="css/cart-drawer.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <link rel="stylesheet" href="../css/mobile-responsive.css?v=20260914">
+  <style>
+    /* Minimal White Auth Button (Synced with Site Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.5px !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    }
+    .nav-auth-btn:hover {
+      background: #F9FAFB !important;
+      border-color: rgba(42, 42, 42, 0.35) !important;
+      color: #000000 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+    }
+    .nav-auth-icon {
+      flex-shrink: 0 !important;
+      color: #4B5563 !important;
+      transition: color 0.2s ease !important;
+    }
+    .nav-auth-btn:hover .nav-auth-icon {
+      color: #000000 !important;
+    }
+  </style>
+  
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" role="banner">
+    <a href="/ecom/index.php" class="brand">
+      <img src="assets/svgs/logo.svg" alt="SSRINI Handcrafts" class="brand-logo-img">
+    </a>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/index.php">Home</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/collection/index.php">Collections</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="/ecom/store/index.php">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/about/index.php">About</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/contact/index.php">Contacts</a>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Minimal White Auth Button -->
+        <a href="/ecom/auth/index.php" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+          <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Sign In</span>
+        </a>
+
+        <!-- Animated Cart Icon with Tooltip -->
+        <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+          <a href="#" onclick="if(window.openCart) { window.openCart(); return false; }" class="cart-indicator" id="cart-indicator-link">
+            <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+              <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999"/>
+              <circle class="cart-wheel-left" cx="11" cy="41" r="4"/>
+              <circle class="cart-wheel-right" cx="37" cy="41" r="4"/>
+              <path class="cart-upper" d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3"/>
+              <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19"/>
+              <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19"/>
+              <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19"/>
+            </svg>
+            <span class="cart-count">0</span>
+          </a>
+          <!-- Hover Tooltip Popup -->
+          <div class="cart-tooltip">Shopping Bag</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== PRODUCT DETAIL CONTAINER ==================== -->
+  <main class="pdp-container">
+    
+    <!-- Breadcrumbs -->
+    <nav class="store-breadcrumbs" aria-label="Breadcrumb">
+      <a href="/ecom/index.php">Home</a>
+      <span>/</span>
+      <a href="/ecom/store/index.php">Store</a>
+      <span>/</span>
+      <span id="crumb-collection">Collection</span>
+      <span>/</span>
+      <span id="crumb-title">Masterpiece</span>
+    </nav>
+
+    <!-- Main Split Layout -->
+    <div class="pdp-main-layout">
+      
+      <!-- Left: Editorial Scroll Gallery (Vertical Photo Stack) -->
+      <section class="pdp-gallery-wrapper pdp-scroll-gallery" id="pdp-scroll-gallery">
+        <!-- Rendered dynamically by product.js with all product photos stacked vertically -->
+      </section>
+
+      <!-- Right: Product Information & Purchase Action -->
+      <section class="pdp-details-panel">
+        <div>
+          <span id="pdp-collection-tag" class="pdp-collection-name">Rivulet Heritage</span>
+          <h1 id="pdp-title" class="pdp-title">Rivulet Signature Peridot Ring</h1>
+        </div>
+
+        <div class="pdp-price-box">
+          <span id="pdp-price-inr" class="pdp-price-inr">₹35,000</span>
+        </div>
+
+        <div class="pdp-artisan-callout">
+          <p id="pdp-desc">
+            A fluid sculptural form inspired by natural watercourses, hand-carved in wax and cast in 24k gold-plated brass crowned with a vivid green peridot gemstone.
+          </p>
+        </div>
+
+        <!-- Artisan Specifications -->
+        <div class="pdp-specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Artisan Time</span>
+            <span id="spec-hours" class="spec-value">36 Handcrafted Hours</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Guild Provenance</span>
+            <span id="spec-origin" class="spec-value">Bengal Atelier</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Dimensions</span>
+            <span id="spec-dim" class="spec-value">28mm x 18mm</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Item Weight</span>
+            <span id="spec-weight" class="spec-value">14.2g</span>
+          </div>
+        </div>
+
+        <!-- Quantity & Add to Bag -->
+        <div class="pdp-actions-row">
+          <div class="quantity-picker">
+            <button id="qty-dec" class="qty-btn" aria-label="Decrease quantity">−</button>
+            <span id="qty-val" class="qty-val">1</span>
+            <button id="qty-inc" class="qty-btn" aria-label="Increase quantity">+</button>
+          </div>
+
+          <button id="btn-add-to-bag" class="btn-add-to-bag">
+            <span>Add to Bag</span>
+          </button>
+        </div>
+
+        <!-- Accordions -->
+        <div class="pdp-accordions">
+          
+          <div class="accordion-item active">
+            <button class="accordion-header">
+              <span>Artisanal Craftsmanship & Provenance</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div id="acc-craft" class="accordion-body">
+              Every SSRINI creation is sculpted by master generational artisans using ancient techniques without automated machinery. Each piece is individually hallmarked and certified by our guild inspector.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span>Care & Preservation Guidelines</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div id="acc-care" class="accordion-body">
+              Store in the provided velvet-lined wooden keepsake box. Avoid direct contact with harsh chemical detergents or perfume sprays. Clean gently using a soft microfiber cloth and natural beeswax conditioner for timber elements.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span>Insured Delivery & Authenticity Certificate</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div id="acc-delivery" class="accordion-body">
+              Complimentary global priority insured shipping. Delivered in our signature hand-embossed luxury presentation case with a serialized Certificate of Artisanal Authenticity signed by the master craftsman.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Related Masterpieces Section -->
+    <section class="pdp-related-section">
+      <h2 class="related-title">Complete The Ensemble</h2>
+      <div id="pdp-related-grid" class="product-grid cols-4"></div>
+    </section>
+
+  </main>
+
+  <!-- ==================== QUICK VIEW MODAL ==================== -->
+  <div id="quickview-modal-overlay" class="quickview-modal-overlay">
+    <div id="quickview-modal-content" class="quickview-modal-card"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Scripts -->
+  <script src="../js/cursor.js"></script>
+  <script src="js/cart-drawer.js"></script>
+  <script src="js/store.js"></script>
+  <script src="../js/auth-session.js"></script>
+  <script src="js/product.js"></script>
+  <script src="../js/mobile-nav.js?v=20260914"></script>
+</body>
+</html>

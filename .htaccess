@@ -1,0 +1,60 @@
+# Disable directory browsing
+Options -Indexes
+DirectoryIndex index.php index.html
+
+# Rewrite Rules for sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(\.git|\.env|vendor|composer\.) - [F,L]
+</IfModule>
+
+# Protect hidden files and sensitive file extensions (Apache 2.4 + 2.2 fallback)
+<FilesMatch "(^\.|\.(env|sql|json|lock|bak|log|md|sh)$)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block composer files
+<Files "composer.*">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</Files>
+
+# Block direct access to vendor directory
+RedirectMatch 403 ^/vendor/.*$
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com;"
+    Header unset X-Powered-By
+    Header always unset X-Powered-By
+
+    # Service Worker Script - Never cache sw.js, allow root scope
+    <Files "sw.js">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Service-Worker-Allowed "/"
+    </Files>
+
+    # Heavy Static Media & Fonts - Cache Forever (1 Year Immutable)
+    <FilesMatch "\.(jpg|jpeg|png|webp|gif|svg|woff2|woff|ttf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Code Assets - Stale While Revalidate
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
+    </FilesMatch>
+</IfModule>

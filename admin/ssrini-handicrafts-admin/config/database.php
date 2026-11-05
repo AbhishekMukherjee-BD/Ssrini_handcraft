@@ -7,10 +7,12 @@
  */
 
 
-$host = '127.0.0.1';
-$dbname = 'ssrini_handcrafts';
-$username = 'root';
-$password = '';
+require_once dirname(__DIR__, 3) . '/ecom/includes/env.php';
+$env = get_app_env();
+$host = $env['DB_HOST'] ?? '127.0.0.1';
+$dbname = $env['DB_NAME'] ?? 'ssrinihandicrafts';
+$username = $env['DB_USER'] ?? 'ssrinihandicrafts';
+$password = $env['DB_PASS'] ?? 'IuE7HzxtQKszKPk1H6Nx';
 
 $charset = 'utf8mb4';
 $dsn = "mysql:host={$host};dbname={$dbname}; charset={$charset}";
@@ -31,13 +33,7 @@ try {
     );
 
 } catch (PDOException $e) {
-    die(
-        'Database connection failed.<br><br>' .
-        'Error: ' .
-        htmlspecialchars(
-            $e->getMessage(),
-            ENT_QUOTES,
-            'UTF-8'
-        )
-    );
+    error_log('Database connection failed: ' . $e->getMessage());
+    http_response_code(503);
+    die('Service temporarily unavailable. Please try again later.');
 }

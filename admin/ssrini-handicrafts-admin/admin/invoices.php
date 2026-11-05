@@ -541,23 +541,11 @@ foreach ($invoices as $inv) {
     });
 
     function printInvoice(invoice) {
-        const area = document.getElementById('printInvoiceArea');
-        let html = `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <div style="border-bottom:2px solid #7c3aed; padding-bottom:10px; margin-bottom:20px;">
-                    <h2 style="margin:0;">Ssrini Handicrafts</h2>
-                    <p style="margin:0; color:#666;">Invoice Details</p>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        `;
-        Object.keys(invoice).forEach(k => {
-            html += `<div style="border:1px solid #ddd; padding:8px;"><strong>${k.replace(/_/g, ' ')}:</strong> ${invoice[k] ?? '-'}</div>`;
-        });
-        html += `</div></div>`;
-        area.innerHTML = html;
-        area.style.display = 'block';
-        window.print();
-        area.style.display = 'none';
+        if (!invoice.order_id) {
+            alert('Cannot print: No associated order ID found for this invoice.');
+            return;
+        }
+        window.open('/ecom/store/invoice.php?order_id=' + invoice.order_id, '_blank');
     }
 </script>
 </body>

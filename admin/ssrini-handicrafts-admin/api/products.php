@@ -27,7 +27,7 @@ try {
             p.id, p.category_id, p.product_code, p.name, p.slug,
             p.description, p.price, p.price_usd, p.discount_price, p.stock_quantity,
             p.image, p.gallery_images, p.material, p.badge, p.craft_hours,
-            p.origin, p.dimensions, p.weight, p.collection_name, p.status,
+            p.origin, p.length, p.width, p.height, p.weight, p.collection_name, p.status,
             p.created_at, p.updated_at,
             c.name AS category_name
         FROM products p

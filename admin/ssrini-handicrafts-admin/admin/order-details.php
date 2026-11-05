@@ -10,11 +10,9 @@ require_once __DIR__ . '/../includes/auth.php';
 
 requireAdminLogin();
 
-if (!isset($conn) || !($conn instanceof mysqli)) {
+if (!isset($pdo) || !($pdo instanceof PDO)) {
     die('Database connection failed.');
 }
-
-$conn->set_charset('utf8mb4');
 
 /* HELPER FUNCTIONS */
 function e($value) {
@@ -65,6 +63,11 @@ if ($orderId <= 0) {
 
 /* UPDATE ORDER POST HANDLER */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_order'])) {
+    $postedToken = $_POST['csrf_token'] ?? '';
+    if (!verifyCsrfToken($postedToken)) {
+        header('Location: order-details.php?id=' . $orderId . '&error=' . rawurlencode('Security validation failed. Please refresh and try again.'));
+        exit;
+    }
     $newOrderStatus = isset($_POST['order_status']) ? trim($_POST['order_status']) : '';
     $newPaymentStatus = isset($_POST['payment_status']) ? trim($_POST['payment_status']) : '';
 
@@ -82,21 +85,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_order'])) {
     }
 
     $updateQuery = "UPDATE orders SET order_status = ?, payment_status = ?, updated_at = NOW() WHERE id = ?";
-    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt = $pdo->prepare($updateQuery);
 
     if (!$updateStmt) {
         header('Location: order-details.php?id=' . $orderId . '&error=' . rawurlencode('Unable to prepare update query.'));
         exit;
     }
 
-    $updateStmt->bind_param('ssi', $newOrderStatus, $newPaymentStatus, $orderId);
-
-    if ($updateStmt->execute()) {
-        $updateStmt->close();
+    if ($updateStmt->execute([$newOrderStatus, $newPaymentStatus, $orderId])) {
         header('Location: order-details.php?id=' . $orderId . '&success=' . rawurlencode('Order details updated successfully.'));
         exit;
     } else {
-        $updateStmt->close();
         header('Location: order-details.php?id=' . $orderId . '&error=' . rawurlencode('Unable to update the order.'));
         exit;
     }
@@ -120,15 +119,10 @@ $orderQuery = "
     LIMIT 1
 ";
 
-$orderStmt = $conn->prepare($orderQuery);
+$orderStmt = $pdo->prepare($orderQuery);
 if ($orderStmt) {
-    $orderStmt->bind_param('i', $orderId);
-    $orderStmt->execute();
-    $orderResult = $orderStmt->get_result();
-    if ($orderResult && $orderResult->num_rows > 0) {
-        $order = $orderResult->fetch_assoc();
-    }
-    $orderStmt->close();
+    $orderStmt->execute([$orderId]);
+    $order = $orderStmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
 /* ORDER NOT FOUND */
@@ -186,17 +180,10 @@ $itemsQuery = "
     ORDER BY oi.id ASC
 ";
 
-$itemsStmt = $conn->prepare($itemsQuery);
+$itemsStmt = $pdo->prepare($itemsQuery);
 if ($itemsStmt) {
-    $itemsStmt->bind_param('i', $orderId);
-    $itemsStmt->execute();
-    $itemsResult = $itemsStmt->get_result();
-    if ($itemsResult) {
-        while ($item = $itemsResult->fetch_assoc()) {
-            $orderItems[] = $item;
-        }
-    }
-    $itemsStmt->close();
+    $itemsStmt->execute([$orderId]);
+    $orderItems = $itemsStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 }
 
 /* CALCULATIONS & DATA MAPPING */
@@ -545,6 +532,7 @@ $pageTitle = 'Order #' . ($order['order_number'] ?: $order['id']);
                             </div>
                             <div class="order-card-body">
                                 <form method="POST" action="order-details.php?id=<?= e($orderId) ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
                                     <div class="form-group">
                                         <label for="order_status" class="form-label">Order Status</label>
                                         <select id="order_status" name="order_status" class="order-select" required>

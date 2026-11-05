@@ -1,0 +1,267 @@
+/**
+ * SSRINI Handcrafts - Static Product Catalog
+ * Pre-extracted and optimized for instant client-side execution on Vercel
+ */
+window.PRODUCTS_DATA = [
+  {
+    "id": "rivulet-ring-01",
+    "db_id": 1,
+    "slug": "rivulet-ring-01",
+    "title": "Rivulet Signature Peridot Ring",
+    "collection": "Rivulet Heritage",
+    "category": "Rings",
+    "material": "Gold Plated Brass & Peridot",
+    "priceINR": 35000,
+    "badge": "Signature Edition",
+    "images": [
+      "/ecom/store/assets/images/IMG_0685.jpg",
+      "/ecom/store/assets/images/IMG_0688.jpg",
+      "/ecom/store/assets/images/IMG_0689.jpg",
+      "/ecom/store/assets/images/IMG_0690.jpg"
+    ],
+    "description": "A fluid sculptural form inspired by natural watercourses, hand-carved in wax and cast in 24k gold-plated brass crowned with a vivid green peridot gemstone.",
+    "specs": {
+      "craftHours": "36 Handcrafted Hours",
+      "origin": "Bengal Atelier",
+      "dimensions": "28mm x 18mm x 14mm",
+      "weight": "14.2g"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "terracotta-vessel-02",
+    "db_id": 2,
+    "slug": "terracotta-vessel-02",
+    "title": "Terracotta Antiquity Vessel",
+    "collection": "Terracotta Art",
+    "category": "Vessels",
+    "material": "Natural Fired Clay & Mineral Pigment",
+    "priceINR": 31500,
+    "badge": "Heirloom",
+    "images": [
+      "/ecom/store/assets/images/IMG_0686.jpg",
+      "/ecom/store/assets/images/IMG_0689.jpg",
+      "/ecom/store/assets/images/IMG_0691.jpg",
+      "/ecom/store/assets/images/IMG_0692.jpg"
+    ],
+    "description": "Ancient terracotta craftsmanship revived. Wheel-thrown and meticulously hand-etched with geometric folklore symbols before kiln firing.",
+    "specs": {
+      "craftHours": "52 Handcrafted Hours",
+      "origin": "Bishnupur Master Guild",
+      "dimensions": "320mm x 180mm",
+      "weight": "1.8kg"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "silk-stole-03",
+    "db_id": 3,
+    "slug": "silk-stole-03",
+    "title": "Imperial Mulberry Silk Stole",
+    "collection": "Silk & Weave",
+    "category": "Textiles",
+    "material": "100% Pure Mulberry Silk & Gold Zari",
+    "priceINR": 24000,
+    "badge": "Limited Run",
+    "images": [
+      "/ecom/store/assets/images/IMG_0690.jpg",
+      "/ecom/store/assets/images/IMG_0694.jpg",
+      "/ecom/store/assets/images/IMG_0695.jpg",
+      "/ecom/store/assets/images/IMG_0696.jpg"
+    ],
+    "description": "Woven on heritage wooden pit looms using pure mulberry silk threads and real silver-gilt zari border motifs.",
+    "specs": {
+      "craftHours": "72 Loom Hours",
+      "origin": "Murshidabad Weavers",
+      "dimensions": "200cm x 70cm",
+      "weight": "180g"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "filigree-earring-04",
+    "db_id": 4,
+    "slug": "filigree-earring-04",
+    "title": "Tarakasi Filigree Bloom Earrings",
+    "collection": "Brass Filigree",
+    "category": "Earrings",
+    "material": "Fine Brass & Sterling Silver Wire",
+    "priceINR": 26000,
+    "badge": "Masterwork",
+    "images": [
+      "/ecom/store/assets/images/IMG_0694.jpg",
+      "/ecom/store/assets/images/IMG_0697.jpg",
+      "/ecom/store/assets/images/IMG_0698.jpg",
+      "/ecom/store/assets/images/IMG_0699.jpg"
+    ],
+    "description": "Delicate gossamer filigree wire drawing hand-twisted into botanical silhouettes by master artisans.",
+    "specs": {
+      "craftHours": "40 Handcrafted Hours",
+      "origin": "Cuttack Guild",
+      "dimensions": "58mm drop length",
+      "weight": "11.5g per pair"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "ceramic-glyph-05",
+    "db_id": 5,
+    "slug": "ceramic-glyph-05",
+    "title": "Celadon Glazed Ceramic Glyph",
+    "collection": "Ceramic Glyphs",
+    "category": "Decor",
+    "material": "Stoneware & Ash Glaze",
+    "priceINR": 41000,
+    "badge": "Studio Signature",
+    "images": [
+      "/ecom/store/assets/images/IMG_0695.jpg",
+      "/ecom/store/assets/images/IMG_0700.jpg",
+      "/ecom/store/assets/images/IMG_0701.jpg",
+      "/ecom/store/assets/images/IMG_0702.jpg"
+    ],
+    "description": "High-fire stoneware ceramic sculpture featuring crackle celadon ash glaze with engraved ancestral glyphs.",
+    "specs": {
+      "craftHours": "64 Handcrafted Hours",
+      "origin": "Studio SSRINI",
+      "dimensions": "240mm x 140mm x 90mm",
+      "weight": "1.2kg"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "wooden-sculpture-06",
+    "db_id": 6,
+    "slug": "wooden-sculpture-06",
+    "title": "Teak Floral Relief Sculpture",
+    "collection": "Wooden Sculptures",
+    "category": "Sculptures",
+    "material": "Reclaimed Teak & Natural Beeswax",
+    "priceINR": 54000,
+    "badge": "Collector Edition",
+    "images": [
+      "/ecom/store/assets/images/IMG_0697.jpg",
+      "/ecom/store/assets/images/IMG_0702.jpg",
+      "/ecom/store/assets/images/IMG_0703.jpg",
+      "/ecom/store/assets/images/IMG_0704.jpg"
+    ],
+    "description": "Carved from single block century-old reclaimed seasoned teak, polished exclusively with natural organic beeswax and oils.",
+    "specs": {
+      "craftHours": "96 Handcrafted Hours",
+      "origin": "Heritage Woodcraft Guild",
+      "dimensions": "450mm x 220mm x 80mm",
+      "weight": "3.4kg"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "royal-pendant-07",
+    "db_id": 7,
+    "slug": "royal-pendant-07",
+    "title": "Royal Filigree Emerald Pendant",
+    "collection": "Royal Atelier",
+    "category": "Rings",
+    "material": "24k Gold Gilt & Natural Emerald",
+    "priceINR": 65000,
+    "badge": "Atelier Rare",
+    "images": [
+      "/ecom/store/assets/images/IMG_0700.jpg",
+      "/ecom/store/assets/images/IMG_0707.jpg",
+      "/ecom/store/assets/images/IMG_0708.jpg",
+      "/ecom/store/assets/images/IMG_0709.jpg"
+    ],
+    "description": "An ode to royal court jewelry, featuring intricate wirework framing a raw natural Zambian emerald drop.",
+    "specs": {
+      "craftHours": "80 Handcrafted Hours",
+      "origin": "Royal Goldsmith Atelier",
+      "dimensions": "42mm x 25mm with 18\" chain",
+      "weight": "19.8g"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "terracotta-mask-08",
+    "db_id": 8,
+    "slug": "terracotta-mask-08",
+    "title": "Goddess Ritual Mask Sculpture",
+    "collection": "Terracotta Art",
+    "category": "Sculptures",
+    "material": "Oxidized Red Terracotta",
+    "priceINR": 43000,
+    "badge": "Sacred Series",
+    "images": [
+      "/ecom/store/assets/images/IMG_0701.jpg",
+      "/ecom/store/assets/images/IMG_0710.jpg",
+      "/ecom/store/assets/images/IMG_0711.jpg",
+      "/ecom/store/assets/images/IMG_0717.jpg"
+    ],
+    "description": "Sacred ritual mask sculpted using traditional hollow hand-modeling and decorated with natural ochre wash.",
+    "specs": {
+      "craftHours": "58 Handcrafted Hours",
+      "origin": "Bengal Atelier",
+      "dimensions": "380mm x 240mm",
+      "weight": "2.1kg"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+    }
+  },
+  {
+    "id": "agent-test-product",
+    "db_id": 9,
+    "slug": "agent-test-product",
+    "title": "Agent Test Product",
+    "collection": "Heritage Collection",
+    "category": "Rings",
+    "material": "Fine Handcrafted Material",
+    "priceINR": 1500,
+    "badge": "Signature Edition",
+    "images": [
+      "/ecom/store/assets/images/IMG_0685.jpg",
+      "/ecom/store/assets/images/gallery_6aa61472dc2903.49223063.jpg"
+    ],
+    "description": "This is a test product created by the browser subagent.",
+    "specs": {
+      "craftHours": "36 Handcrafted Hours",
+      "origin": "Bengal Atelier",
+      "dimensions": "Custom Handcrafted Size",
+      "weight": "14.2g"
+    },
+    "accordions": {
+      "craftsmanship": "Hand-forged by master artisans with decades of heritage expertise.",
+      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft suede pouch.",
+      "delivery": "Ships in 3-5 business days in full luxury presentation gift packaging with certificate of authenticity."
+    }
+  }
+];
+window.PHP_PRODUCTS_DATA = window.PRODUCTS_DATA;
+window.PHP_WISHLIST_DATA = [];

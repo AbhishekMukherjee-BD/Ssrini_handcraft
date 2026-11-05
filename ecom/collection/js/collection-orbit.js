@@ -8,16 +8,22 @@
 (function () {
   'use strict';
 
-  // 1. DYNAMIC CRAFTSMANSHIP ASSET REGISTRY (1000x1000 WebP at Quality 92 with Lanczos & Unsharp Mask)
-  const CRAFTSMANSHIP_IMAGES = [
-    'assets/images/craftsmanship/1.webp',
-    'assets/images/craftsmanship/2.webp',
-    'assets/images/craftsmanship/3.webp',
-    'assets/images/craftsmanship/4.webp',
-    'assets/images/craftsmanship/5.webp',
-    'assets/images/craftsmanship/6.webp',
-    'assets/images/craftsmanship/7.webp'
-  ];
+  // 1. DYNAMIC CRAFTSMANSHIP ASSET REGISTRY
+  // Reads from DB-injected window.__SSRINI_COLLECTION_DB__ if available,
+  // falls back to hardcoded paths as a safety net.
+  const _DB = window.__SSRINI_COLLECTION_DB__ || null;
+  const CRAFTSMANSHIP_IMAGES = _DB && _DB.orbit && _DB.orbit.length
+    ? _DB.orbit.map(o => o.src)
+    : [
+        'assets/images/craftsmanship/1.webp',
+        'assets/images/craftsmanship/2.webp',
+        'assets/images/craftsmanship/3.webp',
+        'assets/images/craftsmanship/4.webp',
+        'assets/images/craftsmanship/5.webp',
+        'assets/images/craftsmanship/6.webp',
+        'assets/images/craftsmanship/7.webp'
+      ];
+  const HERO_IMAGE_SRC = _DB && _DB.hero ? _DB.hero.src : 'assets/images/craftsmanship/necklace-hero.webp';
 
   // 2. FIXED ENGINE STATE (Settings permanently locked to 300 / 40 / 2.4)
   const state = {
@@ -198,7 +204,7 @@
       this.src = `assets/images/craftsmanship/${baseName}.${ext}`;
     };
 
-    // Crystal glass shine reflection (from rivulet.html)
+    // Crystal glass shine reflection (from rivulet.php)
     const shine = document.createElement('div');
     shine.className = 'card-glass-shine';
 
@@ -292,7 +298,7 @@
         // Spot 6 is at the bottom apex (theta ≈ 86.4 deg, X ≈ 0, Y ≈ +R), naturally pointing down
         const isHeroSpot = (i === 6);
         const imageUrl = isHeroSpot
-          ? 'assets/images/craftsmanship/necklace-hero.webp'
+          ? HERO_IMAGE_SRC
           : state.images[i % state.images.length];
         const cardEl = buildCardDOM(i, item, imageUrl);
         if (isHeroSpot) {

@@ -1,0 +1,464 @@
+<?php
+require_once __DIR__ . '/../includes/social_links.php';
+require_once __DIR__ . '/../includes/collection_data.php';
+$socialLinks    = get_social_links_data();
+$heroImage      = get_collection_hero_image();
+$orbitImages    = get_collection_orbit_images();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSRINI | Haute Joaillerie Collection</title>
+  
+  <link rel="canonical" href="https://yourdomain.com/ecom/collection/">
+
+  <!-- SEO & Brand Meta -->
+  <meta name="description"
+    content="SSRINI Luxury Handcrafts — Radial collection constellation showcasing 25 imperial handcrafted artifacts surrounding the master atelier emblem.">
+    
+  <!-- Open Graph & Social -->
+  <meta property="og:title" content="SSRINI | Haute Joaillerie Collection">
+  <meta property="og:description" content="SSRINI Luxury Handcrafts — Radial collection constellation showcasing 25 imperial handcrafted artifacts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/ecom/collection/">
+  <meta property="og:image" content="<?= htmlspecialchars($heroImage, ENT_QUOTES, 'UTF-8') ?>">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- LCP Preload -->
+  <link rel="preload" as="image" href="<?= htmlspecialchars($heroImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high">
+
+  <!-- Favicon Suite -->
+  <link rel="shortcut icon" href="../favicon.ico?v=2">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png?v=2">
+
+  <!-- Google Fonts: Cinzel, Syne, Inter Tight (Main Website Typography) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/collection.css?v=20260909_auth_v2">
+  <link rel="stylesheet" href="css/spread-rows.css?v=20260905_v11_smooth_fluid">
+  <link rel="stylesheet" href="../store/css/cart-drawer.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <link rel="stylesheet" href="../css/mobile-responsive.css?v=20260914">
+
+  <style>
+    /* Minimal White Auth Button (Synced with Preexisting Website Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      line-height: 1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+    .nav-auth-btn:hover {
+      background: #FFFFFF !important;
+      border-color: #C5A059 !important;
+      color: #C5A059 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.16) !important;
+    }
+    .nav-auth-btn .nav-auth-icon {
+      width: 13px !important;
+      height: 13px !important;
+      stroke: currentColor !important;
+      transition: stroke 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
+  <!-- Footer styles (exact copy from About page) -->
+  <style>
+    .about-footer {
+      background: #ffffff;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 50px 24px 40px;
+      position: relative;
+      z-index: 20;
+    }
+    .about-footer-inner {
+      max-width: 1152px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .about-footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .about-footer-links {
+      display: flex;
+      gap: 24px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .about-footer-link {
+      color: #666;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .about-footer-link:hover {
+      color: #111;
+    }
+    .about-footer-socials {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .about-footer-social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f3f7fa;
+      color: #444;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .about-footer-social-btn:hover {
+      background: #111;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .about-footer-bottom {
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: #888;
+    }
+    .about-footer-legal {
+      display: flex;
+      gap: 16px;
+    }
+    .about-footer-legal a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .about-footer-legal a:hover {
+      color: #111;
+    }
+  </style>
+</head>
+
+<body class="collection-body">
+
+  <!-- ========================================================================
+       LUXURY FLOATING HEADER & NAVIGATION (STANDARD)
+       ======================================================================== -->
+  <!-- ==================== SLEEK NAVBAR (EXACT SHOP STYLE, EXCLUDING LOGO) ==================== -->
+  <nav class="navbar" role="banner">
+    <div class="nav-spacer"></div>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../index.php">Home</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="index.php">Collections</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../store/index.php">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../about/index.php">About</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="../contact/index.php">Contacts</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Minimal White Auth Button -->
+      <a href="../auth/index.php" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+        <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Sign In</span>
+      </a>
+
+      <!-- Animated Cart Icon with Tooltip -->
+      <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+        <a href="../store/index.php" onclick="if(window.openCart) { window.openCart(); return false; }"
+          class="cart-indicator" id="cart-indicator-link">
+          <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"
+            fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+            <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999" />
+            <circle class="cart-wheel-left" cx="11" cy="41" r="4" />
+            <circle class="cart-wheel-right" cx="37" cy="41" r="4" />
+            <path class="cart-upper"
+              d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3" />
+            <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19" />
+            <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19" />
+            <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19" />
+          </svg>
+          <span class="cart-count">0</span>
+        </a>
+        <!-- Hover Tooltip Popup -->
+        <div class="cart-tooltip">Shopping Bag</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       1. ORBIT SHOWCASE SECTION (Section 1: 100vh)
+       ======================================================================== -->
+  <section class="collection-orbit-section" id="collection-orbit-section">
+
+    <!-- Ambient Stage Backdrop -->
+    <div class="stage-grain-overlay"></div>
+    <div class="center-stage-halo"></div>
+
+    <!-- Orbit Stage Viewport -->
+    <div class="orbit-stage-viewport" id="orbit-stage">
+
+      <!-- Center Anchor: Standalone 2x Logo -->
+      <div class="center-logo-anchor" id="center-logo-anchor">
+        <img src="assets/images/logo-emblem-frame143.png" alt="SSRINI Imperial Atelier Emblem"
+          class="center-standalone-logo" id="center-standalone-logo"
+          onerror="this.onerror=null; this.src='../landing/assets/images/logo-emblem-frame143.png';">
+      </div>
+
+      <!-- Dynamic Cards Orbit Layer (25 spots, spot 6 is dead center bottom apex) -->
+      <div class="cards-orbit-container" id="cards-orbit-container">
+        <!-- Injected via js/collection-orbit.js -->
+      </div>
+
+    </div>
+
+    <!-- Subtle Scroll Hint -->
+    <div class="orbit-scroll-hint" id="orbitScrollHint">
+      <span class="orbit-scroll-hint-text">SCROLL TO DISCOVER SPREAD</span>
+      <svg class="orbit-scroll-hint-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================
+       2. FLOATING PARALLAX TRANSITION PROXY (Pure vertical descent on center axis)
+       ======================================================================== -->
+  <div class="parallax-glide-proxy" id="parallaxGlideProxy" style="display: none;">
+    <div class="orbit-card-inner">
+      <img src="assets/images/craftsmanship/necklace-hero.webp" alt="Royal Polki & Pearl Heritage Collar"
+        class="orbit-card-img">
+      <div class="card-glass-shine"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       3. SPREAD ROWS MOTION SECTION (Section 2: 100vh, placed directly below)
+       ======================================================================== -->
+  <section class="collection-spread-section" id="collectionSpreadSection">
+    <div class="spread-showcase-stage" id="spreadStage">
+      <!-- Subtle Film Grain & Radial Gold Ambience -->
+      <div class="stage-grain-overlay"></div>
+      <div class="stage-ambient-glow"></div>
+
+      <!-- Motion Viewport -->
+      <div class="spread-viewport" id="spreadViewport">
+
+        <!-- 1. Hero 1:1 Centerpiece Container (The Origin Necklace) -->
+        <div class="hero-origin-container" id="heroOriginCard" title="Masterpiece Necklace">
+          <div class="hero-card-inner">
+            <img src="assets/images/craftsmanship/necklace-hero.webp" alt="Haute Joaillerie Royal Necklace Centerpiece"
+              class="hero-card-img" id="heroNecklaceImg">
+            <div class="spread-card-glint"></div>
+          </div>
+        </div>
+
+        <!-- 2. Breakout Layer (Flying Cards during emergence transition) -->
+        <div class="spread-breakout-layer" id="breakoutLayer"></div>
+
+        <!-- 3. The 3-Row Momentum Container -->
+        <div class="spread-rows-container" id="spreadRowsContainer">
+          <!-- Row 1: Top Ribbon (Drifts Left) -->
+          <div class="spread-row-track" id="trackRow1">
+            <div class="spread-row-ribbon" id="ribbonRow1"></div>
+          </div>
+
+          <!-- Row 2: Center Ribbon (Drifts Right, houses the original necklace) -->
+          <div class="spread-row-track" id="trackRow2">
+            <div class="spread-row-ribbon" id="ribbonRow2"></div>
+          </div>
+
+          <!-- Row 3: Bottom Ribbon (Drifts Left) -->
+          <div class="spread-row-track" id="trackRow3">
+            <div class="spread-row-ribbon" id="ribbonRow3"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean Modular Extensibility Section -->
+  <section class="collection-modular-extensions" id="collection-modular-extensions">
+    <!-- Future sections will be added here -->
+  </section>
+
+  <!-- ==================== LUXURY FOOTER (exact same as About & Home) ==================== -->
+  <footer class="about-footer" id="main-footer">
+    <div class="about-footer-inner">
+      <div class="about-footer-top">
+        <!-- Quick Links -->
+        <nav class="about-footer-links" aria-label="Footer Quick Links">
+          <a href="/ecom/index.php" class="about-footer-link">Home</a>
+          <a href="/ecom/collection/index.php" class="about-footer-link" style="color: #111; font-weight: 600;">Collections</a>
+          <a href="/ecom/store/index.php" class="about-footer-link">Shop</a>
+          <a href="/ecom/about/index.php" class="about-footer-link">About</a>
+          <a href="/ecom/contact/index.php" class="about-footer-link">Contact</a>
+        </nav>
+
+        <!-- Center Brand Logo -->
+        <a href="/ecom/index.php" style="display: inline-flex; align-items: center;" aria-label="SSRINI Home">
+          <img src="../store/assets/images/logo.png" alt="SSRINI Handicrafts" style="height: 30px; width: auto;">
+        </a>
+
+        <!-- Social Links (dynamic from DB) -->
+        <div class="about-footer-socials" aria-label="Social Links">
+          <?php if (!empty($socialLinks['instagram']['is_active'])): ?>
+          <a href="<?= htmlspecialchars(get_social_url('instagram', '#'), ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" class="about-footer-social-btn" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <?php endif; ?>
+
+          <?php if (!empty($socialLinks['whatsapp']['is_active'])): ?>
+          <a href="<?= htmlspecialchars(get_social_url('whatsapp', '#'), ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" class="about-footer-social-btn" aria-label="WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"/>
+              <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"/>
+            </svg>
+          </a>
+          <?php endif; ?>
+
+          <?php if (!empty($socialLinks['location']['is_active'])): ?>
+          <a href="<?= htmlspecialchars(get_social_url('location', '#'), ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" class="about-footer-social-btn" aria-label="Location">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </a>
+          <?php endif; ?>
+
+          <?php if (!empty($socialLinks['facebook']['is_active'])): ?>
+          <a href="<?= htmlspecialchars(get_social_url('facebook', '#'), ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" class="about-footer-social-btn" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+          <?php endif; ?>
+
+          <?php if (!empty($socialLinks['threads']['is_active'])): ?>
+          <a href="<?= htmlspecialchars(get_social_url('threads', '#'), ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" class="about-footer-social-btn" aria-label="Threads">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 7.5c-1.333 -3 -3.667 -4.5 -7 -4.5c-5 0 -8 2.5 -8 9s3.5 9 8 9s7 -3 7 -5s-1 -5 -7 -5c-2.5 0 -3 1.25 -3 2.5c0 1.5 1 2.5 2.5 2.5c2.5 0 3.5 -1.5 3.5 -5s-2 -4 -3 -4s-1.833 .333 -2.5 1"/>
+            </svg>
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <div class="about-footer-bottom">
+        <div class="about-footer-legal">
+          <a href="/ecom/privacy/">Privacy Policy</a>
+          <span>•</span>
+          <a href="/ecom/terms/">Terms of Service</a>
+        </div>
+        <p>© 2026 Adrish Creative · SSRINI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       DYNAMIC COLLECTION DATA — injected from database
+       collection-orbit.js and spread-rows.js read window.__SSRINI_COLLECTION_DB__
+       ═══════════════════════════════════════════════════════════════ -->
+  <script>
+  window.__SSRINI_COLLECTION_DB__ = {
+    hero: <?= json_encode([
+      'src'   => resolve_collection_image_url($heroImage['image_path']),
+      'title' => $heroImage['title'],
+      'alt'   => $heroImage['alt_text'],
+      'desc'  => $heroImage['description'],
+      'tag'   => 'Haute Joaillerie · Hero Centerpiece',
+      'id'    => 'necklace-hero'
+    ], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?>,
+    orbit: <?= json_encode(array_map(function($img) {
+      return [
+        'src'   => resolve_collection_image_url($img['image_path']),
+        'title' => $img['title'],
+        'alt'   => $img['alt_text'],
+        'desc'  => $img['description'],
+        'tag'   => 'SSRINI Handcrafts',
+        'id'    => 'piece-' . $img['id']
+      ];
+    }, $orbitImages), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?>
+  };
+  </script>
+
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Execution Pipeline: Orbit Engine -> Scroll Orchestrator -> Spread Rows Engine -->
+  <script src="js/collection-orbit.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="js/collection-spread-scroll.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="js/spread-rows.js?v=20260905_v11_smooth_fluid"></script>
+  <script src="../store/js/cart-drawer.js"></script>
+  <script src="../js/auth-session.js"></script>
+  <script src="../js/cursor.js"></script>
+  <script src="../js/mobile-nav.js?v=20260914"></script>
+</body>
+
+</html>

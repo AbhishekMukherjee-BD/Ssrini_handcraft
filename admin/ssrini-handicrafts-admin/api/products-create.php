@@ -31,6 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$csrfToken = $_POST['csrf_token'] ?? '';
+if (!verifyCsrfToken($csrfToken)) {
+    http_response_code(403);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Security token invalid or missing. Please refresh and try again.'
+    ]);
+    exit;
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +63,21 @@ $discountPrice = $_POST['discount_price'] ?? '';
 $stockQuantity = $_POST['stock_quantity'] ?? '';
 
 $status = $_POST['status'] ?? 'active';
+
+/* NEW METADATA FIELDS */
+$collectionName = trim($_POST['collection_name'] ?? '');
+$material = trim($_POST['material'] ?? '');
+$badge = trim($_POST['badge'] ?? '');
+$craftHours = trim($_POST['craft_hours'] ?? '');
+$origin = trim($_POST['origin'] ?? '');
+$length = trim($_POST['length'] ?? '');
+$width = trim($_POST['width'] ?? '');
+$height = trim($_POST['height'] ?? '');
+$weight = trim($_POST['weight'] ?? '');
+
+$accCraft = trim($_POST['accordion_craftsmanship'] ?? '');
+$accCare = trim($_POST['accordion_care'] ?? '');
+$accDelivery = trim($_POST['accordion_delivery'] ?? '');
 
 
 /*
@@ -481,6 +506,44 @@ if (
 
 /*
 |--------------------------------------------------------------------------
+| GALLERY IMAGES UPLOAD (NEW)
+|--------------------------------------------------------------------------
+*/
+$galleryImageNames = [];
+$uploadedGalleryPaths = [];
+
+if (isset($_FILES['gallery_images']) && !empty($_FILES['gallery_images']['name'][0])) {
+    $galleryFiles = $_FILES['gallery_images'];
+    $fileCount = count($galleryFiles['name']);
+
+    for ($i = 0; $i < $fileCount; $i++) {
+        if ($galleryFiles['error'][$i] === UPLOAD_ERR_OK) {
+            
+            // Check size (5MB)
+            if ($galleryFiles['size'][$i] > 5 * 1024 * 1024) continue;
+
+            // Check MIME
+            $finfoGallery = new finfo(FILEINFO_MIME_TYPE);
+            $mimeTypeG = $finfoGallery->file($galleryFiles['tmp_name'][$i]);
+            
+            if (!isset($allowedTypes[$mimeTypeG])) continue;
+
+            $extG = $allowedTypes[$mimeTypeG];
+            $gName = 'gallery_' . uniqid('', true) . '.' . $extG;
+            $gPath = $uploadDirectory . $gName;
+
+            if (move_uploaded_file($galleryFiles['tmp_name'][$i], $gPath)) {
+                $galleryImageNames[] = $gName;
+                $uploadedGalleryPaths[] = $gPath;
+            }
+        }
+    }
+}
+$galleryJson = json_encode($galleryImageNames);
+
+
+/*
+|--------------------------------------------------------------------------
 | INSERT PRODUCT
 |--------------------------------------------------------------------------
 */
@@ -499,6 +562,19 @@ try {
             discount_price,
             stock_quantity,
             image,
+            gallery_images,
+            collection_name,
+            material,
+            badge,
+            craft_hours,
+            origin,
+            length,
+            width,
+            height,
+            weight,
+            accordion_craftsmanship,
+            accordion_care,
+            accordion_delivery,
             status
         )
 
@@ -512,6 +588,19 @@ try {
             :discount_price,
             :stock_quantity,
             :image,
+            :gallery_images,
+            :collection_name,
+            :material,
+            :badge,
+            :craft_hours,
+            :origin,
+            :length,
+            :width,
+            :height,
+            :weight,
+            :accordion_craftsmanship,
+            :accordion_care,
+            :accordion_delivery,
             :status
         )
         "
@@ -548,6 +637,20 @@ try {
 
         ':image' =>
             $imageName,
+            
+        ':gallery_images' => $galleryJson,
+        ':collection_name' => $collectionName ?: null,
+        ':material' => $material ?: null,
+        ':badge' => $badge ?: null,
+        ':craft_hours' => $craftHours ?: null,
+        ':origin' => $origin ?: null,
+        ':length' => $length !== '' ? $length : null,
+        ':width' => $width !== '' ? $width : null,
+        ':height' => $height !== '' ? $height : null,
+        ':weight' => $weight !== '' ? $weight : null,
+        ':accordion_craftsmanship' => $accCraft ?: null,
+        ':accordion_care' => $accCare ?: null,
+        ':accordion_delivery' => $accDelivery ?: null,
 
         ':status' =>
             $status

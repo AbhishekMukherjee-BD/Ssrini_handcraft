@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!link) return;
 
     const href = link.getAttribute('href');
-    if (path === href || (path === '/' && href && href.includes('index.html'))) {
+    if (path === href || (path === '/' && href && href.includes('index.php'))) {
       defaultActiveNav = nav;
       nav.classList.add('active');
     }

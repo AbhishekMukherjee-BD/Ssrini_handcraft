@@ -1,0 +1,287 @@
+<?php require_once __DIR__ . "/../includes/products_data.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | SSRINI — A Creative World</title>
+  <meta name="description" content="Explore the full catalog of handcrafted luxury jewelry, terracotta masterpieces, pure silks, and filigree art from SSRINI.">
+  
+  <link rel="canonical" href="https://yourdomain.com/ecom/store/">
+  
+  <!-- Open Graph & Social -->
+  <meta property="og:title" content="Shop | SSRINI — A Creative World">
+  <meta property="og:description" content="Explore the full catalog of handcrafted luxury jewelry, terracotta masterpieces, pure silks, and filigree art from SSRINI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/ecom/store/">
+  <meta property="og:image" content="https://yourdomain.com/ecom/landing/assets/images/logo-emblem-frame143.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Structured Data Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "SSRINI Handcrafts Store",
+    "description": "Explore the full catalog of handcrafted luxury jewelry, terracotta masterpieces, pure silks, and filigree art.",
+    "url": "https://yourdomain.com/ecom/store/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "SSRINI"
+    }
+  }
+  </script>
+  
+  <!-- Favicon Suite -->
+  <link rel="shortcut icon" href="../favicon.ico?v=2">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png?v=2">
+  
+  <!-- Global Store Data Payload -->
+  <script>
+    window.PHP_PRODUCTS_DATA = <?= json_encode($jsProducts, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    window.PHP_WISHLIST_DATA = <?= json_encode($userWishlist, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+  </script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/store.css">
+  <link rel="stylesheet" href="css/cart-drawer.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <link rel="stylesheet" href="../css/mobile-responsive.css?v=20260914">
+  <style>
+    /* Minimal White Auth Button (Synced with Site Aesthetics) */
+    .nav-auth-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(42, 42, 42, 0.16) !important;
+      border-radius: 999px !important;
+      padding: 6px 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      line-height: 1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+    .nav-auth-btn:hover {
+      background: #FFFFFF !important;
+      border-color: #C5A059 !important;
+      color: #C5A059 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.16) !important;
+    }
+    .nav-auth-btn .nav-auth-icon {
+      width: 13px !important;
+      height: 13px !important;
+      stroke: currentColor !important;
+      transition: stroke 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
+  
+  <!-- GSAP Suite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" role="banner">
+    <a href="/ecom/index.php" class="brand">
+      <img src="assets/svgs/logo.svg" alt="SSRINI Handcrafts" class="brand-logo-img">
+    </a>
+
+    <div class="nav-menu">
+      <div class="nav-menu-links">
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/index.php">Home</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/collection/index.php">Collections</a>
+        </div>
+        <div class="nav-link-wrapper active">
+          <div class="selector"></div>
+          <a href="/ecom/store/index.php">Shop</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/about/index.php">About</a>
+        </div>
+        <div class="nav-link-wrapper">
+          <div class="selector"></div>
+          <a href="/ecom/contact/index.php">Contacts</a>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Minimal White Auth Button -->
+        <a href="/ecom/auth/index.php" class="nav-auth-btn" id="navAuthBtn" title="Member Vault & Sign In">
+          <svg class="nav-auth-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Sign In</span>
+        </a>
+
+        <!-- Animated Cart Icon with Tooltip -->
+        <div class="cart-icon-wrapper" id="cart-icon-wrapper">
+          <a href="#" onclick="if(window.openCart) { window.openCart(); return false; }" class="cart-indicator" id="cart-indicator-link">
+            <svg class="cart-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="square">
+              <path class="cart-upper" d="M8.49994 10H41L37.569 21.4367C36.9345 23.5517 34.9879 25 32.7798 25H10.4999"/>
+              <circle class="cart-wheel-left" cx="11" cy="41" r="4"/>
+              <circle class="cart-wheel-right" cx="37" cy="41" r="4"/>
+              <path class="cart-upper" d="M41 32H9.46174C7.17727 32 6.08953 29.1885 7.77914 27.651L10.6923 25L7.81067 5.14103C7.63231 3.91188 6.57863 3.00005 5.33661 3.00003L3 3"/>
+              <line class="cart-item cart-upper" x1="30" y1="16" x2="30" y2="19"/>
+              <line class="cart-item cart-upper" x1="24" y1="16" x2="24" y2="19"/>
+              <line class="cart-item cart-upper" x1="18" y1="16" x2="18" y2="19"/>
+            </svg>
+            <span class="cart-count">0</span>
+          </a>
+          <!-- Hover Tooltip Popup -->
+          <div class="cart-tooltip">Shopping Bag</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== STORE CONTAINER ==================== -->
+  <main class="store-container font-shop">
+
+    <!-- Collection Label (replaces old breadcrumbs + title block) -->
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+      <p class="selected-collection-label" style="margin-bottom: 0;">All collections</p>
+      <span id="item-count-display" class="item-count-display" style="font-family: 'Inter Tight', sans-serif; font-size: 0.85rem; color: #777; letter-spacing: 0.05em;"></span>
+    </div>
+
+    <!-- Controls Bar: Filter | Sort | Grid Layout -->
+    <div class="top-filters">
+      <!-- Filter Button -->
+      <button id="toggle-filter-drawer" class="filter-text-btn">
+        <span>Filter</span>
+        <span id="filter-badge-count" class="filter-badge" style="display: none;">0</span>
+      </button>
+
+      <!-- Search Bar -->
+      <div class="store-search-container" style="position: relative;">
+        <input type="text" id="store-search-input" class="store-search-input" placeholder="Search masterpieces..." autocomplete="off">
+        <ul id="search-suggestions" class="search-suggestions"></ul>
+      </div>
+
+      <!-- Active Filter Pills -->
+      <div id="active-filter-pills" class="active-filter-pills"></div>
+
+      <!-- Sort & Price Range -->
+      <div class="sort-controls" style="flex-wrap: wrap;">
+        <span class="sort-label">Sort:</span>
+        <button class="sort-button active" data-sort="name-asc">Name <span class="sort-dir">(A-Z)</span></button>
+        
+        <div class="price-range-container">
+          <span class="sort-label" style="margin-left: 12px;">Price Range:</span>
+          <div class="price-inputs">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="price-min" class="price-input" placeholder="Min" min="0">
+            <span class="price-separator">-</span>
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="price-max" class="price-input" placeholder="Max" min="0">
+            <button id="price-go-btn" class="price-go-btn">Go</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Layout Switcher (matching Juri) -->
+      <div class="filters-layout">
+        <div id="three-cols" class="cols-selector cols-active" data-cols="3" title="3 Columns">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="4.5" height="12" rx="1" fill="currentColor"/>
+            <rect x="6.75" width="4.5" height="12" rx="1" fill="currentColor"/>
+            <rect x="13.5" width="4.5" height="12" rx="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <div id="four-cols" class="cols-selector" data-cols="4" title="4 Columns">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="5" width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="10" width="3.2" height="12" rx="1" fill="currentColor"/>
+            <rect x="14.8" width="3.2" height="12" rx="1" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <section id="product-grid" class="product-grid cols-3"></section>
+
+  </main>
+
+  <!-- ==================== FILTER DRAWER ==================== -->
+  <div id="filter-drawer-overlay" class="filter-drawer-overlay">
+    <aside class="filter-drawer" role="dialog" aria-label="Filters">
+      <div class="filter-drawer-header">
+        <h2 class="filter-drawer-title">Filter Catalog</h2>
+        <button id="close-filter-drawer" class="filter-close-btn">✕</button>
+      </div>
+
+      <div class="filter-drawer-body">
+        
+        <!-- Collection Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Collections</h3>
+          <div class="filter-options-list" id="filter-list-collections">
+          </div>
+        </div>
+
+        <!-- Category Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Product Type</h3>
+          <div class="filter-options-list" id="filter-list-categories">
+          </div>
+        </div>
+
+        <!-- Material Filter Group -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Medium & Material</h3>
+          <div class="filter-options-list" id="filter-list-materials">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="filter-drawer-footer">
+        <button id="reset-filters" class="btn-reset-filters">Reset All</button>
+        <button id="apply-filters" class="btn-apply-filters">Apply Filters</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==================== QUICK VIEW MODAL ==================== -->
+  <div id="quickview-modal-overlay" class="quickview-modal-overlay">
+    <div id="quickview-modal-content" class="quickview-modal-card"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Scripts -->
+  <script src="../js/cursor.js"></script>
+  <script src="js/cart-drawer.js"></script>
+  <script src="../js/auth-session.js"></script>
+  <script src="js/store.js"></script>
+  <script src="../js/mobile-nav.js?v=20260914"></script>
+</body>
+</html>

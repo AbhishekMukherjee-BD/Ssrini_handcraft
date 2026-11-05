@@ -55,17 +55,75 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Preload logo frames
-    for (let i = 0; i < totalLogoFrames; i++) {
-        const img = new Image();
-        const num = i.toString().padStart(4, '0');
-        img.src = `loading_frames/frame_${num}.png`;
-        if (i === 0) {
-            img.onload = () => renderLogoFrame(0);
-            if (img.complete) renderLogoFrame(0);
+    // -----------------------------------------------------
+    // TIER 1: CRITICAL ASSET PRELOAD (144 LOGO FRAMES + 7 STACK IMAGES)
+    // -----------------------------------------------------
+    const preloadCriticalAssets = () => {
+        const stackUrls = [
+            'preloader_images/1.jpg',
+            'preloader_images/2.jpeg',
+            'preloader_images/3.jpeg',
+            'preloader_images/4.jpeg',
+            'preloader_images/5.jpeg',
+            'preloader_images/6.jpeg',
+            'preloader_images/7.jpeg'
+        ];
+
+        // 1. Preload & decode 7 preloader stack images
+        const stackPromises = stackUrls.map((url) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    if (img.decode) {
+                        img.decode().then(resolve).catch(resolve);
+                    } else {
+                        resolve();
+                    }
+                };
+                img.onerror = resolve; // Fail-safe
+                img.src = url;
+            });
+        });
+
+        // 2. Preload & decode logo canvas frames (Mobile-Optimized to prevent memory crashes)
+        const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
+        const logoStep = isMobileDevice ? 6 : 1;
+        const logoPromises = [];
+
+        for (let i = 0; i < totalLogoFrames; i += logoStep) {
+            const num = i.toString().padStart(4, '0');
+            const img = new Image();
+            logoFramesCache[i] = img;
+            if (isMobileDevice) {
+                for (let fill = i + 1; fill < Math.min(i + logoStep, totalLogoFrames); fill++) {
+                    logoFramesCache[fill] = img;
+                }
+            }
+
+            const p = new Promise((resolve) => {
+                img.onload = () => {
+                    if (i === 0) renderLogoFrame(0);
+                    if (img.decode) {
+                        img.decode().then(resolve).catch(resolve);
+                    } else {
+                        resolve();
+                    }
+                };
+                img.onerror = resolve; // Fail-safe
+            });
+            img.src = `assets/home/loading_frames/frame_${num}.png`;
+            logoPromises.push(p);
         }
-        logoFramesCache[i] = img;
-    }
+
+        const frame0 = logoFramesCache[0];
+        if (frame0 && frame0.complete) renderLogoFrame(0);
+
+        // Wait for all critical assets or safety timeout (3200ms on desktop, 1200ms on mobile)
+        const allCritical = Promise.all([...stackPromises, ...logoPromises]);
+        const safetyTimeout = new Promise(resolve => setTimeout(resolve, isMobileDevice ? 1200 : 3200));
+
+        return Promise.race([allCritical, safetyTimeout]);
+    };
 
     // -----------------------------------------------------
     // 3. HERO VIDEO FRAMES PRELOAD
@@ -75,10 +133,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const getHeroFramePath = (index) => {
         const frameStr = index.toString().padStart(4, '0');
-        return `hero_frames/frame_${frameStr}.jpg`;
+        return `assets/home/hero_frames/frame_${frameStr}.webp`;
     };
 
     const preloadVideoFrames = () => {
+        const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
+
         // Eagerly preload first frame and final frame (frame 480: gold necklace on mannequin)
         const imgFirst = new Image();
         imgFirst.src = getHeroFramePath(1);
@@ -88,6 +148,23 @@ document.addEventListener("DOMContentLoaded", () => {
         imgLast.src = getHeroFramePath(totalVideoFrames);
         videoFramesCache[totalVideoFrames] = imgLast;
 
+        if (isMobileDevice) {
+            // On Mobile: Keyframe sampling every 20 frames (saves 45MB download and 200MB RAM)
+            const heroStep = 20;
+            for (let i = 1; i <= totalVideoFrames; i += heroStep) {
+                if (!videoFramesCache[i]) {
+                    const img = new Image();
+                    img.src = getHeroFramePath(i);
+                    videoFramesCache[i] = img;
+                    for (let fill = i + 1; fill < Math.min(i + heroStep, totalVideoFrames); fill++) {
+                        videoFramesCache[fill] = img;
+                    }
+                }
+            }
+            return;
+        }
+
+        // On Desktop: Full luxury 480-frame buffer stream
         for (let i = 1; i <= Math.min(60, totalVideoFrames); i++) {
             if (!videoFramesCache[i]) {
                 const img = new Image();
@@ -117,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         setTimeout(loadBatch, 200);
     };
-    preloadVideoFrames();
+    // Defer hero frames: will be triggered during preloader peel (Tier 3)
 
     const renderHeroCanvasFrame = () => {
         const img = videoFramesCache[currentVideoFrame] || new Image();
@@ -184,9 +261,15 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // -----------------------------------------------------
-    // 5. MASTER ANIMATION TIMELINE
+    // 5. MASTER ANIMATION TIMELINE (PAUSED INITIALLY FOR TIER 1 PRELOAD)
     // -----------------------------------------------------
-    const masterTimeline = gsap.timeline({ paused: false });
+    const masterTimeline = gsap.timeline({ paused: true });
+
+    // Start timeline once Tier 1 critical assets (144 logo frames + 7 stack cards) are ready in memory
+    preloadCriticalAssets().then(() => {
+        renderLogoFrame(0);
+        masterTimeline.play();
+    });
 
     // Step 1: Sequential Stacking In (1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7)
     const stackImages = [
@@ -231,6 +314,11 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power3.inOut"
         }, peelStartTime + item.delay);
     });
+
+    // Tier 3: Trigger progressive hero video frames streaming during preloader peel
+    masterTimeline.call(() => {
+        preloadVideoFrames();
+    }, null, peelStartTime);
 
     // Step 4: Expand Image 1 with ZERO-BLUR Native Viewport Expansion
     const expandTime = peelStartTime + 0.75;
@@ -288,6 +376,18 @@ document.addEventListener("DOMContentLoaded", () => {
             // Starts exactly as the 1st frame has zoomed to full
             // and the scroll experience is ready.
             startCursiveAnimation();
+
+            // ── Background Cache Warming for Other Pages ────────
+            const warmPageCache = () => {
+                ['store/index.php', 'collection/index.php', 'about/index.php'].forEach(url => {
+                    fetch(url, { priority: 'low' }).catch(() => {});
+                });
+            };
+            if (window.requestIdleCallback) {
+                window.requestIdleCallback(warmPageCache);
+            } else {
+                setTimeout(warmPageCache, 1500);
+            }
         }
     }, expandTime + 1.25);
 

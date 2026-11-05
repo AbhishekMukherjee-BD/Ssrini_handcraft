@@ -8,9 +8,8 @@ $isCli = (php_sapi_name() === 'cli');
 
 if (!$isCli) {
     header('Content-Type: application/json; charset=UTF-8');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
+    require_once __DIR__ . '/../includes/cors.php';
+    set_cors_headers(['POST', 'OPTIONS']);
 
     $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
@@ -26,82 +25,112 @@ if (!$isCli) {
     }
 }
 
-// 1. Load .env Configuration
-function loadEnv($path) {
-    $env = [];
-    if (!file_exists($path)) {
-        return $env;
-    }
-    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        $line = trim($line);
-        if (empty($line) || strpos($line, '#') === 0) continue;
-        if (strpos($line, '=') !== false) {
-            list($key, $value) = explode('=', $line, 2);
-            $env[trim($key)] = trim($value, " \t\n\r\0\x0B\"'");
-        }
-    }
-    return $env;
+// 1. Connect to Database & Load Config
+$dbPath = __DIR__ . '/../../admin/ssrini-handicrafts-admin/config/database.php';
+if (!file_exists($dbPath)) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Database configuration missing.']);
+    exit;
 }
+require_once $dbPath;
 
-$envPath = __DIR__ . '/../.env';
-$env = loadEnv($envPath);
+require_once __DIR__ . '/../includes/env.php';
+require_once __DIR__ . '/../includes/mailer.php';
+$env = get_app_env();
 
 $storeOwnerEmail = isset($env['STORE_OWNER_EMAIL']) ? $env['STORE_OWNER_EMAIL'] : 'amitguddu2505@gmail.com';
 $storeName = isset($env['STORE_NAME']) ? $env['STORE_NAME'] : 'SSRINI Handcrafts Atelier';
 $storeContactEmail = isset($env['STORE_CONTACT_EMAIL']) ? $env['STORE_CONTACT_EMAIL'] : 'contact@ssrini.com';
 $storeWhatsapp = isset($env['STORE_WHATSAPP']) ? $env['STORE_WHATSAPP'] : '+919836081994';
 
-// 2. Parse Incoming Order JSON
+// 1.5 Rate Limiter: Max 5 email dispatches per session per 15 minutes (decoupled from login_attempts)
+if (!$isCli) {
+    if (session_status() === PHP_SESSION_NONE) {
+        require_once __DIR__ . '/../includes/session_config.php';
+    }
+    $now = time();
+    $window = 900; // 15 minutes
+    if (!isset($_SESSION['email_dispatch_log'])) {
+        $_SESSION['email_dispatch_log'] = [];
+    }
+    // Prune expired entries
+    $_SESSION['email_dispatch_log'] = array_filter($_SESSION['email_dispatch_log'], function($t) use ($now, $window) {
+        return ($now - $t) < $window;
+    });
+    if (count($_SESSION['email_dispatch_log']) >= 5) {
+        http_response_code(429);
+        echo json_encode(['success' => false, 'error' => 'Too many requests. Please try again later.']);
+        exit;
+    }
+    $_SESSION['email_dispatch_log'][] = $now;
+}
 $rawInput = file_get_contents('php://input');
 $order = json_decode($rawInput, true);
 
-if (!$order || !isset($order['order_number'])) {
+if (!$order || empty($order['order_number'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid order payload.']);
     exit;
 }
 
-$orderNumber = htmlspecialchars($order['order_number']);
-$customer = isset($order['customer']) ? $order['customer'] : [];
-$customerName = htmlspecialchars(isset($customer['name']) ? $customer['name'] : 'Valued Customer');
-$customerPhone = htmlspecialchars(isset($customer['phone']) ? $customer['phone'] : 'N/A');
-$customerEmail = htmlspecialchars(isset($customer['email']) ? $customer['email'] : '');
-$customerAddress = htmlspecialchars(isset($customer['address']) ? $customer['address'] : '');
-$customerCity = htmlspecialchars(isset($customer['city']) ? $customer['city'] : '');
-$customerState = htmlspecialchars(isset($customer['state']) ? $customer['state'] : '');
-$customerPincode = htmlspecialchars(isset($customer['pincode']) ? $customer['pincode'] : '');
-$customerNotes = htmlspecialchars(isset($customer['notes']) ? $customer['notes'] : '');
+$orderNumber = trim($order['order_number']);
 
-$totalUsd = htmlspecialchars(isset($order['total_amount_usd']) ? $order['total_amount_usd'] : '0.00');
-$totalInr = htmlspecialchars(isset($order['total_amount_inr']) ? number_format($order['total_amount_inr']) : '0');
-$paymentMethod = (isset($order['payment_method']) && $order['payment_method'] === 'online') ? 'Online Payment (Prepaid)' : 'Cash on Delivery (COD)';
-$paymentStatus = (isset($order['payment_status']) && $order['payment_status'] === 'paid') ? 'Paid' : 'Pending';
+// 3. Security: Verify order exists in the database
+$stmtOrder = $pdo->prepare("SELECT * FROM orders WHERE order_number = ? LIMIT 1");
+$stmtOrder->execute([$orderNumber]);
+$dbOrder = $stmtOrder->fetch(PDO::FETCH_ASSOC);
 
-$items = isset($order['items']) ? $order['items'] : [];
+if (!$dbOrder) {
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'Order not found in records.']);
+    exit;
+}
+
+// Fetch verified order details from DB
+$customerName = htmlspecialchars($dbOrder['customer_name'] ?? 'Valued Customer');
+$customerPhone = htmlspecialchars($dbOrder['customer_phone'] ?? 'N/A');
+$customerEmail = filter_var($dbOrder['customer_email'] ?? '', FILTER_VALIDATE_EMAIL);
+$customerAddress = htmlspecialchars($dbOrder['shipping_address'] ?? '');
+$customerCity = htmlspecialchars($dbOrder['shipping_city'] ?? '');
+$customerState = htmlspecialchars($dbOrder['shipping_state'] ?? '');
+$customerPincode = htmlspecialchars($dbOrder['shipping_pincode'] ?? '');
+$customerNotes = htmlspecialchars($dbOrder['order_notes'] ?? '');
+
+$totalInr = number_format((float)$dbOrder['total_amount'], 2);
+$paymentMethod = ($dbOrder['payment_method'] === 'online') ? 'Online Payment (Prepaid)' : 'Cash on Delivery (COD)';
+$paymentStatus = ($dbOrder['payment_status'] === 'paid') ? 'Paid' : 'Pending';
+
+// Fetch verified items from DB
+$stmtItems = $pdo->prepare("SELECT product_name as title, quantity as qty, price FROM order_items WHERE order_id = ?");
+$stmtItems->execute([$dbOrder['id']]);
+$items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch invoice number
+$stmtInv = $pdo->prepare("SELECT invoice_number FROM invoices WHERE order_id = ? LIMIT 1");
+$stmtInv->execute([$dbOrder['id']]);
+$invoiceNumber = $stmtInv->fetchColumn() ?: ('INV-' . $orderNumber);
 
 // Build Itemized HTML Rows
 $itemsHtml = '';
 foreach ($items as $item) {
-    $title = htmlspecialchars(isset($item['title']) ? $item['title'] : 'Artifact Piece');
-    $qty = (int)(isset($item['qty']) ? $item['qty'] : 1);
-    $price = (float)(isset($item['price']) ? $item['price'] : 0);
+    $title = htmlspecialchars($item['title'] ?? 'Artifact Piece');
+    $qty = (int)($item['qty'] ?? 1);
+    $price = (float)($item['price'] ?? 0);
     $lineTotal = number_format($price * $qty, 2);
-    $size = htmlspecialchars(isset($item['size']) ? $item['size'] : 'Free');
 
     $itemsHtml .= "
     <tr style='border-bottom: 1px solid #eeeeee;'>
       <td style='padding: 12px 8px; font-size: 14px; color: #111111;'>
         <strong>{$title}</strong><br>
-        <span style='font-size: 12px; color: #777777;'>Size: {$size} | Qty: {$qty}</span>
+        <span style='font-size: 12px; color: #777777;'>Qty: {$qty}</span>
       </td>
       <td style='padding: 12px 8px; font-size: 14px; color: #111111; text-align: right;'>
-        \${$lineTotal}
+        ₹{$lineTotal}
       </td>
     </tr>";
 }
 
-// 3. Construct Luxury HTML Email Templates
+// 4. Construct Luxury HTML Email Templates
 
 // Email A: Owner Notification
 $ownerSubject = "🚨 New Order Alert: [{$orderNumber}] - {$customerName}";
@@ -109,24 +138,9 @@ $ownerBody = "
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8'>
+  <meta charset='UTF-8'>
   <title>New Order Alert</title>
 </head>
-<body style='font-family: Arial, sans-serif; background-color: #f7f6f4; margin: 0; padding: 24px; color: #111111;'>
-  <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-    <tr>
-      <td align='center'>
-        <table width='600' border='0' cellspacing='0' cellpadding='0' style='background-color: #ffffff; border-radius: 8px; border: 1px solid #e5e5e5; overflow: hidden;'>
-          <tr>
-            <td style='background-color: #111111; padding: 24px; text-align: center;'>
-              <h1 style='color: #ffffff; font-size: 20px; letter-spacing: 2px; margin: 0; text-transform: uppercase;'>{$storeName}</h1>
-              <p style='color: #c5a059; font-size: 12px; margin: 6px 0 0 0; letter-spacing: 1px; text-transform: uppercase;'>Atelier Order Dispatch Alert</p>
-            </td>
-          </tr>
-          <tr>
-            <td style='padding: 32px;'>
-              <div style='background-color: #fcfbfa; border: 1px solid #e8e6e1; border-radius: 6px; padding: 16px; margin-bottom: 24px;'>
-                <span style='font-size: 12px; color: #777777; text-transform: uppercase; font-weight: bold;'>Order Reference:</span>
                 <h2 style='margin: 4px 0 0 0; color: #111111; font-size: 22px;'>{$orderNumber}</h2>
               </div>
 
@@ -155,7 +169,7 @@ $ownerBody = "
                 </tr>
                 <tr>
                   <td style='font-size: 16px; font-weight: bold; color: #111111; padding-top: 10px;'>Total Amount Due:</td>
-                  <td style='font-size: 20px; font-weight: bold; text-align: right; color: #111111; padding-top: 10px;'>\${$totalUsd} <span style='font-size: 14px; color: #e082a8;'>(₹{$totalInr})</span></td>
+                  <td style='font-size: 20px; font-weight: bold; text-align: right; color: #111111; padding-top: 10px;'>₹{$totalInr}</td>
                 </tr>
               </table>
 
@@ -224,7 +238,7 @@ $buyerBody = "
                 </tr>
                 <tr>
                   <td style='font-size: 16px; font-weight: bold; color: #111111; padding-top: 8px;'>Total:</td>
-                  <td style='font-size: 18px; font-weight: bold; text-align: right; color: #111111; padding-top: 8px;'>\${$totalUsd} <span style='font-size: 13px; color: #e082a8;'>(₹{$totalInr})</span></td>
+                  <td style='font-size: 18px; font-weight: bold; text-align: right; color: #111111; padding-top: 8px;'>₹{$totalInr}</td>
                 </tr>
               </table>
 
@@ -265,18 +279,17 @@ $headers = [
 ];
 $headersStr = implode("\r\n", $headers);
 
-// 4. Send Emails via standard mail()
-$ownerSent = @mail($storeOwnerEmail, $ownerSubject, $ownerBody, $headersStr);
+// 4. Send Emails via centralized mailer.php
+$ownerSent = sendEmailNotification($storeOwnerEmail, $ownerSubject, $ownerBody);
 
 $buyerSent = false;
 if (!empty($customerEmail) && filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
-    $buyerSent = @mail($customerEmail, $buyerSubject, $buyerBody, $headersStr);
+    $buyerSent = sendEmailNotification($customerEmail, $buyerSubject, $buyerBody);
 }
 
 echo json_encode([
     'success' => true,
-    'message' => 'Order received and notifications processed.',
+    'message' => 'Order notification processed.',
     'order_number' => $orderNumber,
-    'owner_alert_sent_to' => $storeOwnerEmail,
-    'buyer_confirmation_sent' => $buyerSent ? $customerEmail : 'N/A'
+    'buyer_notified' => $buyerSent
 ]);

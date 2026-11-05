@@ -13,7 +13,7 @@
       return './' + file;
     }
     const segments = p.split('/').filter(Boolean);
-    if (segments.length > 0 && segments[segments.length - 1].endsWith('.html')) {
+    if (segments.length > 0 && segments[segments.length - 1].endsWith('.php')) {
       segments.pop();
     }
     if (segments.length >= 1) {
@@ -42,11 +42,20 @@
     }
   }
 
-  // Save Cart to localStorage
+  // Save Cart to localStorage and sync to DB if logged in
   function saveCart(cart) {
     localStorage.setItem('ssrini_cart', JSON.stringify(cart));
     updateGlobalCounters();
     renderCartDrawer();
+    
+    const user = JSON.parse(localStorage.getItem('ssrini_auth_user') || 'null');
+    if (user && user.id) {
+      fetch('/ecom/api/cart-sync.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'push', customer_id: user.id, cart: cart })
+      }).catch(err => console.error('Cart sync failed:', err));
+    }
   }
 
   // Sync Cart Counter badges across navbar
@@ -60,7 +69,7 @@
   }
 
   function updateGlobalAuthState() {
-    const user = JSON.parse(localStorage.getItem('ssrini_user') || 'null');
+    const user = JSON.parse(localStorage.getItem('ssrini_auth_user') || 'null');
     const authBtn = document.getElementById('navAuthBtn');
     
     if (user && authBtn) {
@@ -130,7 +139,7 @@
         }
         return false;
       }
-      window.location.href = getStorePath('checkout.html');
+      window.location.href = getStorePath('checkout.php');
     };
 
     document.getElementById('btn-top-checkout').addEventListener('click', checkoutAction);
@@ -172,7 +181,7 @@
       cart.push({
         id: product.id || 'berry-ring-s1',
         title: product.title || 'Berry Ring Silver',
-        price: product.price || product.priceUSD || 523.00,
+        price: product.price || product.priceINR || 35000,
         image: product.image || '../store/assets/images/IMG_0685.jpg',
         size: product.size || 'free',
         weight: product.weight || '1 LBS',
@@ -218,9 +227,9 @@
 
     const cart = getCart();
     const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
+    const subtotal = cart.reduce((sum, item) => sum + (((item.priceINR || item.price || 0)) * (item.qty || 1)), 0);
 
-    const storeUrl = getStorePath('index.html');
+    const storeUrl = getStorePath('index.php');
 
     if (cart.length === 0) {
       // LOCK CHECKOUT BUTTONS (disabled state, grey styling, blocked click)
@@ -251,7 +260,7 @@
           <h3 class="cart-summary-title">Order Summary</h3>
           <div class="cart-summary-row">
             <span>Subtotal</span>
-            <span>$0.00</span>
+            <span>₹0</span>
           </div>
           <div class="cart-summary-row">
             <span>Shipping & Handling</span>
@@ -259,7 +268,7 @@
           </div>
           <div class="cart-summary-row total-row">
             <span>Order Total:</span>
-            <span>$0.00</span>
+            <span>₹0</span>
           </div>
         </div>
       `;
@@ -283,7 +292,7 @@
 
       let itemsHTML = '';
       cart.forEach((item, index) => {
-        const itemTotal = ((item.price || 0) * (item.qty || 1)).toFixed(2);
+        const itemTotal = (((item.priceINR || item.price || 0)) * (item.qty || 1)).toFixed(2);
         itemsHTML += `
           <div class="cart-drawer-item-row" data-index="${index}">
             <img src="${item.image}" alt="${item.title}" class="cart-item-thumb">
@@ -293,7 +302,7 @@
               <div class="cart-item-meta">Weight: ${item.weight || '1 LBS'}</div>
               <button type="button" class="cart-item-remove-link" data-remove-index="${index}">REMOVE THIS ITEM</button>
               <div class="cart-item-price-qty">
-                <span class="cart-item-price">$${itemTotal}</span>
+                <span class="cart-item-price">₹${itemTotal.toLocaleString('en-IN')}</span>
                 <div class="cart-qty-selector">
                   <button type="button" class="cart-qty-btn" data-qty-dec="${index}">-</button>
                   <span class="cart-qty-val">${item.qty || 1}</span>
@@ -331,7 +340,7 @@
           <h3 class="cart-summary-title">Order Summary</h3>
           <div class="cart-summary-row">
             <span>Subtotal</span>
-            <span>$${subtotal.toFixed(2)}</span>
+            <span>₹${subtotal.toLocaleString('en-IN')}</span>
           </div>
           <div class="cart-summary-row">
             <span>Shipping & Handling</span>
@@ -339,7 +348,7 @@
           </div>
           <div class="cart-summary-row total-row">
             <span>Order Total:</span>
-            <span>$${subtotal.toFixed(2)}</span>
+            <span>₹${subtotal.toLocaleString('en-IN')}</span>
           </div>
         </div>
       `;
@@ -374,6 +383,24 @@
     injectDrawerHTML();
     updateGlobalCounters();
     updateGlobalAuthState();
+
+    // PULL cart from DB if user is logged in
+    const user = JSON.parse(localStorage.getItem('ssrini_auth_user') || 'null');
+    if (user && user.id) {
+      fetch('/ecom/api/cart-sync.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'pull', customer_id: user.id })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.cart) {
+          localStorage.setItem('ssrini_cart', JSON.stringify(data.cart));
+          updateGlobalCounters();
+        }
+      })
+      .catch(err => console.error('Cart pull failed:', err));
+    }
 
     // Delegate clicks on cart triggers
     document.addEventListener('click', (e) => {

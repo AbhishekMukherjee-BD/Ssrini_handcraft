@@ -82,7 +82,7 @@ function initCanvasVideoScroll() {
   for (let i = 1; i <= frameCount; i++) {
     const img = new Image();
     const formattedNum = String(i).padStart(3, '0');
-    img.src = `frames/frame_${formattedNum}.webp`;
+    img.src = `../assets/contact/frames/frame_${formattedNum}.webp`;
     img.onload = () => {
       if (i === 1) {
         setCanvasDimensions();

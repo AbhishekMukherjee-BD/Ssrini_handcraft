@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +28,7 @@
     <div class="checkout-header-inner">
       
       <!-- Big & Prominent Logo -->
-      <a href="../index.html" class="checkout-brand-link" aria-label="SSRINI Handcrafts">
+      <a href="/ecom/index.html" class="checkout-brand-link" aria-label="SSRINI Handcrafts">
         <img src="assets/images/logo.png" alt="SSRINI Handcrafts" class="checkout-brand-logo">
       </a>
 
@@ -240,7 +242,7 @@
             <div class="checkout-terms-consent" style="margin-bottom: 20px;">
               <label class="auth-checkbox-label" for="checkoutTermsCheckbox" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-family: 'Inter Tight', sans-serif; font-size: 0.9rem; color: #555;">
                 <input type="checkbox" id="checkoutTermsCheckbox" name="terms_agreed" style="margin-top: 3px; accent-color: #222;">
-                <span>I agree to SSRINI's <a href="../terms.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Terms of Service</a> and <a href="../privacy.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Privacy Policy</a>.</span>
+                <span>I agree to SSRINI's <a href="/ecom/terms/index.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Terms of Service</a> and <a href="/ecom/privacy/index.html" target="_blank" rel="noopener noreferrer" style="color: #222; text-decoration: underline;">Privacy Policy</a>.</span>
               </label>
               <span class="field-error" id="error-checkout-terms" style="display:none; color: #e53935; font-size: 0.85rem; margin-top: 5px;">Please agree to the Terms of Service to complete your purchase.</span>
             </div>
@@ -286,10 +288,8 @@
             <div class="summary-row total-row">
               <div class="total-label-group">
                 <span class="total-title">Total Due</span>
-                <span class="total-subtext">USD / INR Equivalent</span>
               </div>
               <div class="total-amount-group">
-                <span id="summary-total-usd" class="total-usd">$0.00</span>
                 <span id="summary-total-inr" class="total-inr">₹0</span>
               </div>
             </div>
@@ -344,7 +344,7 @@
             <h4 class="detail-box-title">Payment & Status</h4>
             <p class="detail-line"><strong>Method:</strong> <span id="confirmed-payment-method">Cash on Delivery</span></p>
             <p class="detail-line"><strong>Payment Status:</strong> <span id="confirmed-payment-status" class="status-pill pending">Pending</span></p>
-            <p class="detail-line"><strong>Order Total:</strong> <span id="confirmed-total-amount" class="bold">$0.00</span></p>
+            <p class="detail-line"><strong>Order Total:</strong> <span id="confirmed-total-amount" class="bold">₹0</span></p>
           </div>
         </div>
 
@@ -364,6 +364,9 @@
             </svg>
             <span>Connect on WhatsApp for Live Updates</span>
           </a>
+          <a id="btn-view-invoice" href="invoice.html" class="checkout-btn-secondary" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:12px 20px; border:1px solid #c5a059; border-radius:6px; color:#c5a059; font-weight:600; font-size:14px; background:rgba(197,160,89,0.08);">
+            <span>📄 View & Print Invoice</span>
+          </a>
           <a href="index.html" class="checkout-btn-primary return-store-btn">Return to Storefront</a>
         </div>
       </div>
@@ -375,8 +378,12 @@
   <div class="cursor"></div>
 
   <!-- Scripts -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="../js/cursor.js"></script>
   <script src="js/cart-drawer.js"></script>
+  <script>
+    window.STORE_WHATSAPP_URL = "https://wa.me/919836081994";
+  </script>
   <script src="js/checkout.js"></script>
 </body>
 </html>

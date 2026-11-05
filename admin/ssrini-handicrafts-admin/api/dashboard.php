@@ -862,16 +862,16 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                     <!-- Enhanced anchor tags for guaranteed navigation -->
                    
                 <div class="quick-actions-list">
-                        <a href="../products.php" class="action-btn primary">
+                        <a href="/admin/ssrini-handicrafts-admin/admin/products.php" class="action-btn primary">
                             <i class="fa-solid fa-plus"></i> Add Product
                         </a>
-                        <a href="../admin/orders.php" class="action-btn secondary">
+                        <a href="/admin/ssrini-handicrafts-admin/admin/orders.php" class="action-btn secondary">
                             <i class="fa-solid fa-box"></i> New Orders
                         </a>
-                        <a href="../invoices.php" class="action-btn secondary">
+                        <a href="/admin/ssrini-handicrafts-admin/admin/invoices.php" class="action-btn secondary">
                             <i class="fa-solid fa-file-invoice"></i> Create Invoice
                         </a>
-                        <a href="../categories.php" class="action-btn secondary">
+                        <a href="/admin/ssrini-handicrafts-admin/admin/categories.php" class="action-btn secondary">
                             <i class="fa-solid fa-tag"></i> Add Category
                         </a>
                     </div>

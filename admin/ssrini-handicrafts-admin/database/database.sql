@@ -218,16 +218,22 @@ CREATE TABLE IF NOT EXISTS reviews(
     product_id INT UNSIGNED NULL,
 
     rating INT UNSIGNED NOT NULL,
+    author_name VARCHAR(255) NULL,
+    author_location VARCHAR(255) NULL,
+    avatar_image VARCHAR(500) NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    source VARCHAR(100) NOT NULL DEFAULT 'Google Reviews',
     review_text TEXT NULL,
 
     status ENUM(
         'pending',
         'approved',
         'hidden'
-    ) NOT NULL DEFAULT 'pending',
+    ) NOT NULL DEFAULT 'approved',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON  UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
 
     INDEX idx_reviews_customer(customer_id),
@@ -325,16 +331,38 @@ CREATE TABLE IF NOT EXISTS front_page_content (
 
 CREATE TABLE IF NOT EXISTS about_content (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
+    hero_image VARCHAR(500) NULL,
+    main_heading VARCHAR(255) NULL,
+    story_para_1 TEXT NULL,
+    story_para_2 TEXT NULL,
+    story_para_3 TEXT NULL,
+    story_subtext TEXT NULL,
+    stat_1_num VARCHAR(50) DEFAULT '20+',
+    stat_1_text VARCHAR(100) DEFAULT 'years of heritage',
+    stat_2_num VARCHAR(50) DEFAULT '2004',
+    stat_2_text VARCHAR(100) DEFAULT 'founded in Kolkata',
+    stat_3_num VARCHAR(50) DEFAULT '2021',
+    stat_3_text VARCHAR(100) DEFAULT 'ATELIER',
+    stat_4_num VARCHAR(50) DEFAULT '4.9★',
+    stat_4_text VARCHAR(100) DEFAULT 'verified craft rating',
     company_description TEXT NULL,
-
-    facebook_url VARCHAR(255) NULL,
-    instagram_url VARCHAR(255) NULL,
-    twitter_url VARCHAR(255) NULL,
-
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 13b. ABOUT HONORS & AWARDS
+CREATE TABLE IF NOT EXISTS about_awards (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    affiliation VARCHAR(255) NOT NULL,
+    quote TEXT NOT NULL,
+    image_path VARCHAR(500) NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 14. STORE SETTINGS
 

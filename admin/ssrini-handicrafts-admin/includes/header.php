@@ -28,6 +28,8 @@ $pageTitles = [
     'filter-configuration.php' => 'Filter Configuration',
     'front-page-content.php' => 'Front Page Content',
     'about-details.php' => 'About Details',
+    'social-links.php' => 'Social Links',
+    'login-settings.php' => 'Login Customization',
     'analytics.php' => 'Analytics',
     'settings.php' => 'Settings'
 ];

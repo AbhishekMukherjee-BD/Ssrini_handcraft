@@ -22,19 +22,6 @@ function initCheckoutPage() {
   if (emptyView) emptyView.style.display = 'none';
   if (activeGrid) activeGrid.style.display = 'grid';
 
-  // Prefill from Session
-  try {
-    const user = JSON.parse(localStorage.getItem('ssrini_user') || 'null');
-    if (user) {
-      const nameInput = document.getElementById('customer-name');
-      const emailInput = document.getElementById('customer-email');
-      const phoneInput = document.getElementById('customer-phone');
-      if (nameInput && user.first_name) nameInput.value = user.first_name + ' ' + (user.last_name || '');
-      if (emailInput && user.email) emailInput.value = user.email;
-      if (phoneInput && user.phone) phoneInput.value = user.phone;
-    }
-  } catch(e) {}
-
   // Render Order Summary in Right Column
   renderOrderSummary(cart);
 
@@ -61,21 +48,19 @@ function renderOrderSummary(cart) {
   const countEl = document.getElementById('summary-items-count');
   const listEl = document.getElementById('summary-items-list');
   const subtotalEl = document.getElementById('summary-subtotal');
-  const totalUsdEl = document.getElementById('summary-total-usd');
   const totalInrEl = document.getElementById('summary-total-inr');
 
   const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-  const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
-  const inrTotal = Math.round(subtotal * 83); // USD to INR conversion approximation
+  const subtotal = cart.reduce((sum, item) => sum + ((item.priceINR || item.price || 0) * (item.qty || 1)), 0);
+  const inrTotal = subtotal; 
 
   if (countEl) countEl.textContent = `${totalQty} ${totalQty === 1 ? 'Piece' : 'Pieces'}`;
-  if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-  if (totalUsdEl) totalUsdEl.textContent = `$${subtotal.toFixed(2)}`;
+  if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
   if (totalInrEl) totalInrEl.textContent = `₹${inrTotal.toLocaleString('en-IN')}`;
 
   if (listEl) {
     listEl.innerHTML = cart.map(item => {
-      const lineTotal = ((item.price || 0) * (item.qty || 1)).toFixed(2);
+      const lineTotal = ((item.priceINR || item.price || 0) * (item.qty || 1));
       return `
         <div class="summary-item-row">
           <div class="summary-item-thumb-wrapper">
@@ -86,7 +71,7 @@ function renderOrderSummary(cart) {
             <h4 class="summary-item-title">${item.title}</h4>
             <div class="summary-item-meta">Size: ${item.size || 'Free'} · ${item.weight || '1 LBS'}</div>
           </div>
-          <div class="summary-item-price">$${lineTotal}</div>
+          <div class="summary-item-price">₹${lineTotal.toLocaleString('en-IN')}</div>
         </div>
       `;
     }).join('');
@@ -150,15 +135,6 @@ function validateCheckoutForm(form) {
     isValid = false;
   }
 
-  const termsCheckbox = form.querySelector('#checkoutTermsCheckbox');
-  const termsError = form.querySelector('#error-checkout-terms');
-  if (termsCheckbox && !termsCheckbox.checked) {
-    if (termsError) termsError.style.display = 'block';
-    isValid = false;
-  } else if (termsError) {
-    termsError.style.display = 'none';
-  }
-
   return isValid;
 }
 
@@ -186,8 +162,8 @@ function handleOrderSubmission(e) {
   }
 
   const cart = getCart();
-  const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
-  const inrTotal = Math.round(subtotal * 83);
+  const subtotal = cart.reduce((sum, item) => sum + ((item.priceINR || item.price || 0) * (item.qty || 1)), 0);
+  const inrTotal = subtotal;
 
   // Generate Unique Order Number
   const randomSuffix = Math.floor(10000 + Math.random() * 90000);
@@ -213,7 +189,6 @@ function handleOrderSubmission(e) {
     order_number: orderNumber,
     customer: customerData,
     items: cart,
-    total_amount_usd: subtotal.toFixed(2),
     total_amount_inr: inrTotal,
     payment_method: paymentMethod,
     payment_status: paymentMethod === 'online' ? 'paid' : 'pending',
@@ -221,52 +196,136 @@ function handleOrderSubmission(e) {
     created_at: new Date().toISOString()
   };
 
-  // Asynchronously dispatch order to backend API
-  fetch('http://localhost:8080/api/create-order.php', {
+  // Helper to persist order into local storage for static Vercel demo
+  const saveOrderLocally = (order) => {
+    try {
+      const existing = JSON.parse(localStorage.getItem('ssrini_orders') || '[]');
+      existing.unshift(order);
+      localStorage.setItem('ssrini_orders', JSON.stringify(existing));
+      localStorage.setItem('ssrini_last_order', JSON.stringify(order));
+    } catch (e) {
+      console.warn('Could not save order to localStorage:', e);
+    }
+  };
+
+  // Process the order via API (falls back gracefully to client-side order completion on static host)
+  fetch('../api/create-order.php', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        email: customerData.email,
-        name: customerData.name,
-        phone: customerData.phone,
-        shipping: {
-            address: customerData.address,
-            city: customerData.city,
-            state: customerData.state,
-            pincode: customerData.pincode
-        },
-        items: cart,
-        payment_method: paymentMethod,
-        shipping_cost: 0,
-        discount_amount: 0,
-        order_notes: customerData.notes
-    })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderPayload)
   })
-  .then(res => res.json())
+  .then(response => {
+    if (!response.ok) throw new Error('Static host: backend PHP not available');
+    return response.json();
+  })
   .then(data => {
     if (data.success) {
-      console.log('[SSRINI Order Placed]:', data);
-      orderPayload.order_number = data.order_number; // Update with real order number
+      saveOrderLocally(orderPayload);
+      if (data.razorpay_order_id) {
+        // ONLINE PAYMENT: Initialize Razorpay Checkout
+        const options = {
+          "key": data.razorpay_key_id, 
+          "amount": inrTotal * 100, 
+          "currency": "INR",
+          "name": "SSRINI Handcrafts",
+          "description": "Bespoke Order #" + data.order_number,
+          "order_id": data.razorpay_order_id,
+          "handler": function (response) {
+            verifyRazorpayPayment(response, data.order_id, orderPayload, submitBtn, btnText);
+          },
+          "prefill": {
+            "name": customerData.name,
+            "email": customerData.email,
+            "contact": customerData.phone.replace('+91 ', '')
+          },
+          "theme": {
+            "color": "#111111"
+          },
+          "modal": {
+            "ondismiss": function() {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                if (btnText) btnText.textContent = 'PLACE ORDER SECURELY';
+              }
+            }
+          }
+        };
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (response){
+          console.error("Razorpay Payment Failed: ", response.error);
+          alert("Payment Failed: " + response.error.description);
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            if (btnText) btnText.textContent = 'PLACE ORDER SECURELY';
+          }
+        });
+        rzp.open();
+      } else {
+        // COD PAYMENT: Complete immediately
+        completeOrderSuccess(orderPayload);
+      }
     } else {
-      console.error('[SSRINI API Error]:', data.message);
-      // Fallback/continue with local payload if error
+      throw new Error(data.error || 'Failed to process order.');
     }
   })
-  .catch(err => {
-    console.error('[SSRINI Fetch Error]:', err);
-  })
-  .finally(() => {
-    // Clear cart from localStorage
-    localStorage.removeItem('ssrini_cart');
-    if (typeof updateGlobalCounters === 'function') {
-      updateGlobalCounters();
-    }
-
-    // Render Order Confirmation Screen
-    showOrderConfirmation(orderPayload);
+  .catch(error => {
+    console.warn('Static deployment mode active. Completing order client-side:', error);
+    saveOrderLocally(orderPayload);
+    completeOrderSuccess(orderPayload);
   });
+}
+
+// Verify Payment Integrity via Backend
+function verifyRazorpayPayment(paymentData, internalOrderId, orderPayload, submitBtn, btnText) {
+  if (btnText) btnText.textContent = 'VERIFYING PAYMENT...';
+  
+  fetch('../api/verify-payment.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      razorpay_payment_id: paymentData.razorpay_payment_id,
+      razorpay_order_id: paymentData.razorpay_order_id,
+      razorpay_signature: paymentData.razorpay_signature,
+      internal_order_id: internalOrderId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Payment Verified! 
+      orderPayload.payment_status = 'paid'; // Force UI to show paid
+      completeOrderSuccess(orderPayload);
+    } else {
+      throw new Error(data.error || 'Signature verification failed.');
+    }
+  })
+  .catch(error => {
+    console.error('Verification error:', error);
+    alert('Payment verification failed. Please contact support if amount was deducted.');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      if (btnText) btnText.textContent = 'PLACE ORDER SECURELY';
+    }
+  });
+}
+
+// Complete the UI Order Success Flow
+function completeOrderSuccess(orderPayload) {
+  // Fire and forget email notification
+  fetch('../api/send-order-email.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderPayload)
+  }).catch(err => console.error('Email dispatch failed:', err));
+
+  // Clear cart from localStorage
+  localStorage.removeItem('ssrini_cart');
+  if (typeof updateGlobalCounters === 'function') {
+    updateGlobalCounters();
+  }
+
+  // Render Order Confirmation
+  showOrderConfirmation(orderPayload);
 }
 
 // Display Order Confirmation View
@@ -298,7 +357,7 @@ function showOrderConfirmation(order) {
     statusPill.className = 'status-pill pending';
   }
 
-  document.getElementById('confirmed-total-amount').textContent = `$${order.total_amount_usd} (₹${order.total_amount_inr.toLocaleString('en-IN')})`;
+  document.getElementById('confirmed-total-amount').textContent = `₹${order.total_amount_inr.toLocaleString('en-IN')}`;
 
   // Render Purchased Items List
   const itemsListEl = document.getElementById('confirmed-items-list');
@@ -306,7 +365,7 @@ function showOrderConfirmation(order) {
     itemsListEl.innerHTML = order.items.map(item => `
       <div class="confirmed-item-row">
         <span>${item.qty || 1}x ${item.title}</span>
-        <strong>$${((item.price || 0) * (item.qty || 1)).toFixed(2)}</strong>
+        <strong>₹${((item.priceINR || item.price || 0) * (item.qty || 1)).toLocaleString('en-IN')}</strong>
       </div>
     `).join('');
   }
@@ -317,10 +376,22 @@ function showOrderConfirmation(order) {
     const waText = encodeURIComponent(
       `Hello SSRINI Atelier! I have placed an order #${order.order_number}.\n\n` +
       `Name: ${order.customer.name}\n` +
-      `Total: $${order.total_amount_usd} (₹${order.total_amount_inr.toLocaleString('en-IN')})\n` +
+      `Total: ₹${order.total_amount_inr.toLocaleString('en-IN')}\n` +
       `Delivery To: ${order.customer.city}, ${order.customer.state}\n\n` +
       `Please provide dispatch and tracking updates.`
     );
-    waBtn.href = `https://wa.me/919836081994?text=${waText}`;
+    const baseWa = window.STORE_WHATSAPP_URL || '';
+    if (!baseWa) {
+      waBtn.style.display = 'none';
+      return;
+    }
+    const separator = baseWa.includes('?') ? '&' : '?';
+    waBtn.href = `${baseWa}${separator}text=${waText}`;
+  }
+
+  // Configure Direct Invoice CTA
+  const invBtn = document.getElementById('btn-view-invoice');
+  if (invBtn) {
+    invBtn.href = `invoice.html?order=${encodeURIComponent(order.order_number)}`;
   }
 }

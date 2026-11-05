@@ -22,66 +22,84 @@
   'use strict';
 
   /* ==========================================================================
-     1. MASTER CURATED CRAFTSMANSHIP DATA (8 HIGH-DPI ASSETS)
+     1. MASTER CURATED CRAFTSMANSHIP DATA
+     Reads from DB-injected window.__SSRINI_COLLECTION_DB__ when available.
+     Falls back to hardcoded paths as a safety net.
      ========================================================================== */
-  const COLLECTION = [
-    {
-      id: 'necklace-hero',
-      src: 'assets/images/craftsmanship/necklace-hero.webp',
-      title: 'Royal Polki & Pearl Heritage Collar',
-      tag: 'Haute Joaillerie · Hero Centerpiece',
-      desc: 'A magnificent royal statement piece crafted in 22kt hallmarked gold, encrusted with syndicate uncut polki diamonds, natural Zambian emerald beads, and hand-strung South Sea baroque pearls.'
-    },
-    {
-      id: 'piece-1',
-      src: 'assets/images/craftsmanship/1.webp',
-      title: 'Heritage Filigree Solitaire Band',
-      tag: 'Artisan Atelier · Ring',
-      desc: 'Precision hand-engraved gold filigree band centered around a certified brilliant-cut diamond solitaire, finished with antique millgrain edging.'
-    },
-    {
-      id: 'piece-2',
-      src: 'assets/images/craftsmanship/2.webp',
-      title: 'Imperial Jadau Choker & Cascades',
-      tag: 'Royal Court · Choker',
-      desc: 'Intricate closed-back Kundan setting featuring floral meenakari enameling on reverse, set with untreated Burmese rubies and faceted emerald drops.'
-    },
-    {
-      id: 'piece-3',
-      src: 'assets/images/craftsmanship/3.webp',
-      title: 'Nizam Heritage Polki Kada',
-      tag: 'Dynasty Collection · Bangle',
-      desc: 'Sculpted solid gold kada with screw clasp, lined with natural unheated rubies and diamond polki clusters.'
-    },
-    {
-      id: 'piece-4',
-      src: 'assets/images/craftsmanship/4.webp',
-      title: 'Temple Architecture Jhumka Pendants',
-      tag: 'Heritage South · Earrings',
-      desc: 'Intricately articulated chandelier earrings inspired by Dravidian temple gopuram carvings and seed pearl hangings.'
-    },
-    {
-      id: 'piece-5',
-      src: 'assets/images/craftsmanship/5.webp',
-      title: 'Peacock Motif Navratna Choker',
-      tag: 'Masterpiece · Multi-Gem',
-      desc: 'Featuring nine sacred astrological gemstones arranged in cosmic alignment with feather-carved gold plumage.'
-    },
-    {
-      id: 'piece-6',
-      src: 'assets/images/craftsmanship/6.webp',
-      title: 'Mughal Blossom Royal Collar',
-      tag: 'Imperial Archival · Collar',
-      desc: 'A flexible mesh gold collar woven with micro-pearls and rose-cut diamonds, radiating regal majesty.'
-    },
-    {
-      id: 'piece-7',
-      src: 'assets/images/craftsmanship/7.webp',
-      title: 'Artisan Hand-Engraved Wedding Band',
-      tag: 'Timeless · Band',
-      desc: 'Subtle high-polish brushed gold with hand-chiseled millgrain edges and pavé set micro diamonds.'
+  const _DB = window.__SSRINI_COLLECTION_DB__ || null;
+
+  // Build COLLECTION from DB or fallback
+  const COLLECTION = (function() {
+    if (_DB && _DB.orbit && _DB.orbit.length && _DB.hero) {
+      // Hero is always index 0
+      const list = [{ ..._DB.hero, id: 'necklace-hero' }];
+      _DB.orbit.forEach((o, i) => {
+        list.push({ ...o, id: o.id || ('piece-' + (i + 1)) });
+      });
+      // Ensure at least 8 entries by cycling if fewer
+      while (list.length < 8) list.push(...list.slice(1));
+      return list.slice(0, Math.max(list.length, 8));
     }
-  ];
+    // Hardcoded fallback
+    return [
+      {
+        id: 'necklace-hero',
+        src: 'assets/images/craftsmanship/necklace-hero.webp',
+        title: 'Royal Polki & Pearl Heritage Collar',
+        tag: 'Haute Joaillerie · Hero Centerpiece',
+        desc: 'A magnificent royal statement piece crafted in 22kt hallmarked gold, encrusted with syndicate uncut polki diamonds, natural Zambian emerald beads, and hand-strung South Sea baroque pearls.'
+      },
+      {
+        id: 'piece-1',
+        src: 'assets/images/craftsmanship/1.webp',
+        title: 'Heritage Filigree Solitaire Band',
+        tag: 'Artisan Atelier · Ring',
+        desc: 'Precision hand-engraved gold filigree band centered around a certified brilliant-cut diamond solitaire, finished with antique millgrain edging.'
+      },
+      {
+        id: 'piece-2',
+        src: 'assets/images/craftsmanship/2.webp',
+        title: 'Imperial Jadau Choker & Cascades',
+        tag: 'Royal Court · Choker',
+        desc: 'Intricate closed-back Kundan setting featuring floral meenakari enameling on reverse, set with untreated Burmese rubies and faceted emerald drops.'
+      },
+      {
+        id: 'piece-3',
+        src: 'assets/images/craftsmanship/3.webp',
+        title: 'Nizam Heritage Polki Kada',
+        tag: 'Dynasty Collection · Bangle',
+        desc: 'Sculpted solid gold kada with screw clasp, lined with natural unheated rubies and diamond polki clusters.'
+      },
+      {
+        id: 'piece-4',
+        src: 'assets/images/craftsmanship/4.webp',
+        title: 'Temple Architecture Jhumka Pendants',
+        tag: 'Heritage South · Earrings',
+        desc: 'Intricately articulated chandelier earrings inspired by Dravidian temple gopuram carvings and seed pearl hangings.'
+      },
+      {
+        id: 'piece-5',
+        src: 'assets/images/craftsmanship/5.webp',
+        title: 'Peacock Motif Navratna Choker',
+        tag: 'Masterpiece · Multi-Gem',
+        desc: 'Featuring nine sacred astrological gemstones arranged in cosmic alignment with feather-carved gold plumage.'
+      },
+      {
+        id: 'piece-6',
+        src: 'assets/images/craftsmanship/6.webp',
+        title: 'Mughal Blossom Royal Collar',
+        tag: 'Imperial Archival · Collar',
+        desc: 'A flexible mesh gold collar woven with micro-pearls and rose-cut diamonds, radiating regal majesty.'
+      },
+      {
+        id: 'piece-7',
+        src: 'assets/images/craftsmanship/7.webp',
+        title: 'Artisan Hand-Engraved Wedding Band',
+        tag: 'Timeless · Band',
+        desc: 'Subtle high-polish brushed gold with hand-chiseled millgrain edges and pavé set micro diamonds.'
+      }
+    ];
+  })();
 
   /* Mapping pieces across columns:
      - Row 0 (Top): Centered on Solitaire Ring (Piece 1)

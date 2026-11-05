@@ -208,19 +208,37 @@
       color: var(--muted);
       text-align: center;
     }
+
+    @media screen and (max-width: 768px) {
+      .legal-nav {
+        padding: max(12px, env(safe-area-inset-top)) 18px 12px 18px;
+      }
+      .legal-nav-logo img {
+        height: 32px;
+      }
+      .legal-container {
+        padding: 24px 18px max(40px, env(safe-area-inset-bottom)) 18px;
+      }
+      .legal-title {
+        font-size: 28px;
+      }
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Top Bar -->
   <nav class="legal-nav">
-    <a href="../index.html" class="legal-nav-logo" aria-label="SSRINI Home">
+    <a href="/ecom/index.html" class="legal-nav-logo" aria-label="SSRINI Home">
       <img src="../landing/assets/images/logo.png" alt="SSRINI Handicrafts">
     </a>
-    <a href="../index.html" class="legal-back-btn">
+    <button onclick="if(document.referrer && document.referrer !== window.location.href){ history.back(); } else { window.location.href='/ecom/index.php'; }" class="legal-back-btn" style="border:none; cursor:pointer; font-family:inherit; background:none; padding:0;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      Back to Home
-    </a>
+      Go Back
+    </button>
   </nav>
 
   <main class="legal-container">

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  CURSIVE HANDWRITING ANIMATION — TEMPLATE                   ║
+    ║  Skill: cursive-text-animation                              ║
+    ║  Technique: SVG <text> + Google Fonts + GSAP dashoffset     ║
+    ║                                                             ║
+    ║  HOW TO CUSTOMIZE:                                          ║
+    ║  1. Change TEXT_LINE_1 / TEXT_LINE_2 below                  ║
+    ║  2. Change DEFAULT_FONT to any of the 4 options             ║
+    ║  3. Change DEFAULT_INK to any hex color                     ║
+    ║  4. Change DEFAULT_SPEED (0.4 = slow, 1.0 = normal, 2+ = fast) ║
+    ╚══════════════════════════════════════════════════════════════╝
+    -->
+    <title>Cursive Animation Preview</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Pinyon+Script&family=Italianno&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Design Tokens ───────────────────────────────────────── */
+        :root {
+            --bg:         #faf9f8;
+            --ink:        #5c3d2e;   /* Default: Walnut Brown */
+            --hud-bg:     rgba(255, 255, 255, 0.95);
+            --hud-border: rgba(0, 0, 0, 0.08);
+            --text:       #222222;
+            --accent:     #b8945a;
+        }
+
+        /* ── Reset ───────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* ── Body ────────────────────────────────────────────────── */
+        body {
+            min-height: 100vh;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 130px;
+            transition: background 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* ── Background Modes ────────────────────────────────────── */
+        body.dark {
+            --bg:         #0c0d0f;
+            --hud-bg:     rgba(18, 20, 24, 0.95);
+            --hud-border: rgba(255, 255, 255, 0.1);
+            --text:       #eeeeee;
+            --ink:        #dfc394;
+        }
+
+        /* Checkerboard = transparent background check */
+        body.check {
+            background: #cccccc
+                repeating-conic-gradient(#bbbbbb 0% 25%, #d4d4d4 0% 50%)
+                0 0 / 20px 20px;
+        }
+
+        /* ── Status Badge ─────────────────────────────────────────── */
+        .status {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--hud-bg);
+            border: 1px solid var(--hud-border);
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99;
+            white-space: nowrap;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.7; transform: scale(0.9); }
+            50%       { opacity: 1;   transform: scale(1.25); }
+        }
+
+        /* ── Stage ───────────────────────────────────────────────── */
+        .stage {
+            width: 100%;
+            max-width: 1100px;
+            padding: 60px 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* ── Font Picker Pills ────────────────────────────────────── */
+        .font-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .font-pill {
+            padding: 7px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--hud-border);
+            background: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            transition: all 0.18s ease;
+        }
+
+        .font-pill:hover { border-color: var(--accent); }
+
+        .font-pill.active {
+            background: var(--ink);
+            color: #fff;
+            border-color: var(--ink);
+        }
+
+        body.dark .font-pill.active {
+            background: var(--accent);
+            color: #111;
+            border-color: var(--accent);
+        }
+
+        /* ── SVG Wrapper ──────────────────────────────────────────── */
+        .svg-wrap {
+            width: 100%;
+            max-width: 980px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #cursive-svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        /* SVG text: stroke-only initially */
+        .cursive-line {
+            fill: transparent;
+            stroke: var(--ink);
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: fill 0.5s ease, stroke 0.3s ease;
+        }
+
+        .cursive-line.filled {
+            fill: var(--ink);
+        }
+
+        /* ── Subtitle ─────────────────────────────────────────────── */
+        .subtitle {
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--ink);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: color 0.3s ease;
+        }
+
+        /* ── Pen Nib Glow ─────────────────────────────────────────── */
+        #nib {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d4af37;
+            box-shadow: 0 0 14px 4px rgba(212, 175, 55, 0.85);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 200;
+        }
+
+        /* ── HUD ──────────────────────────────────────────────────── */
+        .hud {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--hud-bg);
+            border: 1px solid var(--hud-border);
+            border-radius: 22px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0,0,0,0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 99;
+            max-width: 95vw;
+        }
+
+        .hud-sep {
+            width: 1px;
+            height: 22px;
+            background: var(--hud-border);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--hud-border);
+            background: #ffffff;
+            color: #222222;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        body.dark .btn {
+            background: #1c1e22;
+            color: #f0f0f0;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            background: #1a1a1a;
+            color: #ffffff;
+            border-color: #1a1a1a;
+        }
+
+        body.dark .btn.primary {
+            background: var(--accent);
+            color: #111111;
+            border-color: var(--accent);
+        }
+
+        /* Sliders */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text);
+        }
+
+        .slider-row input[type="range"] {
+            width: 72px;
+            accent-color: var(--ink);
+            cursor: pointer;
+        }
+
+        /* Color Swatches */
+        .swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+
+        .swatch:hover { transform: scale(1.22); }
+
+        .swatch.active {
+            border-color: #333333;
+            transform: scale(1.15);
+        }
+
+        body.dark .swatch.active { border-color: #ffffff; }
+
+        /* Text Input */
+        .txt-wrap {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .txt-wrap input {
+            border: 1px solid var(--hud-border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: inherit;
+            font-size: 13px;
+            background: transparent;
+            color: var(--text);
+            outline: none;
+            width: 200px;
+            transition: border-color 0.18s ease;
+        }
+
+        .txt-wrap input:focus { border-color: var(--accent); }
+
+        /* ── Responsive ───────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .hud { padding: 10px 14px; gap: 8px; }
+            .hud-sep { display: none; }
+            .txt-wrap input { width: 130px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Status Badge ────────────────────────────────────────── -->
+    <div class="status">
+        <span class="live-dot"></span>
+        <span>Cursive Preview · White Canvas</span>
+    </div>
+
+    <!-- ── Pen Nib Glow ────────────────────────────────────────── -->
+    <div id="nib"></div>
+
+    <!-- ── Stage ───────────────────────────────────────────────── -->
+    <div class="stage">
+
+        <!-- Font Picker -->
+        <div class="font-row" id="font-row">
+            <button class="font-pill" data-font="Great Vibes"   onclick="setFont(this)">Great Vibes    <small style="opacity:.5;font-size:10px">— Closest to Blush</small></button>
+            <button class="font-pill" data-font="Pinyon Script" onclick="setFont(this)">Pinyon Script  <small style="opacity:.5;font-size:10px">— Ultra fine</small></button>
+            <button class="font-pill active" data-font="Alex Brush"   onclick="setFont(this)">Alex Brush     <small style="opacity:.5;font-size:10px">— Classic elegance</small></button>
+            <button class="font-pill" data-font="Italianno"     onclick="setFont(this)">Italianno      <small style="opacity:.5;font-size:10px">— Very thin</small></button>
+        </div>
+
+        <!-- SVG Artboard — Edit text content here for customization -->
+        <div class="svg-wrap">
+            <svg id="cursive-svg" viewBox="0 0 960 260" xmlns="http://www.w3.org/2000/svg">
+                <!--
+                    LINE 1 — edit textContent to change displayed text
+                    y="120" positions it in the upper half
+                -->
+                <text id="line1" class="cursive-line"
+                    x="480" y="120"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="'Alex Brush', cursive"
+                    font-size="88">Where Every Piece</text>
+
+                <!--
+                    LINE 2 — edit textContent to change displayed text
+                    y="218" positions it in the lower half
+                -->
+                <text id="line2" class="cursive-line"
+                    x="480" y="218"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="'Alex Brush', cursive"
+                    font-size="88">Tells A Story.</text>
+            </svg>
+        </div>
+
+        <!-- Subtitle — edit text content here -->
+        <div class="subtitle" id="subtitle">
+            Ssrini Handicrafts &nbsp;·&nbsp; Timeless Handcraft Heritage
+        </div>
+    </div>
+
+    <!-- ── Floating HUD ─────────────────────────────────────────── -->
+    <div class="hud">
+
+        <!-- Replay + Pause -->
+        <div style="display:flex;gap:6px;align-items:center">
+            <button class="btn primary" onclick="replayAnimation()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                Replay
+            </button>
+            <button class="btn" onclick="togglePause()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="4" width="4" height="16"/>
+                    <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+                <span id="pause-label">Pause</span>
+            </button>
+        </div>
+
+        <div class="hud-sep"></div>
+
+        <!-- Custom Text Input -->
+        <div class="txt-wrap">
+            <input type="text" id="txt-line1" placeholder="Line 1…" value="Where Every Piece">
+            <input type="text" id="txt-line2" placeholder="Line 2…" value="Tells A Story.">
+            <button class="btn" onclick="applyText()">Write ✦</button>
+        </div>
+
+        <div class="hud-sep"></div>
+
+        <!-- Speed -->
+        <div class="slider-row">
+            Speed:
+            <input type="range" id="speed-slider" min="0.4" max="3" step="0.1" value="1" oninput="onSpeed(this.value)">
+            <span id="speed-val">1.0×</span>
+        </div>
+
+        <!-- Ink Width -->
+        <div class="slider-row">
+            Ink:
+            <input type="range" id="ink-slider" min="0.8" max="6" step="0.2" value="1.8" oninput="onStroke(this.value)">
+            <span id="ink-val">1.8px</span>
+        </div>
+
+        <!-- Font Size -->
+        <div class="slider-row">
+            Size:
+            <input type="range" id="size-slider" min="48" max="120" step="4" value="88" oninput="onFontSize(this.value)">
+            <span id="size-val">88px</span>
+        </div>
+
+        <div class="hud-sep"></div>
+
+        <!-- Ink Color Swatches -->
+        <div style="display:flex;gap:6px;align-items:center">
+            <div class="swatch active" style="background:#5c3d2e" title="Walnut Brown (Default)" onclick="setInk('#5c3d2e',this)"></div>
+            <div class="swatch"        style="background:#1a1a1a" title="Deep Charcoal"          onclick="setInk('#1a1a1a',this)"></div>
+            <div class="swatch"        style="background:#b8945a" title="Champagne Gold"         onclick="setInk('#b8945a',this)"></div>
+            <div class="swatch"        style="background:#1b3354" title="Royal Navy"             onclick="setInk('#1b3354',this)"></div>
+            <div class="swatch"        style="background:#4a6741" title="Forest Green"           onclick="setInk('#4a6741',this)"></div>
+        </div>
+
+        <div class="hud-sep"></div>
+
+        <!-- Background Mode -->
+        <div style="display:flex;gap:6px;align-items:center">
+            <button class="btn" onclick="setBg('white')">White</button>
+            <button class="btn" onclick="setBg('check')">Transparent</button>
+            <button class="btn" onclick="setBg('dark')">Dark</button>
+        </div>
+    </div>
+
+    <!--
+        GSAP — uses local file for Ssrini Handicrafts project.
+        For other projects: replace with CDN:
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    -->
+    <script src="js/gsap.min.js"></script>
+
+    <script>
+    /* ════════════════════════════════════════════════════════════
+       CONFIGURATION — Change these defaults when adapting the skill
+       ════════════════════════════════════════════════════════════ */
+    const CONFIG = {
+        TEXT_LINE_1:   'Where Every Piece',
+        TEXT_LINE_2:   'Tells A Story.',
+        DEFAULT_FONT:  'Alex Brush',      // Great Vibes | Pinyon Script | Alex Brush | Italianno
+        DEFAULT_INK:   '#5c3d2e',         // Walnut Brown
+        DEFAULT_SPEED: 1.0,               // 0.4 = slow, 1.0 = normal, 2.0 = fast
+        DEFAULT_STROKE_W: 1.8,            // px
+        DEFAULT_FONT_SIZE: 88,            // px
+        PATH_SPEED_DIVISOR: 380,          // lower = faster writing per px of path
+        SUBTITLE: 'Ssrini Handicrafts · Timeless Handcraft Heritage'
+    };
+
+    /* ════════════════════════════════════════════════════════════
+       STATE
+       ════════════════════════════════════════════════════════════ */
+    let tl        = null;
+    let inkColor  = CONFIG.DEFAULT_INK;
+    let strokeW   = CONFIG.DEFAULT_STROKE_W;
+    let speed     = CONFIG.DEFAULT_SPEED;
+    let fontSize  = CONFIG.DEFAULT_FONT_SIZE;
+    let isPaused  = false;
+    let activeFont = CONFIG.DEFAULT_FONT;
+
+    /* ── Element Refs ─────────────────────────────────────────── */
+    const line1El  = document.getElementById('line1');
+    const line2El  = document.getElementById('line2');
+    const subtitleEl = document.getElementById('subtitle');
+    const nibEl    = document.getElementById('nib');
+    const svgEl    = document.getElementById('cursive-svg');
+
+    /* ════════════════════════════════════════════════════════════
+       BOOT — wait for fonts to render before measuring paths
+       ════════════════════════════════════════════════════════════ */
+    window.addEventListener('load', () => {
+        // Apply config defaults to SVG elements
+        line1El.textContent = CONFIG.TEXT_LINE_1;
+        line2El.textContent = CONFIG.TEXT_LINE_2;
+        subtitleEl.textContent = CONFIG.SUBTITLE;
+        document.getElementById('txt-line1').value = CONFIG.TEXT_LINE_1;
+        document.getElementById('txt-line2').value = CONFIG.TEXT_LINE_2;
+
+        // 400ms delay ensures Google Fonts have rendered before getTotalLength()
+        setTimeout(() => replayAnimation(), 400);
+    });
+
+    /* ════════════════════════════════════════════════════════════
+       CORE ANIMATION
+       ════════════════════════════════════════════════════════════ */
+    function replayAnimation() {
+        if (tl) tl.kill();
+
+        isPaused = false;
+        document.getElementById('pause-label').textContent = 'Pause';
+
+        const lines = [line1El, line2El].filter(el => el.textContent.trim() !== '');
+
+        // Reset each line
+        lines.forEach(el => {
+            el.classList.remove('filled');
+            el.style.stroke      = inkColor;
+            el.style.strokeWidth = strokeW;
+            el.style.fill        = 'transparent';
+        });
+
+        gsap.set(subtitleEl, { opacity: 0, y: 10 });
+        gsap.set(nibEl,      { opacity: 0 });
+
+        tl = gsap.timeline({ timeScale: speed });
+
+        lines.forEach((el, idx) => {
+            const len = (el.getTotalLength && el.getTotalLength()) || 2000;
+
+            // Set up the dash reveal
+            el.style.strokeDasharray  = len + 2;
+            el.style.strokeDashoffset = len + 2;
+
+            // Duration is proportional to path length for consistent pen speed
+            const dur = (len / CONFIG.PATH_SPEED_DIVISOR) * 1.1;
+
+            tl.to(el, {
+                strokeDashoffset: 0,
+                duration:         dur,
+                ease:             'none',   // constant speed = most natural handwriting feel
+
+                onStart() {
+                    gsap.set(nibEl, { opacity: 1 });
+                },
+
+                onUpdate() {
+                    movNib(el, this.progress(), len);
+                },
+
+                onComplete() {
+                    // Ink fill fades in once stroke is complete
+                    el.classList.add('filled');
+                    el.style.fill = inkColor;
+                    // Reduce stroke weight so fill dominates without double-weight look
+                    gsap.to(el, { strokeWidth: strokeW * 0.3, duration: 0.35 });
+                }
+
+            }, idx === 0 ? 0 : '-=0.05'); // tiny overlap for continuous feel
+        });
+
+        // Hide nib, reveal subtitle
+        tl.to(nibEl,      { opacity: 0, duration: 0.3 },                   '-=0.2');
+        tl.to(subtitleEl, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.1');
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       PEN NIB TRACKER
+       Converts SVG coordinate → screen coordinate for nib position
+       ════════════════════════════════════════════════════════════ */
+    function movNib(el, progress, len) {
+        if (!el.getPointAtLength) return;
+        try {
+            const pt   = el.getPointAtLength(progress * len);
+            const rect = svgEl.getBoundingClientRect();
+            const vb   = svgEl.viewBox.baseVal;
+            gsap.set(nibEl, {
+                left: rect.left + pt.x * (rect.width  / vb.width),
+                top:  rect.top  + pt.y * (rect.height / vb.height)
+            });
+        } catch (e) { /* ignore during font loading */ }
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       CONTROLS
+       ════════════════════════════════════════════════════════════ */
+
+    /** Pause / Resume toggle */
+    function togglePause() {
+        if (!tl) return;
+        if (isPaused) {
+            tl.play();
+            isPaused = false;
+            document.getElementById('pause-label').textContent = 'Pause';
+        } else {
+            tl.pause();
+            isPaused = true;
+            document.getElementById('pause-label').textContent = 'Resume';
+        }
+    }
+
+    /** Speed slider → GSAP timeScale */
+    function onSpeed(v) {
+        speed = parseFloat(v);
+        document.getElementById('speed-val').textContent = speed.toFixed(1) + '×';
+        if (tl) tl.timeScale(speed);
+    }
+
+    /** Ink width slider → SVG stroke-width */
+    function onStroke(v) {
+        strokeW = parseFloat(v);
+        document.getElementById('ink-val').textContent = strokeW + 'px';
+        [line1El, line2El].forEach(el => el.style.strokeWidth = strokeW);
+    }
+
+    /** Font size slider → SVG font-size attribute, then replay */
+    function onFontSize(v) {
+        fontSize = parseInt(v);
+        document.getElementById('size-val').textContent = fontSize + 'px';
+        [line1El, line2El].forEach(el => el.setAttribute('font-size', fontSize));
+        // Must replay: new font size changes path length
+        replayAnimation();
+    }
+
+    /** Ink color swatch */
+    function setInk(hex, dotEl) {
+        inkColor = hex;
+        document.documentElement.style.setProperty('--ink', hex);
+        [line1El, line2El].forEach(el => {
+            el.style.stroke = hex;
+            if (el.classList.contains('filled')) el.style.fill = hex;
+        });
+        subtitleEl.style.color = hex;
+        document.querySelectorAll('.swatch').forEach(d => d.classList.remove('active'));
+        if (dotEl) dotEl.classList.add('active');
+    }
+
+    /** Font pill — change font-family, replay after render */
+    function setFont(btnEl) {
+        activeFont = btnEl.dataset.font;
+        document.querySelectorAll('.font-pill').forEach(b => b.classList.remove('active'));
+        btnEl.classList.add('active');
+        const ff = `'${activeFont}', cursive`;
+        [line1El, line2El].forEach(el => el.setAttribute('font-family', ff));
+        // Delay for font render before measuring path
+        setTimeout(() => replayAnimation(), 200);
+    }
+
+    /** Custom text input → update SVG text, replay */
+    function applyText() {
+        const t1 = document.getElementById('txt-line1').value.trim();
+        const t2 = document.getElementById('txt-line2').value.trim();
+        if (t1) line1El.textContent = t1;
+        if (t2) line2El.textContent = t2;
+        // Hide line2 if empty
+        line2El.style.display = t2 ? '' : 'none';
+        replayAnimation();
+    }
+
+    /** Background canvas mode */
+    function setBg(mode) {
+        document.body.classList.remove('dark', 'check');
+        if (mode === 'dark')  document.body.classList.add('dark');
+        if (mode === 'check') document.body.classList.add('check');
+    }
+    </script>
+</body>
+</html>
