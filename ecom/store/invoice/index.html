@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="/ecom/store/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice | SSRINI Luxury Handcrafts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C5A059;
+            --text-dark: #1a1a1a;
+            --text-muted: #666666;
+            --border: #e8e8e8;
+            --bg-card: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f9;
+            color: var(--text-dark);
+            padding: 40px 20px;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 48px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+        .brand-title {
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
+            color: #111;
+            letter-spacing: 2px;
+        }
+        .brand-subtitle {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            margin-top: 4px;
+        }
+        .invoice-meta {
+            text-align: right;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .invoice-meta strong { color: var(--text-dark); }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .info-card h4 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .info-card p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
+        table.items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        table.items-table th {
+            background: #fafafa;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        table.items-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        .text-right { text-align: right; }
+        .summary-box {
+            margin-left: auto;
+            width: 280px;
+            border-top: 2px solid var(--border);
+            padding-top: 12px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+            padding-top: 12px;
+        }
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--border);
+        }
+        .btn-print {
+            background: #111;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-print:hover { background: var(--gold); }
+        .btn-back {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover { color: #111; }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .invoice-container { box-shadow: none; border: none; padding: 0; }
+            .actions-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container" id="invoiceRoot">
+        <div class="invoice-header">
+            <div>
+                <h1 class="brand-title">SSRINI</h1>
+                <p class="brand-subtitle">Haute Joaillerie & Artisanal Fine Art</p>
+            </div>
+            <div class="invoice-meta">
+                <p><strong>INVOICE:</strong> <span id="inv-num">SSR-INV-2026-8841</span></p>
+                <p><strong>DATE:</strong> <span id="inv-date"></span></p>
+                <p><strong>ORDER NO:</strong> <span id="inv-order-no">SSR-2026-92812</span></p>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="info-card">
+                <h4>Billed & Shipped To</h4>
+                <p><strong id="cust-name">Ananya Sengupta</strong></p>
+                <p id="cust-email">ananya.s@heritage.in</p>
+                <p id="cust-phone">+91 98301 22891</p>
+                <p id="cust-address">44/1 Southern Avenue, Lake Area, Kolkata, WB - 700029</p>
+            </div>
+            <div class="info-card" style="text-align: right;">
+                <h4>Atelier Dispatch Origin</h4>
+                <p><strong>SSRINI Artisanal Atelier</strong></p>
+                <p>concierge@ssrini.com</p>
+                <p>Heritage Master Guild, Bengal, India</p>
+                <p>GSTIN: 19AAAFS8821Q1Z8</p>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Artisanal Item</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Unit Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-items-body">
+                <tr>
+                    <td>
+                        <strong>Rivulet Signature Peridot Ring</strong>
+                        <div style="font-size: 12px; color:#888;">Gold Plated Brass & Peridot · 36 Handcrafted Hours</div>
+                    </td>
+                    <td class="text-right">1</td>
+                    <td class="text-right">₹35,000</td>
+                    <td class="text-right">₹35,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="inv-subtotal">₹35,000</span>
+            </div>
+            <div class="summary-row">
+                <span>Insured White-Glove Shipping</span>
+                <span style="color:#2e7d32;">COMPLIMENTARY</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Amount</span>
+                <span id="inv-total" style="color:var(--gold);">₹35,000</span>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <a href="index.html" class="btn-back">← Back to Store Catalog</a>
+            <button class="btn-print" onclick="window.print()">🖨️ Print / Save PDF Invoice</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            document.getElementById('inv-date').textContent = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            
+            // Check if URL has order number or localStorage has order
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('order');
+            
+            const lastOrderRaw = localStorage.getItem('ssrini_last_order');
+            let order = null;
+            if (lastOrderRaw) {
+                try {
+                    const parsed = JSON.parse(lastOrderRaw);
+                    if (!orderId || parsed.order_number === orderId) {
+                        order = parsed;
+                    }
+                } catch(e) {}
+            }
+            
+            if (order) {
+                document.getElementById('inv-num').textContent = `SSR-INV-${order.order_number.replace('SSR-', '')}`;
+                document.getElementById('inv-order-no').textContent = order.order_number;
+                if (order.customer) {
+                    document.getElementById('cust-name').textContent = order.customer.name || 'Valued Patron';
+                    document.getElementById('cust-email').textContent = order.customer.email || '';
+                    document.getElementById('cust-phone').textContent = order.customer.phone || '';
+                    document.getElementById('cust-address').textContent = `${order.customer.address}, ${order.customer.city}, ${order.customer.state} - ${order.customer.pincode}`;
+                }
+                if (order.items && order.items.length > 0) {
+                    const tbody = document.getElementById('invoice-items-body');
+                    tbody.innerHTML = order.items.map(item => `
+                        <tr>
+                            <td>
+                                <strong>${item.title}</strong>
+                                <div style="font-size: 12px; color:#888;">${item.material || 'Fine Artisanal Craft'} · Size: ${item.size || 'Standard'}</div>
+                            </td>
+                            <td class="text-right">${item.qty || 1}</td>
+                            <td class="text-right">₹${((item.priceINR || item.price || 0)).toLocaleString('en-IN')}</td>
+                            <td class="text-right">₹${(((item.priceINR || item.price || 0) * (item.qty || 1))).toLocaleString('en-IN')}</td>
+                        </tr>
+                    `).join('');
+                }
+                const total = order.total_amount_inr || order.total_amount || 0;
+                document.getElementById('inv-subtotal').textContent = `₹${total.toLocaleString('en-IN')}`;
+                document.getElementById('inv-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+            }
+        });
+    </script>
+</body>
+</html>
