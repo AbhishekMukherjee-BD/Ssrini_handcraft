@@ -22,10 +22,8 @@
             if (n) { n.classList.add('visible'); n.style.opacity = '1'; n.style.visibility = 'visible'; }
           } catch(e) {}
         }
-        setTimeout(releasePreloader, 3500);
-        window.addEventListener('load', function() {
-          setTimeout(releasePreloader, 2200);
-        });
+        // Safety timeout only triggers if an unhandled script error halts execution
+        setTimeout(releasePreloader, 7000);
       })();
     </script>
     

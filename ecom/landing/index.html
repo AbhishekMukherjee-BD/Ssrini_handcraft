@@ -19,10 +19,8 @@
             if (p && p.style.display !== 'none') p.style.display = 'none';
           } catch(e) {}
         }
-        setTimeout(releasePreloader, 3500);
-        window.addEventListener('load', function() {
-          setTimeout(releasePreloader, 2200);
-        });
+        // Safety timeout only triggers if an unhandled script error halts execution
+        setTimeout(releasePreloader, 7000);
       })();
     </script>
     <link rel="stylesheet" href="css/style.css?v=20260904_amita">

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", resizeHeroCanvas);
 
     // -----------------------------------------------------
-    // 2. LOGO ASSET PRELOAD & DRAW
+    // 2. LOGO ASSET PRELOAD & DRAW (Wave 1: High Priority Loading Frames)
     // -----------------------------------------------------
     const logoFramesCache = new Array(totalLogoFrames);
     let lastDrawnLogoImg = null;
@@ -55,81 +55,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // -----------------------------------------------------
-    // TIER 1: CRITICAL ASSET PRELOAD (144 LOGO FRAMES + 7 STACK IMAGES)
-    // -----------------------------------------------------
-    const preloadCriticalAssets = () => {
-        const stackUrls = [
-            'preloader_images/1.jpg',
-            'preloader_images/2.jpeg',
-            'preloader_images/3.jpeg',
-            'preloader_images/4.jpeg',
-            'preloader_images/5.jpeg',
-            'preloader_images/6.jpeg',
-            'preloader_images/7.jpeg'
-        ];
+    // Device check for mobile memory & network efficiency
+    const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
 
-        // 1. Preload & decode 7 preloader stack images
-        const stackPromises = stackUrls.map((url) => {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    if (img.decode) {
-                        img.decode().then(resolve).catch(resolve);
-                    } else {
-                        resolve();
-                    }
-                };
-                img.onerror = resolve; // Fail-safe
-                img.src = url;
-            });
-        });
-
-        // 2. Preload & decode logo canvas frames (Mobile-Optimized to prevent memory crashes)
-        const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
-        const logoStep = isMobileDevice ? 6 : 1;
-        const logoPromises = [];
-
+    // Wave 1: Stream loading logo frames immediately in background
+    const preloadLogoFrames = () => {
+        const logoStep = isMobileDevice ? 2 : 1;
         for (let i = 0; i < totalLogoFrames; i += logoStep) {
             const num = i.toString().padStart(4, '0');
             const img = new Image();
+            img.src = `assets/home/loading_frames/frame_${num}.png`;
             logoFramesCache[i] = img;
+            if (i === 0) {
+                img.onload = () => renderLogoFrame(0);
+                if (img.complete) renderLogoFrame(0);
+            }
             if (isMobileDevice) {
                 for (let fill = i + 1; fill < Math.min(i + logoStep, totalLogoFrames); fill++) {
                     logoFramesCache[fill] = img;
                 }
             }
-
-            const p = new Promise((resolve) => {
-                img.onload = () => {
-                    if (i === 0) renderLogoFrame(0);
-                    if (img.decode) {
-                        img.decode().then(resolve).catch(resolve);
-                    } else {
-                        resolve();
-                    }
-                };
-                img.onerror = resolve; // Fail-safe
-            });
-            img.src = `assets/home/loading_frames/frame_${num}.png`;
-            logoPromises.push(p);
         }
-
-        const frame0 = logoFramesCache[0];
-        if (frame0 && frame0.complete) renderLogoFrame(0);
-
-        // Wait for all critical assets or safety timeout (3200ms on desktop, 1200ms on mobile)
-        const allCritical = Promise.all([...stackPromises, ...logoPromises]);
-        const safetyTimeout = new Promise(resolve => setTimeout(resolve, isMobileDevice ? 1200 : 3200));
-
-        return Promise.race([allCritical, safetyTimeout]);
     };
+    preloadLogoFrames();
 
     // -----------------------------------------------------
-    // 3. HERO VIDEO FRAMES PRELOAD
+    // 3. HERO VIDEO FRAMES STREAMING (Wave 2 & Wave 3)
     // -----------------------------------------------------
     const videoFramesCache = new Array(totalVideoFrames + 1);
     let currentVideoFrame = 1;
+    let lastDrawnHeroImg = null;
 
     const getHeroFramePath = (index) => {
         const frameStr = index.toString().padStart(4, '0');
@@ -137,35 +92,22 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const preloadVideoFrames = () => {
-        const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
-
-        // Eagerly preload first frame and final frame (frame 480: gold necklace on mannequin)
+        // Eagerly preload frame 1 and final frame 480
         const imgFirst = new Image();
         imgFirst.src = getHeroFramePath(1);
+        imgFirst.onload = () => {
+            if (currentVideoFrame === 1) renderHeroCanvasFrame();
+        };
         videoFramesCache[1] = imgFirst;
 
         const imgLast = new Image();
         imgLast.src = getHeroFramePath(totalVideoFrames);
         videoFramesCache[totalVideoFrames] = imgLast;
 
-        if (isMobileDevice) {
-            // On Mobile: Keyframe sampling every 20 frames (saves 45MB download and 200MB RAM)
-            const heroStep = 20;
-            for (let i = 1; i <= totalVideoFrames; i += heroStep) {
-                if (!videoFramesCache[i]) {
-                    const img = new Image();
-                    img.src = getHeroFramePath(i);
-                    videoFramesCache[i] = img;
-                    for (let fill = i + 1; fill < Math.min(i + heroStep, totalVideoFrames); fill++) {
-                        videoFramesCache[fill] = img;
-                    }
-                }
-            }
-            return;
-        }
-
-        // On Desktop: Full luxury 480-frame buffer stream
-        for (let i = 1; i <= Math.min(60, totalVideoFrames); i++) {
+        // Wave 2: Buffer initial 60 frames WHILE preloader executes!
+        // These frames download concurrently while the user watches the 4.4s card animation.
+        const initialBatch = Math.min(60, totalVideoFrames);
+        for (let i = 2; i <= initialBatch; i++) {
             if (!videoFramesCache[i]) {
                 const img = new Image();
                 img.src = getHeroFramePath(i);
@@ -173,9 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // Wave 3: Stream frames 61 to 480 in progressive background chunks
         let nextIndex = 61;
         const loadBatch = () => {
-            const batchLimit = Math.min(nextIndex + 25, totalVideoFrames);
+            if (nextIndex > totalVideoFrames) return;
+            const chunkSize = isMobileDevice ? 15 : 30;
+            const batchLimit = Math.min(nextIndex + chunkSize, totalVideoFrames);
             for (let i = nextIndex; i <= batchLimit; i++) {
                 if (!videoFramesCache[i]) {
                     const img = new Image();
@@ -188,47 +133,59 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (window.requestIdleCallback) {
                     window.requestIdleCallback(loadBatch);
                 } else {
-                    setTimeout(loadBatch, 30);
+                    setTimeout(loadBatch, 35);
                 }
             }
         };
-        setTimeout(loadBatch, 200);
+
+        // Start Wave 3 as the cards begin peeling (at ~1.8s) so it smoothly overlaps
+        setTimeout(loadBatch, 1800);
     };
-    // Defer hero frames: will be triggered during preloader peel (Tier 3)
+
+    // Trigger video frames buffering immediately so frames are loaded BY THE TIME preloader completes!
+    preloadVideoFrames();
 
     const renderHeroCanvasFrame = () => {
-        const img = videoFramesCache[currentVideoFrame] || new Image();
-        if (!img.src) {
-            img.src = getHeroFramePath(currentVideoFrame);
-            videoFramesCache[currentVideoFrame] = img;
+        let img = videoFramesCache[currentVideoFrame];
+        if (!img || !img.complete || img.naturalWidth === 0) {
+            if (!img) {
+                img = new Image();
+                img.src = getHeroFramePath(currentVideoFrame);
+                videoFramesCache[currentVideoFrame] = img;
+            }
         }
 
-        const draw = () => {
+        const draw = (imageToDraw) => {
+            if (!imageToDraw || imageToDraw.naturalWidth === 0) return;
+            lastDrawnHeroImg = imageToDraw;
             const canvasRatio = heroCanvas.width / heroCanvas.height;
-            const imgRatio = img.width / img.height;
+            const imgRatio = imageToDraw.width / imageToDraw.height;
             let renderWidth, renderHeight, x, y;
 
             if (imgRatio > canvasRatio) {
                 renderHeight = heroCanvas.height;
-                renderWidth = img.width * (heroCanvas.height / img.height);
+                renderWidth = imageToDraw.width * (heroCanvas.height / imageToDraw.height);
                 x = (heroCanvas.width - renderWidth) / 2;
                 y = 0;
             } else {
                 renderWidth = heroCanvas.width;
-                renderHeight = img.height * (heroCanvas.width / img.width);
+                renderHeight = imageToDraw.height * (heroCanvas.width / imageToDraw.width);
                 x = 0;
                 y = (heroCanvas.height - renderHeight) / 2;
             }
 
             heroCtx.imageSmoothingEnabled = true;
             heroCtx.imageSmoothingQuality = "high";
-            heroCtx.drawImage(img, x, y, renderWidth, renderHeight);
+            heroCtx.drawImage(imageToDraw, x, y, renderWidth, renderHeight);
         };
 
-        if (img.complete && img.naturalWidth > 0) {
-            draw();
-        } else {
-            img.onload = draw;
+        if (img && img.complete && img.naturalWidth > 0) {
+            draw(img);
+        } else if (lastDrawnHeroImg) {
+            draw(lastDrawnHeroImg);
+            if (img) img.onload = () => { if (currentVideoFrame === videoFramesCache.indexOf(img)) draw(img); };
+        } else if (img) {
+            img.onload = () => draw(img);
         }
     };
 
@@ -261,15 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // -----------------------------------------------------
-    // 5. MASTER ANIMATION TIMELINE (PAUSED INITIALLY FOR TIER 1 PRELOAD)
+    // 5. MASTER ANIMATION TIMELINE (Starts immediately!)
     // -----------------------------------------------------
-    const masterTimeline = gsap.timeline({ paused: true });
-
-    // Start timeline once Tier 1 critical assets (144 logo frames + 7 stack cards) are ready in memory
-    preloadCriticalAssets().then(() => {
-        renderLogoFrame(0);
-        masterTimeline.play();
-    });
+    const masterTimeline = gsap.timeline({ paused: false });
+    renderLogoFrame(0);
 
     // Step 1: Sequential Stacking In (1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7)
     const stackImages = [
@@ -314,11 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power3.inOut"
         }, peelStartTime + item.delay);
     });
-
-    // Tier 3: Trigger progressive hero video frames streaming during preloader peel
-    masterTimeline.call(() => {
-        preloadVideoFrames();
-    }, null, peelStartTime);
 
     // Step 4: Expand Image 1 with ZERO-BLUR Native Viewport Expansion
     const expandTime = peelStartTime + 0.75;
