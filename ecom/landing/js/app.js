@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let nextIndex = 61;
         const loadBatch = () => {
             if (nextIndex > totalVideoFrames) return;
-            const chunkSize = isMobileDevice ? 15 : 30;
+            const chunkSize = isMobileDevice ? 15 : 25;
             const batchLimit = Math.min(nextIndex + chunkSize, totalVideoFrames);
             for (let i = nextIndex; i <= batchLimit; i++) {
                 if (!videoFramesCache[i]) {
@@ -130,16 +130,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             nextIndex = batchLimit + 1;
             if (nextIndex <= totalVideoFrames) {
-                if (window.requestIdleCallback) {
-                    window.requestIdleCallback(loadBatch);
-                } else {
-                    setTimeout(loadBatch, 35);
-                }
+                setTimeout(loadBatch, 60);
             }
         };
 
-        // Start Wave 3 as the cards begin peeling (at ~1.8s) so it smoothly overlaps
-        setTimeout(loadBatch, 1800);
+        // Start Wave 3 as the intro finishes (at ~3.2s) so Wave 1 and Wave 2 get 100% priority
+        setTimeout(loadBatch, 3200);
     };
 
     // Trigger video frames buffering immediately so frames are loaded BY THE TIME preloader completes!
