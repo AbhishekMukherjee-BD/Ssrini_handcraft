@@ -10,89 +10,32 @@ window.PRODUCTS_DATA = [
     "title": "Rivulet Signature Peridot Ring",
     "collection": "Rivulet Heritage",
     "category": "Rings",
-    "material": "Gold Plated Brass & Peridot",
+    "material": "24k Gold Gilt & Zambian Peridot",
     "priceINR": 35000,
     "badge": "Signature Edition",
     "images": [
-      "/ecom/store/assets/images/IMG_0685.jpg",
-      "/ecom/store/assets/images/IMG_0688.jpg",
-      "/ecom/store/assets/images/IMG_0689.jpg",
-      "/ecom/store/assets/images/IMG_0690.jpg"
+      "/ecom/store/assets/products/rivulet-ring-01/1-cover.webp",
+      "/ecom/store/assets/products/rivulet-ring-01/2-model.webp",
+      "/ecom/store/assets/products/rivulet-ring-01/3-detail.webp",
+      "/ecom/store/assets/products/rivulet-ring-01/4-scale.webp",
+      "/ecom/store/assets/products/rivulet-ring-01/5-box.webp"
     ],
-    "description": "A fluid sculptural form inspired by natural watercourses, hand-carved in wax and cast in 24k gold-plated brass crowned with a vivid green peridot gemstone.",
+    "description": "A fluid sculptural form inspired by natural meandering watercourses, hand-carved in micro-crystalline wax and cast in 24k gold-plated brass crowned with an untreated vivid green Zambian peridot gemstone.",
     "specs": {
       "craftHours": "36 Handcrafted Hours",
-      "origin": "Bengal Atelier",
+      "origin": "Bengal Goldsmith Atelier",
       "dimensions": "28mm x 18mm x 14mm",
       "weight": "14.2g"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
-    }
-  },
-  {
-    "id": "terracotta-vessel-02",
-    "db_id": 2,
-    "slug": "terracotta-vessel-02",
-    "title": "Terracotta Antiquity Vessel",
-    "collection": "Terracotta Art",
-    "category": "Vessels",
-    "material": "Natural Fired Clay & Mineral Pigment",
-    "priceINR": 31500,
-    "badge": "Heirloom",
-    "images": [
-      "/ecom/store/assets/images/IMG_0686.jpg",
-      "/ecom/store/assets/images/IMG_0689.jpg",
-      "/ecom/store/assets/images/IMG_0691.jpg",
-      "/ecom/store/assets/images/IMG_0692.jpg"
-    ],
-    "description": "Ancient terracotta craftsmanship revived. Wheel-thrown and meticulously hand-etched with geometric folklore symbols before kiln firing.",
-    "specs": {
-      "craftHours": "52 Handcrafted Hours",
-      "origin": "Bishnupur Master Guild",
-      "dimensions": "320mm x 180mm",
-      "weight": "1.8kg"
-    },
-    "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
-    }
-  },
-  {
-    "id": "silk-stole-03",
-    "db_id": 3,
-    "slug": "silk-stole-03",
-    "title": "Imperial Mulberry Silk Stole",
-    "collection": "Silk & Weave",
-    "category": "Textiles",
-    "material": "100% Pure Mulberry Silk & Gold Zari",
-    "priceINR": 24000,
-    "badge": "Limited Run",
-    "images": [
-      "/ecom/store/assets/images/IMG_0690.jpg",
-      "/ecom/store/assets/images/IMG_0694.jpg",
-      "/ecom/store/assets/images/IMG_0695.jpg",
-      "/ecom/store/assets/images/IMG_0696.jpg"
-    ],
-    "description": "Woven on heritage wooden pit looms using pure mulberry silk threads and real silver-gilt zari border motifs.",
-    "specs": {
-      "craftHours": "72 Loom Hours",
-      "origin": "Murshidabad Weavers",
-      "dimensions": "200cm x 70cm",
-      "weight": "180g"
-    },
-    "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+      "craftsmanship": "Individually hand-forged by generational master metalsmiths utilizing lost-wax casting and hand-burnished high polish finish.",
+      "care": "Shield from perfume, chlorine, and abrasive chemicals. Store individually in the provided velvet atelier pouch.",
+      "delivery": "Complimentary worldwide insured express courier. Ships in luxury presentation gift box with physical Certificate of Authenticity."
     }
   },
   {
     "id": "filigree-earring-04",
-    "db_id": 4,
+    "db_id": 2,
     "slug": "filigree-earring-04",
     "title": "Tarakasi Filigree Bloom Earrings",
     "collection": "Brass Filigree",
@@ -101,167 +44,233 @@ window.PRODUCTS_DATA = [
     "priceINR": 26000,
     "badge": "Masterwork",
     "images": [
-      "/ecom/store/assets/images/IMG_0694.jpg",
-      "/ecom/store/assets/images/IMG_0697.jpg",
-      "/ecom/store/assets/images/IMG_0698.jpg",
-      "/ecom/store/assets/images/IMG_0699.jpg"
+      "/ecom/store/assets/products/filigree-earring-04/1-cover.webp",
+      "/ecom/store/assets/products/filigree-earring-04/2-model.webp",
+      "/ecom/store/assets/products/filigree-earring-04/3-detail.webp",
+      "/ecom/store/assets/products/filigree-earring-04/4-scale.webp",
+      "/ecom/store/assets/products/filigree-earring-04/5-box.webp"
     ],
-    "description": "Delicate gossamer filigree wire drawing hand-twisted into botanical silhouettes by master artisans.",
+    "description": "Delicate gossamer wire drawing hand-twisted into ethereal botanical silhouettes by master Tarakasi artisans. Each wire is thinner than a strand of silk.",
     "specs": {
-      "craftHours": "40 Handcrafted Hours",
-      "origin": "Cuttack Guild",
-      "dimensions": "58mm drop length",
-      "weight": "11.5g per pair"
+      "craftHours": "42 Handcrafted Hours",
+      "origin": "Cuttack Filigree Guild",
+      "dimensions": "62mm drop length x 24mm width",
+      "weight": "11.8g per pair"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+      "craftsmanship": "Hand-drawn fine metallic wire bent with precision tweezers and welded without solder stains by 4th-generation filigree masters.",
+      "care": "Store flat in padded velvet case. Clean only with a dry microfiber cloth; never immerse in ultrasonic cleaners.",
+      "delivery": "Dispatched within 48 hours in signature gold-foiled rigid packaging accompanied by craft provenance documentation."
     }
   },
   {
-    "id": "ceramic-glyph-05",
-    "db_id": 5,
-    "slug": "ceramic-glyph-05",
-    "title": "Celadon Glazed Ceramic Glyph",
-    "collection": "Ceramic Glyphs",
-    "category": "Decor",
-    "material": "Stoneware & Ash Glaze",
-    "priceINR": 41000,
-    "badge": "Studio Signature",
+    "id": "royal-polki-necklace",
+    "db_id": 3,
+    "slug": "royal-polki-necklace",
+    "title": "Royal Polki & Pearl Choker",
+    "collection": "Royal Atelier",
+    "category": "Necklaces",
+    "material": "Uncut Polki Stones, Basra Pearls & 22k Gold Foil",
+    "priceINR": 68000,
+    "badge": "Atelier Rare",
     "images": [
-      "/ecom/store/assets/images/IMG_0695.jpg",
-      "/ecom/store/assets/images/IMG_0700.jpg",
-      "/ecom/store/assets/images/IMG_0701.jpg",
-      "/ecom/store/assets/images/IMG_0702.jpg"
+      "/ecom/store/assets/products/royal-polki-necklace/1-cover.webp",
+      "/ecom/store/assets/products/royal-polki-necklace/2-model.webp",
+      "/ecom/store/assets/products/royal-polki-necklace/3-detail.webp",
+      "/ecom/store/assets/products/royal-polki-necklace/4-scale.webp",
+      "/ecom/store/assets/products/royal-polki-necklace/5-box.webp"
     ],
-    "description": "High-fire stoneware ceramic sculpture featuring crackle celadon ash glaze with engraved ancestral glyphs.",
+    "description": "An ode to royal court jewelry, featuring uncut Polki stones encased in pure 22k gold foil cups, suspended against hand-strung natural seed pearls with adjustable silk dori cord.",
     "specs": {
-      "craftHours": "64 Handcrafted Hours",
-      "origin": "Studio SSRINI",
-      "dimensions": "240mm x 140mm x 90mm",
-      "weight": "1.2kg"
+      "craftHours": "88 Handcrafted Hours",
+      "origin": "Jaipur Royal Guild",
+      "dimensions": "340mm choker arc with adjustable silk tie",
+      "weight": "64.5g"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+      "craftsmanship": "Centuries-old Jadau technique combining lac-core filling, pure gold foil burnishing, and reverse-side floral Meenakari detailing.",
+      "care": "Store wrapped in muslin cloth inside airtight presentation box. Keep dry and avoid direct contact with cosmetic sprays.",
+      "delivery": "Hand-packaged in silk-lined jewelry chest with numbered certification card."
     }
   },
   {
-    "id": "wooden-sculpture-06",
-    "db_id": 6,
-    "slug": "wooden-sculpture-06",
-    "title": "Teak Floral Relief Sculpture",
-    "collection": "Wooden Sculptures",
-    "category": "Sculptures",
-    "material": "Reclaimed Teak & Natural Beeswax",
+    "id": "mayur-kundan-pendant",
+    "db_id": 4,
+    "slug": "mayur-kundan-pendant",
+    "title": "Mayur Heritage Kundan Pendant",
+    "collection": "Royal Atelier",
+    "category": "Necklaces",
+    "material": "24k Gold Foil, Ruby Cabochon & Meenakari",
+    "priceINR": 42000,
+    "badge": "Heirloom",
+    "images": [
+      "/ecom/store/assets/products/mayur-kundan-pendant/1-cover.webp",
+      "/ecom/store/assets/products/mayur-kundan-pendant/2-model.webp",
+      "/ecom/store/assets/products/mayur-kundan-pendant/3-detail.webp",
+      "/ecom/store/assets/products/mayur-kundan-pendant/4-scale.webp",
+      "/ecom/store/assets/products/mayur-kundan-pendant/5-box.webp"
+    ],
+    "description": "A regal peacock silhouette celebrating majesty and grace, sculpted in 24k gold foil setting with a pigeon-blood ruby cabochon heart and vivid mineral enamel plumage on the reverse.",
+    "specs": {
+      "craftHours": "54 Handcrafted Hours",
+      "origin": "Rajasthan Atelier",
+      "dimensions": "48mm x 32mm pendant with 20\" chain",
+      "weight": "21.4g"
+    },
+    "accordions": {
+      "craftsmanship": "Traditional Kundan setting utilizing ultra-refined 99.9% pure gold foils pressed cold around each gemstone contour.",
+      "care": "Polish with soft flannel cloth. Avoid exposure to water, extreme humidity, or alcohol-based fragrances.",
+      "delivery": "Insured courier delivery within 3-4 business days in plush velvet jewelry cassette."
+    }
+  },
+  {
+    "id": "chandrakala-gold-bangles",
+    "db_id": 5,
+    "slug": "chandrakala-gold-bangles",
+    "title": "Chandrakala Hand-Engraved Kadas",
+    "collection": "Heritage Collection",
+    "category": "Bangles",
+    "material": "22k Gold Vermeil with Floral Nakashi",
     "priceINR": 54000,
     "badge": "Collector Edition",
     "images": [
-      "/ecom/store/assets/images/IMG_0697.jpg",
-      "/ecom/store/assets/images/IMG_0702.jpg",
-      "/ecom/store/assets/images/IMG_0703.jpg",
-      "/ecom/store/assets/images/IMG_0704.jpg"
+      "/ecom/store/assets/products/chandrakala-gold-bangles/1-cover.webp",
+      "/ecom/store/assets/products/chandrakala-gold-bangles/2-model.webp",
+      "/ecom/store/assets/products/chandrakala-gold-bangles/3-detail.webp",
+      "/ecom/store/assets/products/chandrakala-gold-bangles/4-scale.webp",
+      "/ecom/store/assets/products/chandrakala-gold-bangles/5-box.webp"
     ],
-    "description": "Carved from single block century-old reclaimed seasoned teak, polished exclusively with natural organic beeswax and oils.",
+    "description": "Twin masterwork kadas sculpted with raised botanical repoussé and chasing. A hidden threaded screw clasp ensures flawless wrist contouring and weight balance.",
     "specs": {
-      "craftHours": "96 Handcrafted Hours",
-      "origin": "Heritage Woodcraft Guild",
-      "dimensions": "450mm x 220mm x 80mm",
-      "weight": "3.4kg"
+      "craftHours": "76 Handcrafted Hours",
+      "origin": "Bengal Goldsmith Atelier",
+      "dimensions": "2.6 standard wrist size (60mm inner diameter)",
+      "weight": "48.6g (pair)"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+      "craftsmanship": "Formed from solid brass core layered with heavy 5-micron 22k gold vermeil and engraved entirely by hand with hardened steel chisels.",
+      "care": "Store wrapped in protective velvet sleeves. Wipe with dry flannel after each wear to preserve the satin-sheen luster.",
+      "delivery": "Presented in handcrafted wooden keepsake box with velvet interior."
     }
   },
   {
-    "id": "royal-pendant-07",
-    "db_id": 7,
-    "slug": "royal-pendant-07",
-    "title": "Royal Filigree Emerald Pendant",
-    "collection": "Royal Atelier",
+    "id": "padma-lotus-ring",
+    "db_id": 6,
+    "slug": "padma-lotus-ring",
+    "title": "Padma Lotus Statement Cocktail Ring",
+    "collection": "Rivulet Heritage",
     "category": "Rings",
-    "material": "24k Gold Gilt & Natural Emerald",
-    "priceINR": 65000,
-    "badge": "Atelier Rare",
+    "material": "Rose Quartz, Pavé Emeralds & 22k Gold Vermeil",
+    "priceINR": 38000,
+    "badge": "Studio Signature",
     "images": [
-      "/ecom/store/assets/images/IMG_0700.jpg",
-      "/ecom/store/assets/images/IMG_0707.jpg",
-      "/ecom/store/assets/images/IMG_0708.jpg",
-      "/ecom/store/assets/images/IMG_0709.jpg"
+      "/ecom/store/assets/products/padma-lotus-ring/1-cover.webp",
+      "/ecom/store/assets/products/padma-lotus-ring/2-model.webp",
+      "/ecom/store/assets/products/padma-lotus-ring/3-detail.webp",
+      "/ecom/store/assets/products/padma-lotus-ring/4-scale.webp",
+      "/ecom/store/assets/products/padma-lotus-ring/5-box.webp"
     ],
-    "description": "An ode to royal court jewelry, featuring intricate wirework framing a raw natural Zambian emerald drop.",
+    "description": "Multi-tiered lotus blossom ring with hand-carved natural rose quartz petals opening towards a pavé-set Colombian emerald pistil. The ring band features ergonomic comfort-fit contouring.",
     "specs": {
-      "craftHours": "80 Handcrafted Hours",
-      "origin": "Royal Goldsmith Atelier",
-      "dimensions": "42mm x 25mm with 18\" chain",
-      "weight": "19.8g"
+      "craftHours": "48 Handcrafted Hours",
+      "origin": "Studio SSRINI",
+      "dimensions": "32mm crown diameter x 14mm rise",
+      "weight": "16.7g"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
+      "craftsmanship": "Lapidary petal carving paired with microscope-assisted micro-pavé gemstone setting in 22k gold over sterling silver.",
+      "care": "Gently cleanse with mild soapy water and a soft-bristle brush if needed. Dry immediately with lint-free cloth.",
+      "delivery": "Dispatched in custom embossed ring box with international warranty documentation."
     }
   },
   {
-    "id": "terracotta-mask-08",
+    "id": "meenakari-hasli-choker",
+    "db_id": 7,
+    "slug": "meenakari-hasli-choker",
+    "title": "Jaipur Meenakari Regal Hasli Choker",
+    "collection": "Royal Atelier",
+    "category": "Necklaces",
+    "material": "Champlevé Mineral Enamel & 24k Gold Inlay",
+    "priceINR": 76000,
+    "badge": "Masterwork",
+    "images": [
+      "/ecom/store/assets/products/meenakari-hasli-choker/1-cover.webp",
+      "/ecom/store/assets/products/meenakari-hasli-choker/2-model.webp",
+      "/ecom/store/assets/products/meenakari-hasli-choker/3-detail.webp",
+      "/ecom/store/assets/products/meenakari-hasli-choker/4-scale.webp",
+      "/ecom/store/assets/products/meenakari-hasli-choker/5-box.webp"
+    ],
+    "description": "Solid contoured torque collar necklace adorned with intricate five-color vitreous enamel depicting courtly floral vines, fired five distinct times in high-temperature muffle kilns.",
+    "specs": {
+      "craftHours": "110 Handcrafted Hours",
+      "origin": "Jaipur Royal Guild",
+      "dimensions": "135mm interior collar diameter",
+      "weight": "78.2g"
+    },
+    "accordions": {
+      "craftsmanship": "Authentic Champlevé enameling engraved into solid brass, inlaid with crushed mineral powders, and kiln-fused at 800°C before agate stone polishing.",
+      "care": "Enamel is vitreous glass; protect from sharp impact and sudden temperature shocks. Store laid flat in velvet drawer.",
+      "delivery": "Packaged in custom embroidered velvet case accompanied by a numbered certificate of craftsmanship."
+    }
+  },
+  {
+    "id": "bengal-wire-jhumkas",
     "db_id": 8,
-    "slug": "terracotta-mask-08",
-    "title": "Goddess Ritual Mask Sculpture",
-    "collection": "Terracotta Art",
-    "category": "Sculptures",
-    "material": "Oxidized Red Terracotta",
-    "priceINR": 43000,
+    "slug": "bengal-wire-jhumkas",
+    "title": "Bengal Heritage Temple Jhumkas",
+    "collection": "Brass Filigree",
+    "category": "Earrings",
+    "material": "Hand-Chased Brass & Freshwater Pearl Fringes",
+    "priceINR": 32000,
+    "badge": "Limited Run",
+    "images": [
+      "/ecom/store/assets/products/bengal-wire-jhumkas/1-cover.webp",
+      "/ecom/store/assets/products/bengal-wire-jhumkas/2-model.webp",
+      "/ecom/store/assets/products/bengal-wire-jhumkas/3-detail.webp",
+      "/ecom/store/assets/products/bengal-wire-jhumkas/4-scale.webp",
+      "/ecom/store/assets/products/bengal-wire-jhumkas/5-box.webp"
+    ],
+    "description": "Cascading bell-shaped jhumkas celebrating timeless temple architecture, featuring pierced dome work with dancing freshwater seed pearl fringes that resonate with gentle movement.",
+    "specs": {
+      "craftHours": "50 Handcrafted Hours",
+      "origin": "Bengal Atelier",
+      "dimensions": "68mm drop length x 28mm dome diameter",
+      "weight": "22.4g per pair"
+    },
+    "accordions": {
+      "craftsmanship": "Individually pierced filigree dome with micro-soldered jump rings and hand-knotted natural pearls.",
+      "care": "Keep protected from hairspray and moisture. Always store flat in anti-tarnish jewelry pouches.",
+      "delivery": "Ships worldwide via insured courier in commemorative SSRINI gift presentation packaging."
+    }
+  },
+  {
+    "id": "navratna-gemstone-bracelet",
+    "db_id": 9,
+    "slug": "navratna-gemstone-bracelet",
+    "title": "Imperial Navratna Cuff Bracelet",
+    "collection": "Heritage Collection",
+    "category": "Bangles",
+    "material": "Nine Sacred Astrological Gemstones & 22k Gold Gilt",
+    "priceINR": 48000,
     "badge": "Sacred Series",
     "images": [
-      "/ecom/store/assets/images/IMG_0701.jpg",
-      "/ecom/store/assets/images/IMG_0710.jpg",
-      "/ecom/store/assets/images/IMG_0711.jpg",
-      "/ecom/store/assets/images/IMG_0717.jpg"
+      "/ecom/store/assets/products/navratna-gemstone-bracelet/1-cover.webp",
+      "/ecom/store/assets/products/navratna-gemstone-bracelet/2-model.webp",
+      "/ecom/store/assets/products/navratna-gemstone-bracelet/3-detail.webp",
+      "/ecom/store/assets/products/navratna-gemstone-bracelet/4-scale.webp",
+      "/ecom/store/assets/products/navratna-gemstone-bracelet/5-box.webp"
     ],
-    "description": "Sacred ritual mask sculpted using traditional hollow hand-modeling and decorated with natural ochre wash.",
+    "description": "An astrological talisman cuff featuring the nine sacred cosmic gemstones (Ruby, Pearl, Coral, Emerald, Yellow Sapphire, Diamond, Blue Sapphire, Hessonite, and Cat's Eye) set in hand-beveled bezels along an articulated cuff.",
     "specs": {
-      "craftHours": "58 Handcrafted Hours",
-      "origin": "Bengal Atelier",
-      "dimensions": "380mm x 240mm",
-      "weight": "2.1kg"
+      "craftHours": "62 Handcrafted Hours",
+      "origin": "Studio SSRINI",
+      "dimensions": "Flexible fit (62mm - 68mm wrist)",
+      "weight": "34.8g"
     },
     "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with over 20 years of expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation box with certificate of authenticity."
-    }
-  },
-  {
-    "id": "agent-test-product",
-    "db_id": 9,
-    "slug": "agent-test-product",
-    "title": "Agent Test Product",
-    "collection": "Heritage Collection",
-    "category": "Rings",
-    "material": "Fine Handcrafted Material",
-    "priceINR": 1500,
-    "badge": "Signature Edition",
-    "images": [
-      "/ecom/store/assets/images/IMG_0685.jpg",
-      "/ecom/store/assets/images/gallery_6aa61472dc2903.49223063.jpg"
-    ],
-    "description": "This is a test product created by the browser subagent.",
-    "specs": {
-      "craftHours": "36 Handcrafted Hours",
-      "origin": "Bengal Atelier",
-      "dimensions": "Custom Handcrafted Size",
-      "weight": "14.2g"
-    },
-    "accordions": {
-      "craftsmanship": "Hand-forged by master artisans with decades of heritage expertise.",
-      "care": "Avoid contact with moisture, perfumes, and chemical cleaners. Store in a soft suede pouch.",
-      "delivery": "Ships in 3-5 business days in full luxury presentation gift packaging with certificate of authenticity."
+      "craftsmanship": "Individually calibrated gemstone settings positioned strictly according to traditional Vedic astronomical orientations.",
+      "care": "Clean periodically with lukewarm soapy water and soft brush. Dry thoroughly before storing in suede lined box.",
+      "delivery": "Packaged in custom luxury gift box with full gemological appraisal and authenticity certificate."
     }
   }
 ];
-window.PHP_PRODUCTS_DATA = window.PRODUCTS_DATA;
-window.PHP_WISHLIST_DATA = [];

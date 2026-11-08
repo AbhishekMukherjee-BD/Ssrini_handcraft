@@ -3,7 +3,7 @@
  */
 
 // Master Products Dataset
-const PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
+var PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
 
 // State
 let activeFilters = {
@@ -368,7 +368,7 @@ function renderProducts() {
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </button>
-        <a href="product.php?id=${item.id}">
+        <a href="product.html?id=${item.id}">
           <img src="${item.images[0]}" alt="${item.title}" class="img-primary skeleton-shimmer" loading="lazy" onload="this.classList.remove('skeleton-shimmer')">
           <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary skeleton-shimmer" loading="lazy" onload="this.classList.remove('skeleton-shimmer')">
         </a>
@@ -376,7 +376,7 @@ function renderProducts() {
       </div>
       <div class="product-info">
         <span class="product-collection-tag">${item.collection}</span>
-        <a href="product.php?id=${item.id}" class="product-title">${item.title}</a>
+        <a href="product.html?id=${item.id}" class="product-title">${item.title}</a>
         <p class="product-material-desc">${item.material}</p>
         <div class="product-price-row">
           <span class="product-currency-inr">₹${item.priceINR.toLocaleString()}</span>
@@ -418,7 +418,7 @@ window.openQuickView = function(id) {
       </div>
       <div style="display: flex; gap: 12px; margin-top: 8px;">
         <button class="btn-add-to-bag" onclick="addToCartQuick('${item.id}')">Add To Bag</button>
-        <a href="product.php?id=${item.id}" class="filter-btn-toggle" style="padding: 14px 20px;">Full Details →</a>
+        <a href="product.html?id=${item.id}" class="filter-btn-toggle" style="padding: 14px 20px;">Full Details →</a>
       </div>
     </div>
   `;

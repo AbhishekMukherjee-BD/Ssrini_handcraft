@@ -3,7 +3,7 @@
  * Handles dynamic product rendering, vertical image scroll stack, sticky info panel, and accordions.
  */
 
-const PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
+var PRODUCTS_DATA = window.PRODUCTS_DATA || window.PHP_PRODUCTS_DATA || [];
 
 document.addEventListener('DOMContentLoaded', () => {
   initCartCount();
@@ -230,7 +230,7 @@ function setupRelated(currentId) {
     <article class="product-card">
       <div class="product-image-box">
         <span class="product-badge">${item.badge}</span>
-        <a href="product.php?id=${item.id}">
+        <a href="product.html?id=${item.id}">
           <img src="${item.images[0]}" alt="${item.title}" class="img-primary" loading="lazy">
           <img src="${item.images[1] || item.images[0]}" alt="${item.title} Detail" class="img-secondary" loading="lazy">
         </a>
@@ -239,7 +239,7 @@ function setupRelated(currentId) {
       <div class="product-info">
         <span class="product-category">${item.category}</span>
         <h3 class="product-title">
-          <a href="product.php?id=${item.id}">${item.title}</a>
+          <a href="product.html?id=${item.id}">${item.title}</a>
         </h3>
         <p class="product-collection">${item.collection}</p>
         <div class="product-price-row">
