@@ -58,10 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Device check for mobile memory & network efficiency
     const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth < 860);
 
-    // Wave 1: Stream loading logo frames immediately in background
+    // Wave 1: Stream loading logo frames with immediate priority chunking
     const preloadLogoFrames = () => {
         const logoStep = isMobileDevice ? 2 : 1;
-        for (let i = 0; i < totalLogoFrames; i += logoStep) {
+        
+        // Eagerly load the first 25 frames immediately so the animation starts at 0ms with zero stutter
+        const initialCount = Math.min(25, totalLogoFrames);
+        for (let i = 0; i < initialCount; i += logoStep) {
             const num = i.toString().padStart(4, '0');
             const img = new Image();
             img.src = `assets/home/loading_frames/frame_${num}.png`;
@@ -76,6 +79,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         }
+
+        // Stream remaining logo frames in smooth rapid batches (20 frames every 40ms)
+        let nextLogoIdx = initialCount;
+        const streamRemainingLogo = () => {
+            if (nextLogoIdx >= totalLogoFrames) return;
+            const batchLimit = Math.min(nextLogoIdx + 20, totalLogoFrames);
+            for (let i = nextLogoIdx; i < batchLimit; i += logoStep) {
+                if (!logoFramesCache[i]) {
+                    const num = i.toString().padStart(4, '0');
+                    const img = new Image();
+                    img.src = `assets/home/loading_frames/frame_${num}.png`;
+                    logoFramesCache[i] = img;
+                    if (isMobileDevice) {
+                        for (let fill = i + 1; fill < Math.min(i + logoStep, totalLogoFrames); fill++) {
+                            logoFramesCache[fill] = img;
+                        }
+                    }
+                }
+            }
+            nextLogoIdx = batchLimit;
+            if (nextLogoIdx < totalLogoFrames) {
+                setTimeout(streamRemainingLogo, 40);
+            }
+        };
+        setTimeout(streamRemainingLogo, 50);
     };
     preloadLogoFrames();
 
@@ -92,6 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const preloadVideoFrames = () => {
+        const videoStep = isMobileDevice ? 2 : 1;
+
         // Eagerly preload frame 1 and final frame 480
         const imgFirst = new Image();
         imgFirst.src = getHeroFramePath(1);
@@ -107,11 +137,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Wave 2: Buffer initial 60 frames WHILE preloader executes!
         // These frames download concurrently while the user watches the 4.4s card animation.
         const initialBatch = Math.min(60, totalVideoFrames);
-        for (let i = 2; i <= initialBatch; i++) {
+        for (let i = 2; i <= initialBatch; i += videoStep) {
             if (!videoFramesCache[i]) {
                 const img = new Image();
                 img.src = getHeroFramePath(i);
                 videoFramesCache[i] = img;
+                if (isMobileDevice && i + 1 <= totalVideoFrames) {
+                    videoFramesCache[i + 1] = img;
+                }
             }
         }
 
@@ -121,16 +154,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if (nextIndex > totalVideoFrames) return;
             const chunkSize = isMobileDevice ? 15 : 25;
             const batchLimit = Math.min(nextIndex + chunkSize, totalVideoFrames);
-            for (let i = nextIndex; i <= batchLimit; i++) {
+            for (let i = nextIndex; i <= batchLimit; i += videoStep) {
                 if (!videoFramesCache[i]) {
                     const img = new Image();
                     img.src = getHeroFramePath(i);
                     videoFramesCache[i] = img;
+                    if (isMobileDevice && i + 1 <= totalVideoFrames) {
+                        videoFramesCache[i + 1] = img;
+                    }
                 }
             }
             nextIndex = batchLimit + 1;
             if (nextIndex <= totalVideoFrames) {
-                setTimeout(loadBatch, 60);
+                setTimeout(loadBatch, 50);
             }
         };
 
